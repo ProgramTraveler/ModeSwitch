@@ -39,6 +39,9 @@ public class SingleHandView extends View {
     private boolean ring2 = false;
     private boolean ring3 = false;
 
+    //对误差的判断
+    private boolean error = false; //当状态变为true时说明是第二次遇到符合误差的状态
+
 
     //重写父类方法
     public SingleHandView(Context context) { //在new的时候调用
@@ -85,8 +88,6 @@ public class SingleHandView extends View {
     //重写该方法，在这里绘图
     @Override
     protected void onDraw(Canvas canvas) {
-        // System.out.println(width + " " + high);
-        // Log.e("onDraw: ", width + " " + high);
         super.onDraw(canvas);
         canvas.drawCircle(high / 6 * 3 / 2, width / 3, high / 6, paint);
         canvas.drawCircle(high / 6 * 3 / 2, width / 3, high / 12, paint);
@@ -118,7 +119,14 @@ public class SingleHandView extends View {
             int xr = (int) Math.pow((x - high / 6), 2);
             int yr = (int) Math.pow((y - width / 3), 2);
             int ra = xr + yr;
+            System.out.println(index);
+            System.out.println("开始位置" + StartX + " " + StartY);
+            System.out.println("当前位置" + x + " " + y);
             if (ra >= Math.pow((high / 12), 2) && ra <= Math.pow((high / 6), 2)) { //如果落在圆环内
+
+                /*System.out.println("开始位置" + StartX + " " + StartY);
+                System.out.println("当前位置" + x + " " + y) ;*/
+
                 if (!index) { //如果之前没有进入过
                     index = true; //表示已经进入
                     //初次进入的坐标
@@ -127,10 +135,15 @@ public class SingleHandView extends View {
                     //System.out.println("come in" + " " + x + " " + y);
                 }
                 else { //已经进入，这个用来检测是否是一个闭环
-                    System.out.println("开始位置" + StartX + " " + StartY);
-                    System.out.println("当前位置" + x + " " + y) ;
-                    if ((Math.abs(x - StartX) <= 10) && (Math.abs(y - StartY) <= 10)
-                    ) ring2 = true; //当误差小于10的时候就当做是一个闭环
+                    /*System.out.println("开始位置" + StartX + " " + StartY);
+                    System.out.println("当前位置" + x + " " + y) ;*/
+                    if (!error && (Math.abs(x - StartX) > high / 3)) {
+                        error = true;
+                    }
+                    //System.out.println(error);
+                    if ((Math.abs(x - StartX) <= 10) && (Math.abs(y - StartY) <= 10) && error) {
+                        ring2 = true; //当误差小于10的时候就当做是一个闭环
+                    }
                 }
             }else { //要是画出环的处理，暂时还没有想法
 
