@@ -28,6 +28,18 @@ public class SingleHandView extends View {
 
     private int LastX;
     private int LastY;
+
+    //刚进入环内的起点坐标
+    private int StartX;
+    private int StartY;
+    private boolean index = false; //表示当前状态未进入环
+
+    //每个操作环的状态，true表示已经出现
+    private boolean ring1 = true; //第一个环是一个出现的，所以只能是true
+    private boolean ring2 = false;
+    private boolean ring3 = false;
+
+
     //重写父类方法
     public SingleHandView(Context context) { //在new的时候调用
         super(context);
@@ -73,16 +85,23 @@ public class SingleHandView extends View {
     //重写该方法，在这里绘图
     @Override
     protected void onDraw(Canvas canvas) {
-        //System.out.println(width + " " + high);
-        Log.e("onDraw: ", width + " " + high);
+        // System.out.println(width + " " + high);
+        // Log.e("onDraw: ", width + " " + high);
         super.onDraw(canvas);
+        canvas.drawCircle(high / 6 * 3 / 2, width / 3, high / 6, paint);
+        canvas.drawCircle(high / 6 * 3 / 2, width / 3, high / 12, paint);
+
+        if (ring2) { //显示第二个环
+            canvas.drawCircle(high / 6 * 11 / 2, width / 3, high / 6, paint);
+            canvas.drawCircle(high / 6 * 11 / 2, width / 3, high / 12, paint);
+        }
+
+        if (ring3) { //显示第三个环
+            canvas.drawCircle(high / 6 * 10, width / 3, high / 6, paint);
+            canvas.drawCircle(high / 6 * 10, width / 3, high / 12, paint);
+        }
         drawPath();
         canvas.drawBitmap(bitmap, 0, 0, null);
-        //canvas.drawCircle(0, 0, 818, paint);
-        /*canvas.drawCircle(high / 6, width / 3, high / 6, paint);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawCircle(high / 6, width / 3, high / 12, paint);
-    */
     }
     //绘制线条
     private void drawPath() {
@@ -94,6 +113,31 @@ public class SingleHandView extends View {
         int x = (int) event.getX();
         int y = (int) event.getY();
 
+        if (ring1 && !ring2) { //当前只显示第一个圆环
+            boolean indexRing1 = false;
+            int xr = (int) Math.pow((x - high / 6), 2);
+            int yr = (int) Math.pow((y - width / 3), 2);
+            int ra = xr + yr;
+            if (ra >= Math.pow((high / 12), 2) && ra <= Math.pow((high / 6), 2)) { //如果落在圆环内
+                if (!index) { //如果之前没有进入过
+                    index = true; //表示已经进入
+                    //初次进入的坐标
+                    StartX = x;
+                    StartY = y;
+                    //System.out.println("come in" + " " + x + " " + y);
+                }
+                else { //已经进入，这个用来检测是否是一个闭环
+                    System.out.println("开始位置" + StartX + " " + StartY);
+                    System.out.println("当前位置" + x + " " + y) ;
+                    if ((Math.abs(x - StartX) <= 10) && (Math.abs(y - StartY) <= 10)
+                    ) ring2 = true; //当误差小于10的时候就当做是一个闭环
+                }
+            }else { //要是画出环的处理，暂时还没有想法
+
+            }
+
+        }
+        //获取坐标进行画圆
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 LastX = x;
