@@ -26,12 +26,12 @@ public class SingleHandView extends View {
     private Canvas canvas; //内存中创建的Canvas
     private Bitmap bitmap; //缓存绘制的内容
 
-    private int LastX;
-    private int LastY;
+    private float LastX;
+    private float LastY;
 
     //刚进入环内的起点坐标
-    private int StartX;
-    private int StartY;
+    private float StartX;
+    private float StartY;
     private boolean index = false; //表示当前状态未进入环
 
     //每个操作环的状态，true表示已经出现
@@ -53,7 +53,7 @@ public class SingleHandView extends View {
 
     //对误差的判断
     private boolean error = false; //当状态变为true时说明是第二次遇到符合误差的状态
-
+    private float errorNum = 10.0F;
 
     //重写父类方法
     public SingleHandView(Context context) { //在new的时候调用
@@ -124,7 +124,6 @@ public class SingleHandView extends View {
             canvas.drawCircle(Circle2_X, Circle2_Y, BigCircleR, paint);
             canvas.drawCircle(Circle2_X, Circle2_Y, SmallCircleR, paint);
         }
-
         if (ring3) { //显示第三个环
             canvas.drawCircle(Circle3_X, Circle3_Y, BigCircleR, paint);
             canvas.drawCircle(Circle3_X, Circle3_Y, SmallCircleR, paint);
@@ -139,19 +138,15 @@ public class SingleHandView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
-        int x = (int) event.getX();
-        int y = (int) event.getY();
+        float x = event.getX();
+        float y = event.getY();
 
         if (ring1 && !ring2) { //当前只显示第一个圆环
-            boolean indexRing1 = false;
             //求出当前位置与圆心坐标差值的平方
-            int xr = (int) Math.pow((x - Circle1_X), 2);
-            int yr = (int) Math.pow((y - Circle1_Y), 2);
-            int ra = xr + yr;
-            /*System.out.println(index);
-            System.out.println("开始位置" + StartX + " " + StartY);
-            System.out.println("当前位置" + x + " " + y);
-            System.out.println("圆心位置" + high / 6 * 3 / 2 + " " + width / 3);*/
+            double xr = Math.pow((x - Circle1_X), 2);
+            double yr = Math.pow((y - Circle1_Y), 2);
+            double ra = xr + yr;
+
             if (ra >= Math.pow((SmallCircleR), 2) && ra <= Math.pow((BigCircleR), 2)) { //如果落在圆环内
 
                 if (!index) { //如果之前没有进入过
@@ -167,14 +162,47 @@ public class SingleHandView extends View {
                         error = true;
                     }
 
-                    if ((Math.abs(x - StartX) <= 5) && (Math.abs(y - StartY) <= 5) && error) {
+                    if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
                         ring2 = true; //当误差满足条件的时候就当做是一个闭环
+                        //重新初始化条件
+                        index = false;
+                        error = false;
                     }
                 }
             }else { //要是画出环的处理，暂时还没有想法
 
             }
 
+        }
+        if (ring2 && !ring3) { //第二个圆环已经显示，与环1的判断一样
+            //System.out.println("bingo");
+            double xr = Math.pow((x - Circle2_X), 2);
+            double yr = Math.pow((y - Circle2_Y), 2);
+            double ra = xr + yr;
+
+            if (ra >= Math.pow((SmallCircleR), 2) && ra <= Math.pow((BigCircleR), 2)) { //如果落在圆环内
+
+                if (!index) { //如果之前没有进入过
+                    index = true; //表示已经进入
+                    //初次进入的坐标
+                    StartX = x;
+                    StartY = y;
+                    //System.out.println("come in" + " " + x + " " + y);
+                }
+                else { //已经进入，这个用来检测是否是一个闭环
+
+                    if (!error && (Math.abs(x - StartX) > SmallCircleR * 2)) {
+                        error = true;
+                    }
+                    if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
+                        System.out.println("come in");
+                        ring3 = true; //当误差满足条件的时候就当做是一个闭环
+
+                    }
+                }
+            }else { //要是画出环的处理，暂时还没有想法
+
+            }
         }
         //获取坐标进行画线
         switch (action) {
@@ -184,8 +212,8 @@ public class SingleHandView extends View {
                 path.moveTo(LastX, LastY);
                 break;
             case MotionEvent.ACTION_MOVE:
-                int dx = Math.abs(x - LastX);
-                int dy = Math.abs(y - LastY);
+                float dx = Math.abs(x - LastX);
+                float dy = Math.abs(y - LastY);
                 if (dx > 3 || dy > 3)
                     path.lineTo(x, y);
                 LastX = x;
