@@ -38,6 +38,18 @@ public class SingleHandView extends View {
     private boolean ring1 = true; //第一个环是一个出现的，所以只能是true
     private boolean ring2 = false;
     private boolean ring3 = false;
+    //圆环中大小圆的半径
+    private float SmallCircleR = 0;
+    private float BigCircleR = 0;
+    //第一个圆环的圆心坐标
+    private float Circle1_X = 0;
+    private float Circle1_Y = 0;
+    //第二个圆环的圆心坐标
+    private float Circle2_X = 0;
+    private float Circle2_Y = 0;
+    //第三个圆环的圆心坐标
+    private float Circle3_X = 0;
+    private float Circle3_Y = 0;
 
     //对误差的判断
     private boolean error = false; //当状态变为true时说明是第二次遇到符合误差的状态
@@ -78,6 +90,20 @@ public class SingleHandView extends View {
         //但指定快件的宽高需要测量
         width = MeasureSpec.getSize(widthMeasureSpec); //获取屏幕宽度
         high = MeasureSpec.getSize(highMeasureSpec); //获取屏幕高度
+
+        //根据屏幕大小来设置大小半径
+        SmallCircleR = high / 12;
+        BigCircleR = high / 6;
+        //根据屏幕大小来设置每个圆环的圆心位置
+        Circle1_X = high / 6 * 3 / 2;
+        Circle1_Y = width / 3;
+
+        Circle2_X = high / 6 * 11 / 2;
+        Circle2_Y = width / 3;
+
+        Circle3_X = high / 6 * 10;
+        Circle3_Y = width / 3;
+
         //width = getMeasuredWidth();
         //high = getMeasuredHeight();
         //初始化bitmap和canvas
@@ -89,17 +115,19 @@ public class SingleHandView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawCircle(high / 6 * 3 / 2, width / 3, high / 6, paint);
-        canvas.drawCircle(high / 6 * 3 / 2, width / 3, high / 12, paint);
+
+        //绘制第一个环
+        canvas.drawCircle(Circle1_X, Circle1_Y, BigCircleR, paint);
+        canvas.drawCircle(Circle1_X, Circle1_Y, SmallCircleR, paint);
 
         if (ring2) { //显示第二个环
-            canvas.drawCircle(high / 6 * 11 / 2, width / 3, high / 6, paint);
-            canvas.drawCircle(high / 6 * 11 / 2, width / 3, high / 12, paint);
+            canvas.drawCircle(Circle2_X, Circle2_Y, BigCircleR, paint);
+            canvas.drawCircle(Circle2_X, Circle2_Y, SmallCircleR, paint);
         }
 
         if (ring3) { //显示第三个环
-            canvas.drawCircle(high / 6 * 10, width / 3, high / 6, paint);
-            canvas.drawCircle(high / 6 * 10, width / 3, high / 12, paint);
+            canvas.drawCircle(Circle3_X, Circle3_Y, BigCircleR, paint);
+            canvas.drawCircle(Circle3_X, Circle3_Y, SmallCircleR, paint);
         }
         drawPath();
         canvas.drawBitmap(bitmap, 0, 0, null);
@@ -116,16 +144,15 @@ public class SingleHandView extends View {
 
         if (ring1 && !ring2) { //当前只显示第一个圆环
             boolean indexRing1 = false;
-            int xr = (int) Math.pow((x - high / 6), 2);
-            int yr = (int) Math.pow((y - width / 3), 2);
+            //求出当前位置与圆心坐标差值的平方
+            int xr = (int) Math.pow((x - Circle1_X), 2);
+            int yr = (int) Math.pow((y - Circle1_Y), 2);
             int ra = xr + yr;
-            System.out.println(index);
+            /*System.out.println(index);
             System.out.println("开始位置" + StartX + " " + StartY);
             System.out.println("当前位置" + x + " " + y);
-            if (ra >= Math.pow((high / 12), 2) && ra <= Math.pow((high / 6), 2)) { //如果落在圆环内
-
-                /*System.out.println("开始位置" + StartX + " " + StartY);
-                System.out.println("当前位置" + x + " " + y) ;*/
+            System.out.println("圆心位置" + high / 6 * 3 / 2 + " " + width / 3);*/
+            if (ra >= Math.pow((SmallCircleR), 2) && ra <= Math.pow((BigCircleR), 2)) { //如果落在圆环内
 
                 if (!index) { //如果之前没有进入过
                     index = true; //表示已经进入
@@ -135,14 +162,13 @@ public class SingleHandView extends View {
                     //System.out.println("come in" + " " + x + " " + y);
                 }
                 else { //已经进入，这个用来检测是否是一个闭环
-                    /*System.out.println("开始位置" + StartX + " " + StartY);
-                    System.out.println("当前位置" + x + " " + y) ;*/
-                    if (!error && (Math.abs(x - StartX) > high / 3)) {
+
+                    if (!error && (Math.abs(x - StartX) > SmallCircleR * 2)) {
                         error = true;
                     }
-                    //System.out.println(error);
-                    if ((Math.abs(x - StartX) <= 10) && (Math.abs(y - StartY) <= 10) && error) {
-                        ring2 = true; //当误差小于10的时候就当做是一个闭环
+
+                    if ((Math.abs(x - StartX) <= 5) && (Math.abs(y - StartY) <= 5) && error) {
+                        ring2 = true; //当误差满足条件的时候就当做是一个闭环
                     }
                 }
             }else { //要是画出环的处理，暂时还没有想法
@@ -150,7 +176,7 @@ public class SingleHandView extends View {
             }
 
         }
-        //获取坐标进行画圆
+        //获取坐标进行画线
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 LastX = x;
