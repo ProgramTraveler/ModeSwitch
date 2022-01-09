@@ -30,8 +30,8 @@ public class SingleHandView extends View {
     private float LastY;
 
     //刚进入环内的起点坐标
-    private float StartX;
-    private float StartY;
+    private float StartX = 0;
+    private float StartY = 0;
     private boolean index = false; //表示当前状态未进入环
 
     //每个操作环的状态，true表示已经出现
@@ -140,7 +140,6 @@ public class SingleHandView extends View {
         int action = event.getAction();
         float x = event.getX();
         float y = event.getY();
-
         if (ring1 && !ring2) { //当前只显示第一个圆环
             //求出当前位置与圆心坐标差值的平方
             double xr = Math.pow((x - Circle1_X), 2);
@@ -158,10 +157,9 @@ public class SingleHandView extends View {
                 }
                 else { //已经进入，这个用来检测是否是一个闭环
 
-                    if (!error && (Math.abs(x - StartX) > SmallCircleR * 2)) {
+                    if (!error && (Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) >= SmallCircleR * 2)) { //根据两点距离判断
                         error = true;
                     }
-
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
                         ring2 = true; //当误差满足条件的时候就当做是一个闭环
                         //重新初始化条件
@@ -176,6 +174,7 @@ public class SingleHandView extends View {
         }
         if (ring2 && !ring3) { //第二个圆环已经显示，与环1的判断一样
             //System.out.println("bingo");
+            //System.out.println(index + " " + error);
             double xr = Math.pow((x - Circle2_X), 2);
             double yr = Math.pow((y - Circle2_Y), 2);
             double ra = xr + yr;
@@ -187,17 +186,14 @@ public class SingleHandView extends View {
                     //初次进入的坐标
                     StartX = x;
                     StartY = y;
-                    //System.out.println("come in" + " " + x + " " + y);
                 }
                 else { //已经进入，这个用来检测是否是一个闭环
-
-                    if (!error && (Math.abs(x - StartX) > SmallCircleR * 2)) {
+                    if (!error && (Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) >= SmallCircleR * 2)) {
                         error = true;
                     }
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
                         System.out.println("come in");
                         ring3 = true; //当误差满足条件的时候就当做是一个闭环
-
                     }
                 }
             }else { //要是画出环的处理，暂时还没有想法
