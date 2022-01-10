@@ -11,6 +11,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+
+import java.util.ArrayList;
 
 /*
     user:王久铭
@@ -55,6 +58,9 @@ public class SingleHandView extends View {
     private boolean error = false; //当状态变为true时说明是第二次遇到符合误差的状态
     private float errorNum = 10.0F;
 
+    //记录按下的当前毫秒数
+    public ArrayList<Long> TimeArr = new ArrayList<Long>();
+
     //重写父类方法
     public SingleHandView(Context context) { //在new的时候调用
         super(context);
@@ -68,8 +74,14 @@ public class SingleHandView extends View {
         super(context, attr, defStyleAttr);
         init();
     }
+    //
+    @Override
+    protected void onLayout(boolean b, int i, int i1, int i2, int i3) {
+
+    }
 
     private void init() {
+
         path = new Path();
 
         paint = new Paint(); //初始化画笔
@@ -131,13 +143,18 @@ public class SingleHandView extends View {
         drawPath();
         canvas.drawBitmap(bitmap, 0, 0, null);
     }
+
     //绘制线条
     private void drawPath() {
         canvas.drawPath(path, paint);
     }
+
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
         int action = event.getAction();
+
         float x = event.getX();
         float y = event.getY();
         if (ring1 && !ring2) { //当前只显示第一个圆环
@@ -153,7 +170,6 @@ public class SingleHandView extends View {
                     //初次进入的坐标
                     StartX = x;
                     StartY = y;
-                    //System.out.println("come in" + " " + x + " " + y);
                 }
                 else { //已经进入，这个用来检测是否是一个闭环
 
@@ -170,11 +186,9 @@ public class SingleHandView extends View {
             }else { //要是画出环的处理，暂时还没有想法
 
             }
-
         }
         if (ring2 && !ring3) { //第二个圆环已经显示，与环1的判断一样
-            //System.out.println("bingo");
-            //System.out.println(index + " " + error);
+
             double xr = Math.pow((x - Circle2_X), 2);
             double yr = Math.pow((y - Circle2_Y), 2);
             double ra = xr + yr;
@@ -200,23 +214,46 @@ public class SingleHandView extends View {
 
             }
         }
-        //获取坐标进行画线
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
+        //根据不同状态，获取坐标进行画线
+        switch (action & MotionEvent.ACTION_MASK) { //
+            case MotionEvent.ACTION_DOWN: //单指按下触发
                 LastX = x;
                 LastY = y;
                 path.moveTo(LastX, LastY);
                 break;
             case MotionEvent.ACTION_MOVE:
-                float dx = Math.abs(x - LastX);
-                float dy = Math.abs(y - LastY);
-                if (dx > 3 || dy > 3)
-                    path.lineTo(x, y);
-                LastX = x;
-                LastY = y;
+
+                if (event.getPointerId(event.getActionIndex()) == 1 && event.getPointerCount() > 1) { //第二根手指
+                    System.out.println("滑动1");
+                }
+
+                if (event.getPointerId(event.getActionIndex()) == 0 && event.getPointerCount() == 1) { //判断是否是第一个手指（释放后，再次按下会默认是0）
+                    float dx = Math.abs(x - LastX);
+                    float dy = Math.abs(y - LastY);
+                    if (dx > 3 || dy > 3)
+                        path.lineTo(x, y);
+                    LastX = x;
+                    LastY = y;
+                }
                 break;
+            case MotionEvent.ACTION_POINTER_UP: //非第一根手指抬起触发
+                path.moveTo(event.getX(0), event.getY(0)); //第一根手指可能会有移动，更新一下位置，不然会出现直接将两点连线
+                break;
+            case MotionEvent.ACTION_POINTER_DOWN: //多指按下时触发
+                TimeArr.add(System.currentTimeMillis()); //获取当前毫秒数
+                if (TimeArr.size() > 1) {
+                    if (event.getPointerCount() > 1 && (TimeArr.get(TimeArr.size() - 1) - TimeArr.get(TimeArr.size() - 2)) <= 500) { //如果前后间隔的差值在500以内，而且有一个以上触摸点，那么就是双击
+                        ShowMenu(true); //显示菜单
+                        System.out.println("双击");
+                    }
+                }
+                break;
+
         }
         invalidate();
+        return true;
+    }
+    public boolean ShowMenu(boolean status) {
         return true;
     }
 }
