@@ -61,6 +61,9 @@ public class SingleHandView extends View {
     //记录按下的当前毫秒数
     public ArrayList<Long> TimeArr = new ArrayList<Long>();
 
+    //绘制的菜单半径
+    public float MenuRa = 0;
+
     //重写父类方法
     public SingleHandView(Context context) { //在new的时候调用
         super(context);
@@ -73,11 +76,6 @@ public class SingleHandView extends View {
     public SingleHandView(Context context, AttributeSet attr, int defStyleAttr) { //会在layout中使用，但会有style
         super(context, attr, defStyleAttr);
         init();
-    }
-    //
-    @Override
-    protected void onLayout(boolean b, int i, int i1, int i2, int i3) {
-
     }
 
     private void init() {
@@ -116,8 +114,9 @@ public class SingleHandView extends View {
         Circle3_X = high / 6 * 10;
         Circle3_Y = width / 3;
 
-        //width = getMeasuredWidth();
-        //high = getMeasuredHeight();
+        //设置菜单的半径
+        MenuRa = high / 6;
+
         //初始化bitmap和canvas
         bitmap = Bitmap.createBitmap(width, high, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
@@ -234,30 +233,37 @@ public class SingleHandView extends View {
                     LastY = y;
                 }
 
-                System.out.println(event.getPointerId(event.getActionIndex()));
+                //.out.println(event.getPointerId(event.getActionIndex()));
+                if (event.getPointerCount() > 1) {
+                    //System.out.println("第一根手指的位置:" + " " + event.getX(0) + " " + event.getY(0) + "第二根手指的位置:" + " " + event.getX(1) + " " + event.getY(1));
+                }
                 break;
             case MotionEvent.ACTION_POINTER_UP: //非第一根手指抬起触发
                 path.moveTo(event.getX(0), event.getY(0)); //第一根手指可能会有移动，更新一下位置，不然会出现直接将两点连线
+                ShowMenu(false,0,0);
                 break;
             case MotionEvent.ACTION_POINTER_DOWN: //多指按下时触发
-                System.out.println("come in" + event.getPointerId(event.getActionIndex()));
                 TimeArr.add(System.currentTimeMillis()); //获取当前毫秒数
                 if (TimeArr.size() > 1) {
                     if (event.getPointerCount() > 1 && (TimeArr.get(TimeArr.size() - 1) - TimeArr.get(TimeArr.size() - 2)) <= 500) { //如果前后间隔的差值在500以内，而且有一个以上触摸点，那么就是双击
-                        ShowMenu(true); //显示菜单
-                        System.out.println("双击");
+                        //显示菜单，并传入菜单出现的位置
+                        ShowMenu(true, event.getX(1), event.getY(1));
                     }
                 }
+                break;
+            case MotionEvent.ACTION_UP:
+                //当最后一根手指抬起时，清除所有元素（其实清不清都行，也没节省多少空间）
+                for (int i = 0; i < TimeArr.size() + 1; i ++) { TimeArr.remove(0); }
                 break;
         }
         invalidate();
         return true;
     }
-    public void ShowMenu(boolean status) {
+    public void ShowMenu(boolean status, float rx, float ry) {
         if (status) { //展开菜单
-
+            canvas.drawCircle(rx, ry - MenuRa, MenuRa, paint);
         }else { //关闭菜单
-
+            canvas.drawColor(0,PorterDuff.Mode.CLEAR);
         }
     }
 }
