@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -259,11 +260,27 @@ public class SingleHandView extends View {
         invalidate();
         return true;
     }
+    //一级菜单那显示
     public void ShowMenu(boolean status, float rx, float ry) {
         if (status) { //展开菜单
-            canvas.drawCircle(rx, ry - MenuRa, MenuRa, paint);
+            canvas.drawCircle(rx, ry - MenuRa * 3 / 2, MenuRa, paint); //设置菜单的图形数据
+            canvas.drawLine(rx, ry - MenuRa * 3 / 2 - MenuRa, rx, ry - MenuRa * 3 / 2 + MenuRa, paint); //菜单的左右分割线
+            paint.setTextSize(100); //画笔大小
+            paint.setStyle(Paint.Style.FILL); //画笔风格为填充
+            //paint.setTypeface(Typeface.DEFAULT_BOLD);
+            //设置文字的位置
+            canvas.drawText("颜",rx - MenuRa / 2 - MenuRa / 4, ry - MenuRa  / 2 * 3 - MenuRa / 4, paint);
+            canvas.drawText("色",rx - MenuRa / 2 - MenuRa / 4, ry - MenuRa  / 2 * 3 + MenuRa / 4, paint);
+            canvas.drawText("粗",rx - MenuRa / 2 + MenuRa / 3 * 2, ry - MenuRa  / 2 * 3 - MenuRa / 4, paint);
+            canvas.drawText("细",rx - MenuRa / 2 + MenuRa / 3 * 2, ry - MenuRa  / 2 * 3 + MenuRa / 4, paint);
+
+            //对画笔重新修改，使效果只显示在文字上
+            paint.setTextSize(36);
+            paint.setStyle(Paint.Style.STROKE);
+
         }else { //关闭菜单
-            canvas.drawColor(0,PorterDuff.Mode.CLEAR);
+            canvas.drawColor(0,PorterDuff.Mode.CLEAR); //其实就是清除画布
         }
     }
+
 }
