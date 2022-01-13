@@ -214,19 +214,17 @@ public class SingleHandView extends View {
 
             }
         }
+
         //根据不同状态，获取坐标进行画线
         switch (action & MotionEvent.ACTION_MASK) { //
+
             case MotionEvent.ACTION_DOWN: //单指按下触发
                 LastX = x;
                 LastY = y;
                 path.moveTo(LastX, LastY);
                 break;
+
             case MotionEvent.ACTION_MOVE:
-
-                if (event.getPointerId(event.getActionIndex()) == 1 && event.getPointerCount() > 1) { //第二根手指
-                    System.out.println("滑动1");
-                }
-
                 if (event.getPointerId(event.getActionIndex()) == 0 && event.getPointerCount() == 1) { //判断是否是第一个手指（释放后，再次按下会默认是0）
                     float dx = Math.abs(x - LastX);
                     float dy = Math.abs(y - LastY);
@@ -235,11 +233,14 @@ public class SingleHandView extends View {
                     LastX = x;
                     LastY = y;
                 }
+
+                System.out.println(event.getPointerId(event.getActionIndex()));
                 break;
             case MotionEvent.ACTION_POINTER_UP: //非第一根手指抬起触发
                 path.moveTo(event.getX(0), event.getY(0)); //第一根手指可能会有移动，更新一下位置，不然会出现直接将两点连线
                 break;
             case MotionEvent.ACTION_POINTER_DOWN: //多指按下时触发
+                System.out.println("come in" + event.getPointerId(event.getActionIndex()));
                 TimeArr.add(System.currentTimeMillis()); //获取当前毫秒数
                 if (TimeArr.size() > 1) {
                     if (event.getPointerCount() > 1 && (TimeArr.get(TimeArr.size() - 1) - TimeArr.get(TimeArr.size() - 2)) <= 500) { //如果前后间隔的差值在500以内，而且有一个以上触摸点，那么就是双击
@@ -248,12 +249,15 @@ public class SingleHandView extends View {
                     }
                 }
                 break;
-
         }
         invalidate();
         return true;
     }
-    public boolean ShowMenu(boolean status) {
-        return true;
+    public void ShowMenu(boolean status) {
+        if (status) { //展开菜单
+
+        }else { //关闭菜单
+
+        }
     }
 }
