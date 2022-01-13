@@ -3,10 +3,13 @@ package com.example.modeswitch;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -14,6 +17,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.ColorRes;
+
+import java.sql.Ref;
 import java.util.ArrayList;
 
 /*
@@ -64,6 +70,11 @@ public class SingleHandView extends View {
 
     //绘制的菜单半径
     public float MenuRa = 0;
+    //菜单的圆心
+    public float MenuX = 0;
+    public float MenuY = 0;
+    //菜单是否展开默认为false
+    public boolean MenuIn = false;
 
     //重写父类方法
     public SingleHandView(Context context) { //在new的时候调用
@@ -98,6 +109,7 @@ public class SingleHandView extends View {
     protected void onMeasure(int widthMeasureSpec, int highMeasureSpec) {
         super.onMeasure(widthMeasureSpec, highMeasureSpec);
         //布局的宽高都是由该方法指定的
+
         //但指定快件的宽高需要测量
         width = MeasureSpec.getSize(widthMeasureSpec); //获取屏幕宽度
         high = MeasureSpec.getSize(highMeasureSpec); //获取屏幕高度
@@ -157,6 +169,7 @@ public class SingleHandView extends View {
 
         float x = event.getX();
         float y = event.getY();
+
         if (ring1 && !ring2) { //当前只显示第一个圆环
             //求出当前位置与圆心坐标差值的平方
             double xr = Math.pow((x - Circle1_X), 2);
@@ -225,6 +238,14 @@ public class SingleHandView extends View {
                 break;
 
             case MotionEvent.ACTION_MOVE:
+
+                if (event.getPointerCount() > 1) {
+                    //一级菜单高亮
+                    System.out.println("高亮");
+                    ShowMenu(MenuIn, 100, 100);
+                    infShowMenu(event.getX(1), event.getY(1));
+                }
+                
                 if (event.getPointerId(event.getActionIndex()) == 0 && event.getPointerCount() == 1) { //判断是否是第一个手指（释放后，再次按下会默认是0）
                     float dx = Math.abs(x - LastX);
                     float dy = Math.abs(y - LastY);
@@ -233,14 +254,10 @@ public class SingleHandView extends View {
                     LastX = x;
                     LastY = y;
                 }
-
-                //.out.println(event.getPointerId(event.getActionIndex()));
-                if (event.getPointerCount() > 1) {
-                    //System.out.println("第一根手指的位置:" + " " + event.getX(0) + " " + event.getY(0) + "第二根手指的位置:" + " " + event.getX(1) + " " + event.getY(1));
-                }
                 break;
             case MotionEvent.ACTION_POINTER_UP: //非第一根手指抬起触发
                 path.moveTo(event.getX(0), event.getY(0)); //第一根手指可能会有移动，更新一下位置，不然会出现直接将两点连线
+                MenuIn = false;
                 ShowMenu(false,0,0);
                 break;
             case MotionEvent.ACTION_POINTER_DOWN: //多指按下时触发
@@ -248,7 +265,8 @@ public class SingleHandView extends View {
                 if (TimeArr.size() > 1) {
                     if (event.getPointerCount() > 1 && (TimeArr.get(TimeArr.size() - 1) - TimeArr.get(TimeArr.size() - 2)) <= 500) { //如果前后间隔的差值在500以内，而且有一个以上触摸点，那么就是双击
                         //显示菜单，并传入菜单出现的位置
-                        ShowMenu(true, event.getX(1), event.getY(1));
+                        MenuIn = true;
+                        ShowMenu(true, event.getX(1), event.getY(1)); //传入当前双击的位置
                     }
                 }
                 break;
@@ -261,26 +279,61 @@ public class SingleHandView extends View {
         return true;
     }
     //一级菜单那显示
-    public void ShowMenu(boolean status, float rx, float ry) {
-        if (status) { //展开菜单
-            canvas.drawCircle(rx, ry - MenuRa * 3 / 2, MenuRa, paint); //设置菜单的图形数据
-            canvas.drawLine(rx, ry - MenuRa * 3 / 2 - MenuRa, rx, ry - MenuRa * 3 / 2 + MenuRa, paint); //菜单的左右分割线
-            paint.setTextSize(100); //画笔大小
-            paint.setStyle(Paint.Style.FILL); //画笔风格为填充
-            //paint.setTypeface(Typeface.DEFAULT_BOLD);
-            //设置文字的位置
-            canvas.drawText("颜",rx - MenuRa / 2 - MenuRa / 4, ry - MenuRa  / 2 * 3 - MenuRa / 4, paint);
-            canvas.drawText("色",rx - MenuRa / 2 - MenuRa / 4, ry - MenuRa  / 2 * 3 + MenuRa / 4, paint);
-            canvas.drawText("粗",rx - MenuRa / 2 + MenuRa / 3 * 2, ry - MenuRa  / 2 * 3 - MenuRa / 4, paint);
-            canvas.drawText("细",rx - MenuRa / 2 + MenuRa / 3 * 2, ry - MenuRa  / 2 * 3 + MenuRa / 4, paint);
+    public void ShowMenu(boolean status, float rx, float ry) { //根据双击位置进行调整
+        //菜单圆心
+        MenuX = rx;
+        MenuY = ry - MenuRa * 3 / 2;
 
-            //对画笔重新修改，使效果只显示在文字上
-            paint.setTextSize(36);
-            paint.setStyle(Paint.Style.STROKE);
+        Paint MenuP = new Paint();
+        MenuP.setTextSize(100); //文字大小
+        MenuP.setStyle(Paint.Style.FILL); //画笔风格为填充
+        MenuP.setTypeface(Typeface.DEFAULT_BOLD); //粗体
+
+        System.out.println(status);
+
+        if (status) { //展开菜单
+            //测试
+            //infShowMenu(rx - MenuRa / 2 - MenuRa / 4,ry - MenuRa  / 2 * 3 - MenuRa / 4);
+
+            canvas.drawCircle(MenuX, MenuY, MenuRa, paint); //设置菜单的图形数据
+            canvas.drawLine(MenuX, MenuY - MenuRa, MenuX, MenuY + MenuRa, paint); //菜单的左右分割线
+
+            //设置文字的位置
+            canvas.drawText("颜",rx - MenuRa / 2 - MenuRa / 4, ry - MenuRa  / 2 * 3 - MenuRa / 4, MenuP);
+            canvas.drawText("色",rx - MenuRa / 2 - MenuRa / 4, ry - MenuRa  / 2 * 3 + MenuRa / 4, MenuP);
+            canvas.drawText("粗",rx - MenuRa / 2 + MenuRa / 3 * 2, ry - MenuRa  / 2 * 3 - MenuRa / 4, MenuP);
+            canvas.drawText("细",rx - MenuRa / 2 + MenuRa / 3 * 2, ry - MenuRa  / 2 * 3 + MenuRa / 4, MenuP);
 
         }else { //关闭菜单
             canvas.drawColor(0,PorterDuff.Mode.CLEAR); //其实就是清除画布
         }
     }
+    //一级菜单的高亮显示
+    public void infShowMenu(float in_x, float in_y) { //传入当前第二根手指的位置，用来判断是否在菜单范围内
+        //求出当前以菜单为圆心，第二根手指位置为边界的圆的方程
+        double x = Math.pow((MenuX - in_x), 2);
+        double y = Math.pow((MenuY - in_y), 2);
+        double r = x + y;
+        //设置圆弧范围
+        RectF rectF = new RectF(MenuX - MenuRa, MenuY - MenuRa, MenuX + MenuRa, MenuY + MenuRa);
 
+        Paint ArcP = new Paint();
+        ArcP.setColor(Color.GRAY); //圆弧颜色
+        ArcP.setStyle(Paint.Style.FILL); //效果为填充
+        ArcP.setStrokeWidth(5); //设置大小
+
+        canvas.drawColor(0,PorterDuff.Mode.CLEAR); //画之前将画布清除
+
+        if (r <= Math.pow(MenuRa, 2) && MenuIn && (in_x < MenuX)) { //当手指的坐标在园内，一级菜单已经展开，而且位置在左
+            //颜色菜单高亮
+            canvas.drawArc(rectF, 90, 180, true, ArcP); //从90度开始，画180度，连接圆心
+
+        }else if (r <= Math.pow(MenuRa, 2) && MenuIn && (in_x > MenuX)) { //像素菜单高亮
+            canvas.drawArc(rectF, 90, -180, true, ArcP); //从90度反方向画180度
+        }else {}
+    }
+    //二级菜单显示
+    public void showSeMenu() {
+
+    }
 }
