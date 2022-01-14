@@ -68,6 +68,9 @@ public class SingleHandView extends View {
     //记录按下的当前毫秒数
     private ArrayList<Long> TimeArr = new ArrayList<Long>();
 
+    /*
+    一级菜单变量
+     */
     //绘制的菜单半径
     private float MenuRa = 0;
     //菜单的圆心
@@ -78,6 +81,13 @@ public class SingleHandView extends View {
     //菜单双击位置
     private float Click_x = 0;
     private float Click_y = 0;
+
+    /*
+    一级菜单高亮变量
+     */
+    //当前手指位置
+    private float Tou_x = 0;
+    private float Tou_y = 0;
 
     //重写父类方法
     public SingleHandView(Context context) { //在new的时候调用
@@ -155,21 +165,21 @@ public class SingleHandView extends View {
             canvas.drawCircle(Circle3_X, Circle3_Y, SmallCircleR, paint);
         }
 
-        if (MenuIn) {
+        infShowMenu(Tou_x, Tou_y);
+
+        if (MenuIn) { //展开一级菜单
             ShowMenu(true, Click_x, Click_y);
         }else {
             ShowMenu(false,0,0);
         }
+
 
         drawPath();
         canvas.drawBitmap(bitmap, 0, 0, null);
     }
 
     //绘制线条
-    private void drawPath() {
-        canvas.drawPath(path, paint);
-    }
-
+    private void drawPath() { canvas.drawPath(path, paint); }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -228,7 +238,6 @@ public class SingleHandView extends View {
                         error = true;
                     }
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
-                        System.out.println("come in");
                         ring3 = true; //当误差满足条件的时候就当做是一个闭环
                     }
                 }
@@ -249,8 +258,9 @@ public class SingleHandView extends View {
             case MotionEvent.ACTION_MOVE:
 
                 if (event.getPointerCount() > 1) {
-                    //一级菜单高亮
-                    infShowMenu(event.getX(1), event.getY(1));
+                    //第二根手指的位置
+                    Tou_x = event.getX(1);
+                    Tou_y = event.getY(1);
                 }
 
                 if (event.getPointerId(event.getActionIndex()) == 0 && event.getPointerCount() == 1) { //判断是否是第一个手指（释放后，再次按下会默认是0）
@@ -279,7 +289,7 @@ public class SingleHandView extends View {
                 break;
             case MotionEvent.ACTION_UP:
                 //当最后一根手指抬起时，清除所有元素（其实清不清都行，也没节省多少空间）
-                for (int i = 0; i < TimeArr.size() + 1; i ++) { TimeArr.remove(0); }
+                while (TimeArr.size() > 0) { TimeArr.remove(0); }
                 break;
         }
         invalidate();
@@ -296,12 +306,8 @@ public class SingleHandView extends View {
         MenuP.setStyle(Paint.Style.FILL); //画笔风格为填充
         MenuP.setTypeface(Typeface.DEFAULT_BOLD); //粗体
 
-        System.out.println(status);
 
         if (status) { //展开菜单
-            //测试
-            //infShowMenu(rx - MenuRa / 2 - MenuRa / 4,ry - MenuRa  / 2 * 3 - MenuRa / 4);
-
             canvas.drawCircle(MenuX, MenuY, MenuRa, paint); //设置菜单的图形数据
             canvas.drawLine(MenuX, MenuY - MenuRa, MenuX, MenuY + MenuRa, paint); //菜单的左右分割线
 
@@ -321,11 +327,12 @@ public class SingleHandView extends View {
         double x = Math.pow((MenuX - in_x), 2);
         double y = Math.pow((MenuY - in_y), 2);
         double r = x + y;
+
         //设置圆弧范围
         RectF rectF = new RectF(MenuX - MenuRa, MenuY - MenuRa, MenuX + MenuRa, MenuY + MenuRa);
 
         Paint ArcP = new Paint();
-        ArcP.setColor(Color.GRAY); //圆弧颜色
+        ArcP.setColor(Color.LTGRAY); //圆弧颜色
         ArcP.setStyle(Paint.Style.FILL); //效果为填充
         ArcP.setStrokeWidth(5); //设置大小
 
@@ -337,7 +344,8 @@ public class SingleHandView extends View {
 
         }else if (r <= Math.pow(MenuRa, 2) && MenuIn && (in_x > MenuX)) { //像素菜单高亮
             canvas.drawArc(rectF, 90, -180, true, ArcP); //从90度反方向画180度
-        }else {}
+        }else {
+        }
     }
     //二级菜单显示
     public void showSeMenu() {
