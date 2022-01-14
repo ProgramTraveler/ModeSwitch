@@ -83,11 +83,21 @@ public class SingleHandView extends View {
     private float Click_y = 0;
 
     /*
-    一级菜单高亮变量
+    一级菜单展开的依据
      */
     //当前手指位置
     private float Tou_x = 0;
     private float Tou_y = 0;
+    //选择的菜单
+    private boolean ColMenu = true;
+    private boolean PixMenu = true;
+
+    /*
+    二级菜单的高亮变量
+     */
+    private boolean MenuSeCol = false; //一级菜单还未选择颜色区域
+    private boolean MenuSePix = false; //一级菜单还未选择像素区域
+
 
     //重写父类方法
     public SingleHandView(Context context) { //在new的时候调用
@@ -165,13 +175,20 @@ public class SingleHandView extends View {
             canvas.drawCircle(Circle3_X, Circle3_Y, SmallCircleR, paint);
         }
 
+        if (MenuIn) { //展开一级菜单
+
+            if (ColMenu) ShowColMenu(true);
+            else ShowColMenu(false);
+
+            if (PixMenu) ShowPixMenu(true);
+            else ShowPixMenu(false);
+        }else {
+            ShowColMenu(false);
+            ShowPixMenu(false);
+        }
+
         infShowMenu(Tou_x, Tou_y);
 
-        if (MenuIn) { //展开一级菜单
-            ShowMenu(true, Click_x, Click_y);
-        }else {
-            ShowMenu(false,0,0);
-        }
 
 
         drawPath();
@@ -295,11 +312,11 @@ public class SingleHandView extends View {
         invalidate();
         return true;
     }
-    //一级菜单那显示
-    public void ShowMenu(boolean status, float rx, float ry) { //根据双击位置进行调整
+    //颜色一级菜单显示
+    public void ShowColMenu(boolean status) { //根据双击位置进行调整
         //菜单圆心
-        MenuX = rx;
-        MenuY = ry - MenuRa * 3 / 2;
+        MenuX = Click_x;
+        MenuY = Click_y - MenuRa * 3 / 2;
 
         Paint MenuP = new Paint();
         MenuP.setTextSize(100); //文字大小
@@ -312,16 +329,38 @@ public class SingleHandView extends View {
             canvas.drawLine(MenuX, MenuY - MenuRa, MenuX, MenuY + MenuRa, paint); //菜单的左右分割线
 
             //设置文字的位置
-            canvas.drawText("颜",rx - MenuRa / 2 - MenuRa / 4, ry - MenuRa  / 2 * 3 - MenuRa / 4, MenuP);
-            canvas.drawText("色",rx - MenuRa / 2 - MenuRa / 4, ry - MenuRa  / 2 * 3 + MenuRa / 4, MenuP);
-            canvas.drawText("粗",rx - MenuRa / 2 + MenuRa / 3 * 2, ry - MenuRa  / 2 * 3 - MenuRa / 4, MenuP);
-            canvas.drawText("细",rx - MenuRa / 2 + MenuRa / 3 * 2, ry - MenuRa  / 2 * 3 + MenuRa / 4, MenuP);
+            canvas.drawText("颜",Click_x - MenuRa / 2 - MenuRa / 4, Click_y - MenuRa  / 2 * 3 - MenuRa / 4, MenuP);
+            canvas.drawText("色",Click_x - MenuRa / 2 - MenuRa / 4, Click_y - MenuRa  / 2 * 3 + MenuRa / 4, MenuP);
 
         }else { //关闭菜单
             canvas.drawColor(0,PorterDuff.Mode.CLEAR); //其实就是清除画布
         }
     }
-    //一级菜单的高亮显示
+    //像素一级菜单
+    public void ShowPixMenu(boolean status) {
+        //菜单圆心
+        MenuX = Click_x;
+        MenuY = Click_y - MenuRa * 3 / 2;
+
+        Paint MenuP = new Paint();
+        MenuP.setTextSize(100); //文字大小
+        MenuP.setStyle(Paint.Style.FILL); //画笔风格为填充
+        MenuP.setTypeface(Typeface.DEFAULT_BOLD); //粗体
+
+
+        if (status) { //展开菜单
+            canvas.drawCircle(MenuX, MenuY, MenuRa, paint); //设置菜单的图形数据
+            canvas.drawLine(MenuX, MenuY - MenuRa, MenuX, MenuY + MenuRa, paint); //菜单的左右分割线
+
+            //设置文字的位置
+            canvas.drawText("粗",Click_x - MenuRa / 2 + MenuRa / 3 * 2, Click_y - MenuRa  / 2 * 3 - MenuRa / 4, MenuP);
+            canvas.drawText("细",Click_x - MenuRa / 2 + MenuRa / 3 * 2, Click_y - MenuRa  / 2 * 3 + MenuRa / 4, MenuP);
+
+        }else { //关闭菜单
+            canvas.drawColor(0,PorterDuff.Mode.CLEAR); //其实就是清除画布
+        }
+    }
+    //一级菜单展开二级菜单
     public void infShowMenu(float in_x, float in_y) { //传入当前第二根手指的位置，用来判断是否在菜单范围内
         //求出当前以菜单为圆心，第二根手指位置为边界的圆的方程
         double x = Math.pow((MenuX - in_x), 2);
@@ -336,19 +375,43 @@ public class SingleHandView extends View {
         ArcP.setStyle(Paint.Style.FILL); //效果为填充
         ArcP.setStrokeWidth(5); //设置大小
 
-        canvas.drawColor(0,PorterDuff.Mode.CLEAR); //画之前将画布清除
+        //canvas.drawColor(0,PorterDuff.Mode.CLEAR); //画之前将画布清除
 
         if (r <= Math.pow(MenuRa, 2) && MenuIn && (in_x < MenuX)) { //当手指的坐标在园内，一级菜单已经展开，而且位置在左
             //颜色菜单高亮
-            canvas.drawArc(rectF, 90, 180, true, ArcP); //从90度开始，画180度，连接圆心
+            //canvas.drawArc(rectF, 90, 180, true, ArcP); //从90度开始，画180度，连接圆心
+            ColMenu = false; //一级颜色菜单关闭
+            MenuSeCol = true; //二级颜色菜单打开
+            MenuSePix = false; //二级像素菜单关闭
+
+            showSeMenu(rectF, true, false, in_x, in_y);
 
         }else if (r <= Math.pow(MenuRa, 2) && MenuIn && (in_x > MenuX)) { //像素菜单高亮
             canvas.drawArc(rectF, 90, -180, true, ArcP); //从90度反方向画180度
         }else {
+            ColMenu = true;
         }
     }
     //二级菜单显示
-    public void showSeMenu() {
+    public void showSeMenu(RectF rectF, boolean Col, boolean Pix, float inf_x, float inf_y) {
 
+        Paint SePaint = new Paint();
+        SePaint.setStrokeWidth(5);
+        SePaint.setStyle(Paint.Style.FILL);
+
+        if (Col && !Pix) {
+            System.out.println("二级颜色");
+
+            SePaint.setColor(Color.BLUE);
+            canvas.drawArc(rectF, 90, 60, true, SePaint); //从90度开始，画180度，连接圆心
+            SePaint.setColor(Color.YELLOW);
+            canvas.drawArc(rectF, 150, 60, true, SePaint);
+            SePaint.setColor(Color.RED);
+            canvas.drawArc(rectF, 210, 60, true, SePaint);
+        }
+
+        if (!Col && Pix) {
+            
+        }
     }
 }
