@@ -66,15 +66,18 @@ public class SingleHandView extends View {
     private float errorNum = 10.0F;
 
     //记录按下的当前毫秒数
-    public ArrayList<Long> TimeArr = new ArrayList<Long>();
+    private ArrayList<Long> TimeArr = new ArrayList<Long>();
 
     //绘制的菜单半径
-    public float MenuRa = 0;
+    private float MenuRa = 0;
     //菜单的圆心
-    public float MenuX = 0;
-    public float MenuY = 0;
-    //菜单是否展开默认为false
-    public boolean MenuIn = false;
+    private float MenuX = 0;
+    private float MenuY = 0;
+    //一级菜单是否展开默认为false
+    private boolean MenuIn = false;
+    //菜单双击位置
+    private float Click_x = 0;
+    private float Click_y = 0;
 
     //重写父类方法
     public SingleHandView(Context context) { //在new的时候调用
@@ -139,7 +142,6 @@ public class SingleHandView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
         //绘制第一个环
         canvas.drawCircle(Circle1_X, Circle1_Y, BigCircleR, paint);
         canvas.drawCircle(Circle1_X, Circle1_Y, SmallCircleR, paint);
@@ -152,6 +154,13 @@ public class SingleHandView extends View {
             canvas.drawCircle(Circle3_X, Circle3_Y, BigCircleR, paint);
             canvas.drawCircle(Circle3_X, Circle3_Y, SmallCircleR, paint);
         }
+
+        if (MenuIn) {
+            ShowMenu(true, Click_x, Click_y);
+        }else {
+            ShowMenu(false,0,0);
+        }
+
         drawPath();
         canvas.drawBitmap(bitmap, 0, 0, null);
     }
@@ -241,11 +250,9 @@ public class SingleHandView extends View {
 
                 if (event.getPointerCount() > 1) {
                     //一级菜单高亮
-                    System.out.println("高亮");
-                    ShowMenu(MenuIn, 100, 100);
                     infShowMenu(event.getX(1), event.getY(1));
                 }
-                
+
                 if (event.getPointerId(event.getActionIndex()) == 0 && event.getPointerCount() == 1) { //判断是否是第一个手指（释放后，再次按下会默认是0）
                     float dx = Math.abs(x - LastX);
                     float dy = Math.abs(y - LastY);
@@ -258,7 +265,6 @@ public class SingleHandView extends View {
             case MotionEvent.ACTION_POINTER_UP: //非第一根手指抬起触发
                 path.moveTo(event.getX(0), event.getY(0)); //第一根手指可能会有移动，更新一下位置，不然会出现直接将两点连线
                 MenuIn = false;
-                ShowMenu(false,0,0);
                 break;
             case MotionEvent.ACTION_POINTER_DOWN: //多指按下时触发
                 TimeArr.add(System.currentTimeMillis()); //获取当前毫秒数
@@ -266,7 +272,8 @@ public class SingleHandView extends View {
                     if (event.getPointerCount() > 1 && (TimeArr.get(TimeArr.size() - 1) - TimeArr.get(TimeArr.size() - 2)) <= 500) { //如果前后间隔的差值在500以内，而且有一个以上触摸点，那么就是双击
                         //显示菜单，并传入菜单出现的位置
                         MenuIn = true;
-                        ShowMenu(true, event.getX(1), event.getY(1)); //传入当前双击的位置
+                        Click_x = event.getX(1); //双击位置
+                        Click_y = event.getY(1);
                     }
                 }
                 break;
