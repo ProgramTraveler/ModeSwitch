@@ -400,7 +400,8 @@ public class SingleHandView extends View {
         SePaint.setStyle(Paint.Style.FILL);
 
         if (Col && !Pix) { //展开二级颜色菜单
-            System.out.println("二级颜色");
+
+            //System.out.println("二级颜色");
 
             SePaint.setColor(Color.BLUE);
             canvas.drawArc(rectF, 90, 60, true, SePaint); //从90度开始，画180度，连接圆心
@@ -408,6 +409,18 @@ public class SingleHandView extends View {
             canvas.drawArc(rectF, 150, 60, true, SePaint);
             SePaint.setColor(Color.RED);
             canvas.drawArc(rectF, 210, 60, true, SePaint);
+
+
+            Paint SeCHLPaint = new Paint();
+
+            SeCHLPaint.setStyle(Paint.Style.STROKE);
+            SeCHLPaint.setColor(Color.BLACK);
+            SeCHLPaint.setStrokeWidth(20);
+
+            if ((inf_y <= (Math.tan(Math.PI * 150 / 180)) * (inf_x - MenuX) + MenuY) && inf_x <= MenuX) { //红色区域高亮
+                canvas.drawArc(rectF,210, 60, true, SeCHLPaint);
+            }
+            //if ((inf_y <= ))
         }
 
         if (!Col && Pix) {
