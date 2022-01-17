@@ -399,7 +399,7 @@ public class SingleHandView extends View {
         SePaint.setStrokeWidth(5);
         SePaint.setStyle(Paint.Style.FILL);
 
-        if (Col && !Pix) {
+        if (Col && !Pix) { //展开二级颜色菜单
             System.out.println("二级颜色");
 
             SePaint.setColor(Color.BLUE);
@@ -411,7 +411,7 @@ public class SingleHandView extends View {
         }
 
         if (!Col && Pix) {
-            
+
         }
     }
 }
