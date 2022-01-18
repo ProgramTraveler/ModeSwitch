@@ -119,16 +119,6 @@ public class SingleHandView extends View {
 
     private void init() {
 
-        /*paint = new Paint(); //初始化画笔
-        paint.setAntiAlias(true); //抗锯齿
-        paint.setColor(getResources().getColor(R.color.black)); //画笔颜色
-        paint.setDither(true);
-        paint.setStyle(Paint.Style.STROKE); //画笔风格，这里仅是画出边界，不填充
-        paint.setStrokeJoin(Paint.Join.ROUND); //结合处为圆角
-        paint.setStrokeCap(Paint.Cap.ROUND); //设置转弯处为圆角
-        paint.setTextSize(36); //绘制文字大小，单位px
-        paint.setStrokeWidth(5); //画笔粗细*/
-
         MyPaint = new Paint();
         MyPaint.setColor(Color.BLACK);
         MyPaint.setStrokeWidth(3);
@@ -310,13 +300,14 @@ public class SingleHandView extends View {
                 pathInfArrayList.get(PathInfNum).path.moveTo(event.getX(0), event.getY(0)); //第一根手指可能会有移动，更新一下位置，不然会出现直接将两点连线
                 MenuIn = false;
 
-                if ((Tou_y <= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x <= MenuX) { //选择红色
+
+                if ((Tou_y <= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x <= MenuX && MenuSeCol && !MenuSePix) { //选择红色
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.RED);
                 }
-                if ((Tou_y >= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && (Tou_y <= (Math.tan(Math.PI * 150 /180)) * (Tou_x - MenuX) + MenuY)) { //选择黄色
+                if ((Tou_y >= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && (Tou_y <= (Math.tan(Math.PI * 150 /180)) * (Tou_x - MenuX) + MenuY) && MenuSeCol && !MenuSePix) { //选择黄色
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.YELLOW);
                 }
-                if ((Tou_y >= (Math.tan(Math.PI * 150 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x <= MenuX) { //选择蓝色
+                if ((Tou_y >= (Math.tan(Math.PI * 150 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x <= MenuX && MenuSeCol && !MenuSePix) { //选择蓝色
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.BLUE);
                 }
 
