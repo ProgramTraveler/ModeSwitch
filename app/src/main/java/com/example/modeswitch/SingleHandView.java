@@ -29,12 +29,14 @@ import java.util.ArrayList;
  */
 
 public class SingleHandView extends View {
-    private Paint paint; //绘制画线的画笔
+    private ArrayList<PathInf> pathInfArrayList;
+    private int PathInfNum = 0; //当前下标指示
+
     private Paint MyPaint; //绘制图形的画笔
 
     private int width = 0; //屏幕的宽度
     private int high = 0; //屏幕的高度
-    private Path path; //记录用户绘制的Path
+
     private Canvas canvas; //内存中创建的Canvas
     private Bitmap bitmap; //缓存绘制的内容
 
@@ -117,9 +119,7 @@ public class SingleHandView extends View {
 
     private void init() {
 
-        path = new Path();
-
-        paint = new Paint(); //初始化画笔
+        /*paint = new Paint(); //初始化画笔
         paint.setAntiAlias(true); //抗锯齿
         paint.setColor(getResources().getColor(R.color.black)); //画笔颜色
         paint.setDither(true);
@@ -127,12 +127,17 @@ public class SingleHandView extends View {
         paint.setStrokeJoin(Paint.Join.ROUND); //结合处为圆角
         paint.setStrokeCap(Paint.Cap.ROUND); //设置转弯处为圆角
         paint.setTextSize(36); //绘制文字大小，单位px
-        paint.setStrokeWidth(5); //画笔粗细
+        paint.setStrokeWidth(5); //画笔粗细*/
 
         MyPaint = new Paint();
         MyPaint.setColor(Color.BLACK);
         MyPaint.setStrokeWidth(3);
         MyPaint.setStyle(Paint.Style.STROKE);
+
+        pathInfArrayList = new ArrayList<>(); //记录不同情况的路径
+
+        pathInfArrayList.add(new PathInf());
+
     }
 
     @Override
@@ -202,7 +207,9 @@ public class SingleHandView extends View {
     }
 
     //绘制线条
-    private void drawPath() { canvas.drawPath(path, paint); }
+    private void drawPath() {
+        for (int i = 0; i < pathInfArrayList.size(); i ++) { canvas.drawPath(pathInfArrayList.get(i).path, pathInfArrayList.get(i).paint); }
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -275,7 +282,7 @@ public class SingleHandView extends View {
             case MotionEvent.ACTION_DOWN: //单指按下触发
                 LastX = x;
                 LastY = y;
-                path.moveTo(LastX, LastY);
+                pathInfArrayList.get(PathInfNum).path.moveTo(LastX, LastY);
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -290,23 +297,27 @@ public class SingleHandView extends View {
                     float dx = Math.abs(x - LastX);
                     float dy = Math.abs(y - LastY);
                     if (dx > 3 || dy > 3)
-                        path.lineTo(x, y);
+                        pathInfArrayList.get(PathInfNum).path.lineTo(x, y);
                     LastX = x;
                     LastY = y;
                 }
                 break;
             case MotionEvent.ACTION_POINTER_UP: //非第一根手指抬起触发
-                path.moveTo(event.getX(0), event.getY(0)); //第一根手指可能会有移动，更新一下位置，不然会出现直接将两点连线
+
+                PathInfNum ++;
+                pathInfArrayList.add(new PathInf());
+
+                pathInfArrayList.get(PathInfNum).path.moveTo(event.getX(0), event.getY(0)); //第一根手指可能会有移动，更新一下位置，不然会出现直接将两点连线
                 MenuIn = false;
 
                 if ((Tou_y <= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x <= MenuX) { //选择红色
-                    paint.setColor(Color.RED);
+                    pathInfArrayList.get(PathInfNum).paint.setColor(Color.RED);
                 }
                 if ((Tou_y >= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && (Tou_y <= (Math.tan(Math.PI * 150 /180)) * (Tou_x - MenuX) + MenuY)) { //选择黄色
-                    paint.setColor(Color.YELLOW);
+                    pathInfArrayList.get(PathInfNum).paint.setColor(Color.YELLOW);
                 }
                 if ((Tou_y >= (Math.tan(Math.PI * 150 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x <= MenuX) { //选择蓝色
-                    paint.setColor(Color.BLUE);
+                    pathInfArrayList.get(PathInfNum).paint.setColor(Color.BLUE);
                 }
 
                 break;
