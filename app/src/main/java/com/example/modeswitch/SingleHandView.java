@@ -29,7 +29,9 @@ import java.util.ArrayList;
  */
 
 public class SingleHandView extends View {
-    private Paint paint; //绘制的画笔
+    private Paint paint; //绘制画线的画笔
+    private Paint MyPaint; //绘制图形的画笔
+
     private int width = 0; //屏幕的宽度
     private int high = 0; //屏幕的高度
     private Path path; //记录用户绘制的Path
@@ -125,7 +127,12 @@ public class SingleHandView extends View {
         paint.setStrokeJoin(Paint.Join.ROUND); //结合处为圆角
         paint.setStrokeCap(Paint.Cap.ROUND); //设置转弯处为圆角
         paint.setTextSize(36); //绘制文字大小，单位px
-        paint.setStrokeWidth(3); //画笔粗细
+        paint.setStrokeWidth(5); //画笔粗细
+
+        MyPaint = new Paint();
+        MyPaint.setColor(Color.BLACK);
+        MyPaint.setStrokeWidth(3);
+        MyPaint.setStyle(Paint.Style.STROKE);
     }
 
     @Override
@@ -162,17 +169,18 @@ public class SingleHandView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
         //绘制第一个环
-        canvas.drawCircle(Circle1_X, Circle1_Y, BigCircleR, paint);
-        canvas.drawCircle(Circle1_X, Circle1_Y, SmallCircleR, paint);
+        canvas.drawCircle(Circle1_X, Circle1_Y, BigCircleR, MyPaint);
+        canvas.drawCircle(Circle1_X, Circle1_Y, SmallCircleR, MyPaint);
 
         if (ring2) { //显示第二个环
-            canvas.drawCircle(Circle2_X, Circle2_Y, BigCircleR, paint);
-            canvas.drawCircle(Circle2_X, Circle2_Y, SmallCircleR, paint);
+            canvas.drawCircle(Circle2_X, Circle2_Y, BigCircleR, MyPaint);
+            canvas.drawCircle(Circle2_X, Circle2_Y, SmallCircleR, MyPaint);
         }
         if (ring3) { //显示第三个环
-            canvas.drawCircle(Circle3_X, Circle3_Y, BigCircleR, paint);
-            canvas.drawCircle(Circle3_X, Circle3_Y, SmallCircleR, paint);
+            canvas.drawCircle(Circle3_X, Circle3_Y, BigCircleR, MyPaint);
+            canvas.drawCircle(Circle3_X, Circle3_Y, SmallCircleR, MyPaint);
         }
 
         if (MenuIn) { //展开一级菜单
@@ -188,8 +196,6 @@ public class SingleHandView extends View {
         }
 
         infShowMenu(Tou_x, Tou_y);
-
-
 
         drawPath();
         canvas.drawBitmap(bitmap, 0, 0, null);
@@ -292,6 +298,17 @@ public class SingleHandView extends View {
             case MotionEvent.ACTION_POINTER_UP: //非第一根手指抬起触发
                 path.moveTo(event.getX(0), event.getY(0)); //第一根手指可能会有移动，更新一下位置，不然会出现直接将两点连线
                 MenuIn = false;
+
+                if ((Tou_y <= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x <= MenuX) { //选择红色
+                    paint.setColor(Color.RED);
+                }
+                if ((Tou_y >= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && (Tou_y <= (Math.tan(Math.PI * 150 /180)) * (Tou_x - MenuX) + MenuY)) { //选择黄色
+                    paint.setColor(Color.YELLOW);
+                }
+                if ((Tou_y >= (Math.tan(Math.PI * 150 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x <= MenuX) { //选择蓝色
+                    paint.setColor(Color.BLUE);
+                }
+
                 break;
             case MotionEvent.ACTION_POINTER_DOWN: //多指按下时触发
                 TimeArr.add(System.currentTimeMillis()); //获取当前毫秒数
@@ -325,8 +342,8 @@ public class SingleHandView extends View {
 
 
         if (status) { //展开菜单
-            canvas.drawCircle(MenuX, MenuY, MenuRa, paint); //设置菜单的图形数据
-            canvas.drawLine(MenuX, MenuY - MenuRa, MenuX, MenuY + MenuRa, paint); //菜单的左右分割线
+            canvas.drawCircle(MenuX, MenuY, MenuRa, MyPaint); //设置菜单的图形数据
+            canvas.drawLine(MenuX, MenuY - MenuRa, MenuX, MenuY + MenuRa, MyPaint); //菜单的左右分割线
 
             //设置文字的位置
             canvas.drawText("颜",Click_x - MenuRa / 2 - MenuRa / 4, Click_y - MenuRa  / 2 * 3 - MenuRa / 4, MenuP);
@@ -349,8 +366,8 @@ public class SingleHandView extends View {
 
 
         if (status) { //展开菜单
-            canvas.drawCircle(MenuX, MenuY, MenuRa, paint); //设置菜单的图形数据
-            canvas.drawLine(MenuX, MenuY - MenuRa, MenuX, MenuY + MenuRa, paint); //菜单的左右分割线
+            canvas.drawCircle(MenuX, MenuY, MenuRa, MyPaint); //设置菜单的图形数据
+            canvas.drawLine(MenuX, MenuY - MenuRa, MenuX, MenuY + MenuRa, MyPaint); //菜单的左右分割线
 
             //设置文字的位置
             canvas.drawText("粗",Click_x - MenuRa / 2 + MenuRa / 3 * 2, Click_y - MenuRa  / 2 * 3 - MenuRa / 4, MenuP);
@@ -401,8 +418,6 @@ public class SingleHandView extends View {
 
         if (Col && !Pix) { //展开二级颜色菜单
 
-            //System.out.println("二级颜色");
-
             SePaint.setColor(Color.BLUE);
             canvas.drawArc(rectF, 90, 60, true, SePaint); //从90度开始，画180度，连接圆心
             SePaint.setColor(Color.YELLOW);
@@ -410,19 +425,22 @@ public class SingleHandView extends View {
             SePaint.setColor(Color.RED);
             canvas.drawArc(rectF, 210, 60, true, SePaint);
 
-
+            //颜色二级菜单高亮显示
             Paint SeCHLPaint = new Paint();
-
             SeCHLPaint.setStyle(Paint.Style.STROKE);
             SeCHLPaint.setColor(Color.BLACK);
             SeCHLPaint.setStrokeWidth(20);
 
-            if ((inf_y <= (Math.tan(Math.PI * 150 / 180)) * (inf_x - MenuX) + MenuY) && inf_x <= MenuX) { //红色区域高亮
+            if ((inf_y <= (Math.tan(Math.PI * 30 / 180)) * (inf_x - MenuX) + MenuY) && inf_x <= MenuX) { //红色区域高亮
                 canvas.drawArc(rectF,210, 60, true, SeCHLPaint);
             }
-            //if ((inf_y <= ))
+            if ((inf_y >= (Math.tan(Math.PI * 30 / 180)) * (inf_x - MenuX) + MenuY) && (inf_y <= (Math.tan(Math.PI * 150 /180)) * (inf_x - MenuX) + MenuY)) { //黄色区域高亮
+                canvas.drawArc(rectF, 150, 60, true, SeCHLPaint);
+            }
+            if ((inf_y >= (Math.tan(Math.PI * 150 / 180)) * (inf_x - MenuX) + MenuY) && inf_x <= MenuX) { //蓝色区域高亮
+                canvas.drawArc(rectF, 90, 60, true, SeCHLPaint);
+            }
         }
-
         if (!Col && Pix) {
 
         }
