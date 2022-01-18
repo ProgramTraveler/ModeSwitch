@@ -292,6 +292,7 @@ public class SingleHandView extends View {
                     LastY = y;
                 }
                 break;
+
             case MotionEvent.ACTION_POINTER_UP: //非第一根手指抬起触发
 
                 PathInfNum ++;
@@ -301,15 +302,24 @@ public class SingleHandView extends View {
                 MenuIn = false;
 
 
+                //颜色控制
                 if ((Tou_y <= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x <= MenuX && MenuSeCol && !MenuSePix) { //选择红色
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.RED);
-                }
-                if ((Tou_y >= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && (Tou_y <= (Math.tan(Math.PI * 150 /180)) * (Tou_x - MenuX) + MenuY) && MenuSeCol && !MenuSePix) { //选择黄色
+                } else if ((Tou_y >= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && (Tou_y <= (Math.tan(Math.PI * 150 /180)) * (Tou_x - MenuX) + MenuY) && MenuSeCol && !MenuSePix) { //选择黄色
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.YELLOW);
-                }
-                if ((Tou_y >= (Math.tan(Math.PI * 150 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x <= MenuX && MenuSeCol && !MenuSePix) { //选择蓝色
+                } else if ((Tou_y >= (Math.tan(Math.PI * 150 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x <= MenuX && MenuSeCol && !MenuSePix) { //选择蓝色
+                    System.out.println("蓝色");
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.BLUE);
+                }else { //否则颜色保持不变
+                    pathInfArrayList.get(PathInfNum).paint = pathInfArrayList.get(PathInfNum - 1).paint;
                 }
+                //像素控制
+                /*if () {
+
+                }*/
+
+                MenuSeCol = false;
+                MenuSePix = false;
 
                 break;
             case MotionEvent.ACTION_POINTER_DOWN: //多指按下时触发
@@ -406,9 +416,15 @@ public class SingleHandView extends View {
             showSeMenu(rectF, true, false, in_x, in_y);
 
         }else if (r <= Math.pow(MenuRa, 2) && MenuIn && (in_x > MenuX)) { //像素菜单高亮
-            canvas.drawArc(rectF, 90, -180, true, ArcP); //从90度反方向画180度
+
+            PixMenu = false; //一级像素菜单关闭
+            MenuSeCol = false; //二级颜色菜单不显示
+            MenuSePix = true; //二级像素菜单显示
+
+            showSeMenu(rectF, false, true, in_x, in_y);
         }else {
             ColMenu = true;
+            PixMenu = true;
         }
     }
     //二级菜单显示
@@ -417,8 +433,11 @@ public class SingleHandView extends View {
         Paint SePaint = new Paint();
         SePaint.setStrokeWidth(5);
         SePaint.setStyle(Paint.Style.FILL);
+        SePaint.setTextSize(50);
 
         if (Col && !Pix) { //展开二级颜色菜单
+
+            ShowPixMenu(true); //像素一级菜单正常显示
 
             SePaint.setColor(Color.BLUE);
             canvas.drawArc(rectF, 90, 60, true, SePaint); //从90度开始，画180度，连接圆心
@@ -444,6 +463,15 @@ public class SingleHandView extends View {
             }
         }
         if (!Col && Pix) {
+
+            ShowColMenu(true); //颜色一级菜单正常显示
+
+            //对提示文字进行区域划分
+            canvas.drawLine(MenuX, MenuY, (float) (MenuX + Math.cos(Math.PI * 30 / 180) * MenuRa), (float) (MenuY - Math.sin(Math.PI * 30 / 180) * MenuRa), SePaint);
+            canvas.drawLine(MenuX, MenuY, (float) (MenuX + Math.cos(Math.PI * 30 / 180) * MenuRa), (float) (MenuY + Math.sin(Math.PI * 30 / 180) * MenuRa), SePaint);
+            //提示文字
+            canvas.drawText("2px", MenuX + MenuRa / 3, MenuY - MenuRa / 2, SePaint);
+
 
         }
     }

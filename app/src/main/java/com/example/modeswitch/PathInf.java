@@ -27,7 +27,7 @@ public class PathInf {
         paint.setStrokeJoin(Paint.Join.ROUND); //结合处为圆角
         paint.setStrokeCap(Paint.Cap.ROUND); //设置转弯处为圆角
         paint.setTextSize(36); //绘制文字大小，单位px
-        paint.setStrokeWidth(5); //画笔粗细
+        paint.setStrokeWidth(2); //画笔粗细
     }
 
 }
