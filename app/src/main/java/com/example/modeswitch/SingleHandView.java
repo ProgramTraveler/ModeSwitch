@@ -67,7 +67,7 @@ public class SingleHandView extends View {
 
     //对误差的判断
     private boolean error = false; //当状态变为true时说明是第二次遇到符合误差的状态
-    private float errorNum = 10.0F;
+    private float errorNum = 20.0F;
 
     //记录按下的当前毫秒数
     private ArrayList<Long> TimeArr = new ArrayList<Long>();
