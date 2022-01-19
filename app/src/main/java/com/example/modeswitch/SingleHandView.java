@@ -102,6 +102,9 @@ public class SingleHandView extends View {
     private boolean MenuSeCol = false; //一级菜单还未选择颜色区域
     private boolean MenuSePix = false; //一级菜单还未选择像素区域
 
+    private int colorNow = Color.BLACK;
+    private int pixNow = 2;
+
 
     //重写父类方法
     public SingleHandView(Context context) { //在new的时候调用
@@ -295,29 +298,46 @@ public class SingleHandView extends View {
 
             case MotionEvent.ACTION_POINTER_UP: //非第一根手指抬起触发
 
-                PathInfNum ++;
-                pathInfArrayList.add(new PathInf());
+                //System.out.println(PathInfNum + " " + pathInfArrayList.size());
+
+
+                pathInfArrayList.get(PathInfNum).paint.setColor(colorNow);
+                pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(pixNow);
+
 
                 pathInfArrayList.get(PathInfNum).path.moveTo(event.getX(0), event.getY(0)); //第一根手指可能会有移动，更新一下位置，不然会出现直接将两点连线
+
                 MenuIn = false;
 
+                //pathInfArrayList.get(PathInfNum).paint = pathInfArrayList.get(PathInfNum - 1).paint;
 
                 //颜色控制
                 if ((Tou_y <= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x <= MenuX && MenuSeCol && !MenuSePix) { //选择红色
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.RED);
+                    colorNow = Color.RED;
                 } else if ((Tou_y >= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && (Tou_y <= (Math.tan(Math.PI * 150 /180)) * (Tou_x - MenuX) + MenuY) && MenuSeCol && !MenuSePix) { //选择黄色
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.YELLOW);
+                    colorNow = Color.YELLOW;
                 } else if ((Tou_y >= (Math.tan(Math.PI * 150 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x <= MenuX && MenuSeCol && !MenuSePix) { //选择蓝色
-                    System.out.println("蓝色");
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.BLUE);
-                }else { //否则颜色保持不变
-                    pathInfArrayList.get(PathInfNum).paint = pathInfArrayList.get(PathInfNum - 1).paint;
+                    colorNow = Color.BLUE;
+                } else if ((Tou_y >= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x >= MenuX && !MenuSeCol && MenuSePix) { //最大像素区域高亮
+                    pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(16);
+                    pixNow = 16;
+                } else if ((Tou_y <= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && (Tou_x >= (Math.tan(Math.PI * 150 /180)) * (Tou_x - MenuX) + MenuY) && !MenuSeCol && MenuSePix) { //中等像素区域高亮
+                    pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(8);
+                    pixNow = 8;
+                } else if ((Tou_y <= (Math.tan(Math.PI * 150 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x >= MenuX && !MenuSeCol && MenuSePix) { //最小像素区域高亮
+                    pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(4);
+                    pixNow = 4;
+                }else { //否则就和之前保持一致
+
+                    //pathInfArrayList.get(PathInfNum).paint.setColor(colorNow);
+                    //pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(pixNow);
+
                 }
-                //像素控制
-                /*if () {
 
-                }*/
-
+                //将二级菜单重新关闭
                 MenuSeCol = false;
                 MenuSePix = false;
 
@@ -330,6 +350,11 @@ public class SingleHandView extends View {
                         MenuIn = true;
                         Click_x = event.getX(1); //双击位置
                         Click_y = event.getY(1);
+
+                        //每次双击产生一个新的对象
+                        PathInfNum ++;
+                        pathInfArrayList.add(new PathInf());
+
                     }
                 }
                 break;
@@ -351,7 +376,6 @@ public class SingleHandView extends View {
         MenuP.setTextSize(100); //文字大小
         MenuP.setStyle(Paint.Style.FILL); //画笔风格为填充
         MenuP.setTypeface(Typeface.DEFAULT_BOLD); //粗体
-
 
         if (status) { //展开菜单
             canvas.drawCircle(MenuX, MenuY, MenuRa, MyPaint); //设置菜单的图形数据
@@ -422,9 +446,13 @@ public class SingleHandView extends View {
             MenuSePix = true; //二级像素菜单显示
 
             showSeMenu(rectF, false, true, in_x, in_y);
+
         }else {
             ColMenu = true;
             PixMenu = true;
+
+            MenuSeCol = false;
+            MenuSePix = false;
         }
     }
     //二级菜单显示
@@ -450,7 +478,7 @@ public class SingleHandView extends View {
             Paint SeCHLPaint = new Paint();
             SeCHLPaint.setStyle(Paint.Style.STROKE);
             SeCHLPaint.setColor(Color.BLACK);
-            SeCHLPaint.setStrokeWidth(20);
+            SeCHLPaint.setStrokeWidth(10);
 
             if ((inf_y <= (Math.tan(Math.PI * 30 / 180)) * (inf_x - MenuX) + MenuY) && inf_x <= MenuX) { //红色区域高亮
                 canvas.drawArc(rectF,210, 60, true, SeCHLPaint);
@@ -470,8 +498,25 @@ public class SingleHandView extends View {
             canvas.drawLine(MenuX, MenuY, (float) (MenuX + Math.cos(Math.PI * 30 / 180) * MenuRa), (float) (MenuY - Math.sin(Math.PI * 30 / 180) * MenuRa), SePaint);
             canvas.drawLine(MenuX, MenuY, (float) (MenuX + Math.cos(Math.PI * 30 / 180) * MenuRa), (float) (MenuY + Math.sin(Math.PI * 30 / 180) * MenuRa), SePaint);
             //提示文字
-            canvas.drawText("2px", MenuX + MenuRa / 3, MenuY - MenuRa / 2, SePaint);
+            canvas.drawText("4px", MenuX + MenuRa / 4, MenuY - MenuRa / 2, SePaint);
+            canvas.drawText("8px", MenuX + MenuRa / 2, MenuY, SePaint);
+            canvas.drawText("16px", MenuX + MenuRa / 4, MenuY + MenuRa / 3 * 2,SePaint);
 
+            //像素二级菜单高亮显示
+            Paint SePHLPaint = new Paint();
+            SePHLPaint.setStyle(Paint.Style.STROKE);
+            SePHLPaint.setColor(Color.BLACK);
+            SePHLPaint.setStrokeWidth(10);
+
+            if ((inf_y >= (Math.tan(Math.PI * 30 / 180)) * (inf_x - MenuX) + MenuY) && inf_x >= MenuX) { //最大像素区域高亮
+                canvas.drawArc(rectF,30, 60, true, SePHLPaint);
+            }
+            if ((inf_y <= (Math.tan(Math.PI * 30 / 180)) * (inf_x - MenuX) + MenuY) && (inf_y >= (Math.tan(Math.PI * 150 /180)) * (inf_x - MenuX) + MenuY)) { //中等像素区域高亮
+                canvas.drawArc(rectF, 30, -60, true, SePHLPaint);
+            }
+            if ((inf_y <= (Math.tan(Math.PI * 150 / 180)) * (inf_x - MenuX) + MenuY) && inf_x >= MenuX) { //最小像素区域高亮
+                canvas.drawArc(rectF, 270, 60, true, SePHLPaint);
+            }
 
         }
     }
