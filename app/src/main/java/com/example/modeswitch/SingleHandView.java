@@ -246,17 +246,18 @@ public class SingleHandView extends View {
 
         if (hoop.getRing_1() && !hoop.getRing_2()) { //当前只显示第一个圆环
             //求出当前位置与圆心坐标差值的平方
-            double xr = Math.pow((x - Circle1_X), 2);
-            double yr = Math.pow((y - Circle1_Y), 2);
+            //double xr = Math.pow((x - Circle1_X), 2);
+            //double yr = Math.pow((y - Circle1_Y), 2);
 
-            //double xr = Math.pow((x - hoop.getCircle_X(1)), 2);
-            //double yr = Math.pow((x - hoop.getCircle_Y(1)), 2);
+            double xr = Math.pow((x - hoop.getCircle_X(1)), 2);
+            double yr = Math.pow((y - hoop.getCircle_Y(1)), 2);
 
             double ra = xr + yr;
 
+            System.out.println(xr + " " + yr + " " + Math.pow((x - hoop.getCircle_X(1)), 2) + " " + Math.pow((x - hoop.getCircle_Y(1)), 2));
             System.out.println(ra + " " + Math.pow((hoop.getSmallCircleR()), 2) + " " + Math.pow((hoop.getBigCircleR()), 2) + " " + Math.pow(high / 6, 2));
 
-            System.out.println((ra >= Math.pow((hoop.getSmallCircleR()), 2)) + " " + (ra <= Math.pow((hoop.getBigCircleR()), 2)));
+            //System.out.println((ra >= Math.pow((hoop.getSmallCircleR()), 2)) + " " + (ra <= Math.pow((hoop.getBigCircleR()), 2)));
 
             if ((ra >= Math.pow((hoop.getSmallCircleR()), 2)) && (ra <= Math.pow((hoop.getBigCircleR()), 2))) { //如果落在圆环内
 
