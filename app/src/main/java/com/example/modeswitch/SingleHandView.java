@@ -53,11 +53,13 @@ public class SingleHandView extends View {
     private boolean ring2 = false;
     private boolean ring3 = false;*/
     //圆环中大小圆的半径
-    /*private float SmallCircleR = 0;
-    private float BigCircleR = 0;
+    //private float SmallCircleR = 0;
+    //private float BigCircleR = 0;
     //第一个圆环的圆心坐标
     private float Circle1_X = 0;
     private float Circle1_Y = 0;
+
+    /*
     //第二个圆环的圆心坐标
     private float Circle2_X = 0;
     private float Circle2_Y = 0;
@@ -148,14 +150,15 @@ public class SingleHandView extends View {
         high = MeasureSpec.getSize(highMeasureSpec); //获取屏幕高度
 
         //根据屏幕大小来设置大小半径
-        hoop.setSmallCircleR(high / 12);
+        hoop.setSmallCircleR((float) high / 12);
         //BigCircleR = high / 6;
-        hoop.setBigCircleR(high / 6);
+        hoop.setBigCircleR((float) high / 6);
+
 
         //根据屏幕大小来设置每个圆环的圆心位置
-        /*Circle1_X = high / 6 * 3 / 2;
+        Circle1_X = high / 6 * 3 / 2;
         Circle1_Y = width / 3;
-
+        /*
         Circle2_X = high / 6 * 11 / 2;
         Circle2_Y = width / 3;
 
@@ -179,21 +182,30 @@ public class SingleHandView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        //System.out.println(hoop.getRing_1() + " " + hoop.getRing_2() + " " + hoop.getRing_3());
+
         //绘制第一个环
         /*canvas.drawCircle(Circle1_X, Circle1_Y, BigCircleR, MyPaint);
         canvas.drawCircle(Circle1_X, Circle1_Y, SmallCircleR, MyPaint);*/
         canvas.drawCircle(hoop.getCircle_X(1), hoop.getCircle_Y(1), hoop.getBigCircleR(), MyPaint);
         canvas.drawCircle(hoop.getCircle_X(1), hoop.getCircle_Y(1), hoop.getSmallCircleR(), MyPaint);
 
+
         if (hoop.getRing_2()) { //显示第二个环
             /*canvas.drawCircle(Circle2_X, Circle2_Y, BigCircleR, MyPaint);
             canvas.drawCircle(Circle2_X, Circle2_Y, SmallCircleR, MyPaint);*/
+
+            System.out.println("二");
+
             canvas.drawCircle(hoop.getCircle_X(2), hoop.getCircle_Y(2), hoop.getBigCircleR(), MyPaint);
             canvas.drawCircle(hoop.getCircle_X(2), hoop.getCircle_Y(2), hoop.getSmallCircleR(), MyPaint);
         }
         if (hoop.getRing_3()) { //显示第三个环
             /*canvas.drawCircle(Circle3_X, Circle3_Y, BigCircleR, MyPaint);
             canvas.drawCircle(Circle3_X, Circle3_Y, SmallCircleR, MyPaint);*/
+
+            System.out.println("三");
+
             canvas.drawCircle(hoop.getCircle_X(3), hoop.getCircle_Y(3), hoop.getBigCircleR(), MyPaint);
             canvas.drawCircle(hoop.getCircle_X(3), hoop.getCircle_Y(3), hoop.getSmallCircleR(), MyPaint);
 
@@ -230,17 +242,25 @@ public class SingleHandView extends View {
         float x = event.getX();
         float y = event.getY();
 
+
+
         if (hoop.getRing_1() && !hoop.getRing_2()) { //当前只显示第一个圆环
             //求出当前位置与圆心坐标差值的平方
-            /*double xr = Math.pow((x - Circle1_X), 2);
-            double yr = Math.pow((y - Circle1_Y), 2);*/
+            double xr = Math.pow((x - Circle1_X), 2);
+            double yr = Math.pow((y - Circle1_Y), 2);
 
-            double xr = Math.pow((x - hoop.getCircle_X(1)), 2);
-            double yr = Math.pow((x - hoop.getCircle_Y(1)), 2);
+            //double xr = Math.pow((x - hoop.getCircle_X(1)), 2);
+            //double yr = Math.pow((x - hoop.getCircle_Y(1)), 2);
 
             double ra = xr + yr;
 
-            if (ra >= Math.pow((hoop.getSmallCircleR()), 2) && ra <= Math.pow((hoop.getBigCircleR()), 2)) { //如果落在圆环内
+            System.out.println(ra + " " + Math.pow((hoop.getSmallCircleR()), 2) + " " + Math.pow((hoop.getBigCircleR()), 2) + " " + Math.pow(high / 6, 2));
+
+            System.out.println((ra >= Math.pow((hoop.getSmallCircleR()), 2)) + " " + (ra <= Math.pow((hoop.getBigCircleR()), 2)));
+
+            if ((ra >= Math.pow((hoop.getSmallCircleR()), 2)) && (ra <= Math.pow((hoop.getBigCircleR()), 2))) { //如果落在圆环内
+
+                System.out.println("二");
 
                 if (!index) { //如果之前没有进入过
                     index = true; //表示已经进入
@@ -255,6 +275,9 @@ public class SingleHandView extends View {
                     }
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
                         //ring2 = true;
+
+
+
                         hoop.setRing_2(true);// 当误差满足条件的时候就当做是一个闭环
                         //重新初始化条件
                         index = false;
@@ -284,6 +307,8 @@ public class SingleHandView extends View {
                         error = true;
                     }
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
+
+                        System.out.println("三");
                         hoop.setRing_3(true);//当误差满足条件的时候就当做是一个闭环
                     }
                 }
