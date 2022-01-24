@@ -48,25 +48,6 @@ public class SingleHandView extends View {
     private float StartY = 0;
     private boolean index = false; //表示当前状态未进入环
 
-    //每个操作环的状态，true表示已经出现
-    /*private boolean ring1 = true; //第一个环是一个出现的，所以只能是true
-    private boolean ring2 = false;
-    private boolean ring3 = false;*/
-    //圆环中大小圆的半径
-    //private float SmallCircleR = 0;
-    //private float BigCircleR = 0;
-    //第一个圆环的圆心坐标
-    private float Circle1_X = 0;
-    private float Circle1_Y = 0;
-
-    /*
-    //第二个圆环的圆心坐标
-    private float Circle2_X = 0;
-    private float Circle2_Y = 0;
-    //第三个圆环的圆心坐标
-    private float Circle3_X = 0;
-    private float Circle3_Y = 0;*/
-
     //环
     private Hoop hoop;
 
@@ -156,15 +137,6 @@ public class SingleHandView extends View {
 
 
         //根据屏幕大小来设置每个圆环的圆心位置
-        Circle1_X = high / 6 * 3 / 2;
-        Circle1_Y = width / 3;
-        /*
-        Circle2_X = high / 6 * 11 / 2;
-        Circle2_Y = width / 3;
-
-        Circle3_X = high / 6 * 10;
-        Circle3_Y = width / 3;*/
-
         hoop.setCircle(1, high / 6 * 3 / 2, width / 3);
         hoop.setCircle(2, high / 6 * 11 / 2, width / 3);
         hoop.setCircle(3, high / 6 * 10, width / 3);
@@ -182,30 +154,17 @@ public class SingleHandView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        //System.out.println(hoop.getRing_1() + " " + hoop.getRing_2() + " " + hoop.getRing_3());
 
         //绘制第一个环
-        /*canvas.drawCircle(Circle1_X, Circle1_Y, BigCircleR, MyPaint);
-        canvas.drawCircle(Circle1_X, Circle1_Y, SmallCircleR, MyPaint);*/
         canvas.drawCircle(hoop.getCircle_X(1), hoop.getCircle_Y(1), hoop.getBigCircleR(), MyPaint);
         canvas.drawCircle(hoop.getCircle_X(1), hoop.getCircle_Y(1), hoop.getSmallCircleR(), MyPaint);
 
 
         if (hoop.getRing_2()) { //显示第二个环
-            /*canvas.drawCircle(Circle2_X, Circle2_Y, BigCircleR, MyPaint);
-            canvas.drawCircle(Circle2_X, Circle2_Y, SmallCircleR, MyPaint);*/
-
-            System.out.println("二");
-
             canvas.drawCircle(hoop.getCircle_X(2), hoop.getCircle_Y(2), hoop.getBigCircleR(), MyPaint);
             canvas.drawCircle(hoop.getCircle_X(2), hoop.getCircle_Y(2), hoop.getSmallCircleR(), MyPaint);
         }
         if (hoop.getRing_3()) { //显示第三个环
-            /*canvas.drawCircle(Circle3_X, Circle3_Y, BigCircleR, MyPaint);
-            canvas.drawCircle(Circle3_X, Circle3_Y, SmallCircleR, MyPaint);*/
-
-            System.out.println("三");
-
             canvas.drawCircle(hoop.getCircle_X(3), hoop.getCircle_Y(3), hoop.getBigCircleR(), MyPaint);
             canvas.drawCircle(hoop.getCircle_X(3), hoop.getCircle_Y(3), hoop.getSmallCircleR(), MyPaint);
 
@@ -246,9 +205,6 @@ public class SingleHandView extends View {
 
         if (hoop.getRing_1() && !hoop.getRing_2()) { //当前只显示第一个圆环
             //求出当前位置与圆心坐标差值的平方
-            //double xr = Math.pow((x - Circle1_X), 2);
-            //double yr = Math.pow((y - Circle1_Y), 2);
-
             double xr = Math.pow((x - hoop.getCircle_X(1)), 2);
             double yr = Math.pow((y - hoop.getCircle_Y(1)), 2);
 
@@ -257,11 +213,7 @@ public class SingleHandView extends View {
             System.out.println(xr + " " + yr + " " + Math.pow((x - hoop.getCircle_X(1)), 2) + " " + Math.pow((x - hoop.getCircle_Y(1)), 2));
             System.out.println(ra + " " + Math.pow((hoop.getSmallCircleR()), 2) + " " + Math.pow((hoop.getBigCircleR()), 2) + " " + Math.pow(high / 6, 2));
 
-            //System.out.println((ra >= Math.pow((hoop.getSmallCircleR()), 2)) + " " + (ra <= Math.pow((hoop.getBigCircleR()), 2)));
-
             if ((ra >= Math.pow((hoop.getSmallCircleR()), 2)) && (ra <= Math.pow((hoop.getBigCircleR()), 2))) { //如果落在圆环内
-
-                System.out.println("二");
 
                 if (!index) { //如果之前没有进入过
                     index = true; //表示已经进入
@@ -275,10 +227,6 @@ public class SingleHandView extends View {
                         error = true;
                     }
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
-                        //ring2 = true;
-
-
-
                         hoop.setRing_2(true);// 当误差满足条件的时候就当做是一个闭环
                         //重新初始化条件
                         index = false;
@@ -308,8 +256,6 @@ public class SingleHandView extends View {
                         error = true;
                     }
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
-
-                        System.out.println("三");
                         hoop.setRing_3(true);//当误差满足条件的时候就当做是一个闭环
                     }
                 }
@@ -346,10 +292,6 @@ public class SingleHandView extends View {
                 break;
 
             case MotionEvent.ACTION_POINTER_UP: //非第一根手指抬起触发
-
-                //System.out.println(PathInfNum + " " + pathInfArrayList.size());
-
-
                 pathInfArrayList.get(PathInfNum).paint.setColor(colorNow);
                 pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(pixNow);
 
@@ -357,8 +299,6 @@ public class SingleHandView extends View {
                 pathInfArrayList.get(PathInfNum).path.moveTo(event.getX(0), event.getY(0)); //第一根手指可能会有移动，更新一下位置，不然会出现直接将两点连线
 
                 MenuIn = false;
-
-                //pathInfArrayList.get(PathInfNum).paint = pathInfArrayList.get(PathInfNum - 1).paint;
 
                 //颜色控制
                 if ((Tou_y <= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x <= MenuX && MenuSeCol && !MenuSePix) { //选择红色
@@ -380,10 +320,6 @@ public class SingleHandView extends View {
                     pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(4);
                     pixNow = 4;
                 }else { //否则就和之前保持一致
-
-                    //pathInfArrayList.get(PathInfNum).paint.setColor(colorNow);
-                    //pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(pixNow);
-
                 }
                 //将二级菜单重新关闭
                 MenuSeCol = false;
@@ -476,11 +412,8 @@ public class SingleHandView extends View {
         ArcP.setStyle(Paint.Style.FILL); //效果为填充
         ArcP.setStrokeWidth(5); //设置大小
 
-        //canvas.drawColor(0,PorterDuff.Mode.CLEAR); //画之前将画布清除
-
         if (r <= Math.pow(MenuRa, 2) && MenuIn && (in_x < MenuX)) { //当手指的坐标在园内，一级菜单已经展开，而且位置在左
             //颜色菜单高亮
-            //canvas.drawArc(rectF, 90, 180, true, ArcP); //从90度开始，画180度，连接圆心
             ColMenu = false; //一级颜色菜单关闭
             MenuSeCol = true; //二级颜色菜单打开
             MenuSePix = false; //二级像素菜单关闭
