@@ -12,14 +12,17 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="模式切换"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ModeSwitch">
+
         <!--主菜单-->
         <activity
             android:name=".MainMenu"
-            android:exported="true">
+            android:exported="true"
+            android:label="主菜单"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -27,10 +30,12 @@
         </activity>
         <!--单手主辅模式-->
         <activity
+            android:label="单手主辅模式"
             android:name=".SingleHandMAndA"
             android:exported="false"></activity>
         <!--动态区域单手模式-->
         <activity
+            android:label="单手动态模式"
             android:name=".SingleDynamic"
             android:exported="false"
             />

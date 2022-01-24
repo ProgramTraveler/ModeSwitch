@@ -5,22 +5,44 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainMenu"
-    android:paddingBottom="20dp"
-    android:tag="主菜单"
+    android:orientation="vertical"
+
     >
-    <!--android:paddingBottom="20dp" 设置当前界面的控件底部内边距为20dp-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
+        android:layout_marginLeft="150dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="8dp"
+
         android:id="@+id/SingleHand"
         android:text="单手主辅模式"
-        />
+        android:textSize="25dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/SingDynamic"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="47dp"
+
+        android:layout_marginLeft="150dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="8dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
         android:text="单手动态模式"
-        tools:layout_editor_absoluteX="72dp"
-        tools:layout_editor_absoluteY="78dp" />
+        android:textSize="25dp"
+        />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
