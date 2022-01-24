@@ -16,21 +16,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ModeSwitch">
+        <!--主菜单-->
         <activity
             android:name=".MainMenu"
             android:exported="true">
-
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!--单手主辅模式-->
         <activity
             android:name=".SingleHandMAndA"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
+        <!--动态区域单手模式-->
+        <activity
+            android:name=".SingleDynamic"
+            android:exported="false"
+            />
     </application>
 
 </manifest>

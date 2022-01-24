@@ -4,8 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainMenu">
-
+    tools:context=".MainMenu"
+    android:paddingBottom="20dp"
+    android:tag="主菜单"
+    >
+    <!--android:paddingBottom="20dp" 设置当前界面的控件底部内边距为20dp-->
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -13,6 +16,11 @@
         android:text="单手主辅模式"
         />
 
-
-
+    <Button
+        android:id="@+id/SingDynamic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="单手动态模式"
+        tools:layout_editor_absoluteX="72dp"
+        tools:layout_editor_absoluteY="78dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
