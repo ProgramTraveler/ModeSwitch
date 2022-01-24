@@ -11,7 +11,7 @@ import android.view.Display;
 /*
     user:王久铭
     date:2022-01-05
-    purpose:单手主辅模式
+    purpose:活动 单手主辅模式
  */
 public class SingleHandMAndA extends AppCompatActivity {
 

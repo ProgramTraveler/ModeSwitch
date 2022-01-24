@@ -4,13 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SingleHandMAndA">
+    tools:context=".MainMenu">
 
-    <com.example.modeswitch.SingleHandView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="10dp"
-        android:background="@color/white"
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/SingleHand"
+        android:text="单手主辅模式"
         />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
