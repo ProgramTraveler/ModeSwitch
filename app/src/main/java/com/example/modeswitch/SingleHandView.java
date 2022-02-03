@@ -108,6 +108,8 @@ public class SingleHandView extends View {
 
     private void init() {
 
+        System.out.println("单手");
+
         MyPaint = new Paint();
         MyPaint.setColor(Color.BLACK);
         MyPaint.setStrokeWidth(3);

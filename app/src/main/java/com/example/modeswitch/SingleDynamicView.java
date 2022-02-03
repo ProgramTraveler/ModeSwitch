@@ -13,19 +13,31 @@ import androidx.annotation.Nullable;
  */
 
 public class SingleDynamicView extends View {
+
+
+
+
+
     public SingleDynamicView(Context context) {
         super(context);
     }
 
-    public SingleDynamicView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+    //重写父类方法
+    public SingleHandView(Context context) { //在new的时候调用
+        super(context);
+        MYinit();
+    }
+    public SingleHandView(Context context, AttributeSet attr) { //在布局中使用(layout)
+        super(context, attr);
+        MYinit();
+    }
+    public SingleHandView(Context context, AttributeSet attr, int defStyleAttr) { //会在layout中使用，但会有style
+        super(context, attr, defStyleAttr);
+        MYinit();
     }
 
-    public SingleDynamicView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
 
-    public SingleDynamicView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
+    private void MYinit() {
+        System.out.println("动态");
     }
 }
