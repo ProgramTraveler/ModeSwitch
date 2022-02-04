@@ -26,7 +26,7 @@ public class MainMenu extends AppCompatActivity {
         buttonSingle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainMenu.this, SingleHandMAndA.class); //由当前模式朓往单手主辅模式
+                Intent intent = new Intent(MainMenu.this, SingleHandMAndA.class); //由当前模式跳往单手主辅模式
                 startActivity(intent);
                 //对选择的模式进行提示
                 Toast.makeText(MainMenu.this, "已选择单手主辅模式", Toast.LENGTH_SHORT).show();
