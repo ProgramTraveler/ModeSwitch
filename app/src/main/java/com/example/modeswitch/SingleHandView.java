@@ -40,16 +40,15 @@ public class SingleHandView extends View {
     private Canvas canvas; //内存中创建的Canvas
     private Bitmap bitmap; //缓存绘制的内容
 
-    private float LastX;
-    private float LastY;
-
+    //环
+    private Hoop hoop;
     //刚进入环内的起点坐标
     private float StartX = 0;
     private float StartY = 0;
     private boolean index = false; //表示当前状态未进入环
 
-    //环
-    private Hoop hoop;
+    private float LastX;
+    private float LastY;
 
     //对误差的判断
     private boolean error = false; //当状态变为true时说明是第二次遇到符合误差的状态
@@ -96,22 +95,18 @@ public class SingleHandView extends View {
     public SingleHandView(Context context) { //在new的时候调用
         super(context);
         init();
-        System.out.println("1");
+
     }
     public SingleHandView(Context context, AttributeSet attr) { //在布局中使用(layout)
         super(context, attr);
-        System.out.println("2");
         init();
     }
     public SingleHandView(Context context, AttributeSet attr, int defStyleAttr) { //会在layout中使用，但会有style
         super(context, attr, defStyleAttr);
-        System.out.println("3");
         init();
     }
 
     private void init() {
-
-        System.out.println("单手");
 
         MyPaint = new Paint();
         MyPaint.setColor(Color.BLACK);
@@ -206,17 +201,12 @@ public class SingleHandView extends View {
         float x = event.getX();
         float y = event.getY();
 
-
-
         if (hoop.getRing_1() && !hoop.getRing_2()) { //当前只显示第一个圆环
             //求出当前位置与圆心坐标差值的平方
             double xr = Math.pow((x - hoop.getCircle_X(1)), 2);
             double yr = Math.pow((y - hoop.getCircle_Y(1)), 2);
 
             double ra = xr + yr;
-
-            System.out.println(xr + " " + yr + " " + Math.pow((x - hoop.getCircle_X(1)), 2) + " " + Math.pow((x - hoop.getCircle_Y(1)), 2));
-            System.out.println(ra + " " + Math.pow((hoop.getSmallCircleR()), 2) + " " + Math.pow((hoop.getBigCircleR()), 2) + " " + Math.pow(high / 6, 2));
 
             if ((ra >= Math.pow((hoop.getSmallCircleR()), 2)) && (ra <= Math.pow((hoop.getBigCircleR()), 2))) { //如果落在圆环内
 
@@ -359,8 +349,8 @@ public class SingleHandView extends View {
     public void ShowColMenu(boolean status) { //根据双击位置进行调整
         //菜单圆心
         MenuX = Click_x;
-        MenuY = Click_y - MenuRa * 3 / 2;
-
+        //MenuY = Click_y - MenuRa * 3 / 2;
+        MenuY = Click_y;
         Paint MenuP = new Paint();
         MenuP.setTextSize(100); //文字大小
         MenuP.setStyle(Paint.Style.FILL); //画笔风格为填充
@@ -371,8 +361,8 @@ public class SingleHandView extends View {
             canvas.drawLine(MenuX, MenuY - MenuRa, MenuX, MenuY + MenuRa, MyPaint); //菜单的左右分割线
 
             //设置文字的位置
-            canvas.drawText("颜",Click_x - MenuRa / 2 - MenuRa / 4, Click_y - MenuRa  / 2 * 3 - MenuRa / 4, MenuP);
-            canvas.drawText("色",Click_x - MenuRa / 2 - MenuRa / 4, Click_y - MenuRa  / 2 * 3 + MenuRa / 4, MenuP);
+            canvas.drawText("颜",MenuX - MenuRa / 2 - MenuRa / 4, MenuY - MenuRa / 4, MenuP);
+            canvas.drawText("色",MenuX - MenuRa / 2 - MenuRa / 4, MenuY + MenuRa / 4, MenuP);
 
         }else { //关闭菜单
             canvas.drawColor(0,PorterDuff.Mode.CLEAR); //其实就是清除画布
@@ -382,7 +372,7 @@ public class SingleHandView extends View {
     public void ShowPixMenu(boolean status) {
         //菜单圆心
         MenuX = Click_x;
-        MenuY = Click_y - MenuRa * 3 / 2;
+        MenuY = Click_y;
 
         Paint MenuP = new Paint();
         MenuP.setTextSize(100); //文字大小
@@ -395,8 +385,8 @@ public class SingleHandView extends View {
             canvas.drawLine(MenuX, MenuY - MenuRa, MenuX, MenuY + MenuRa, MyPaint); //菜单的左右分割线
 
             //设置文字的位置
-            canvas.drawText("粗",Click_x - MenuRa / 2 + MenuRa / 3 * 2, Click_y - MenuRa  / 2 * 3 - MenuRa / 4, MenuP);
-            canvas.drawText("细",Click_x - MenuRa / 2 + MenuRa / 3 * 2, Click_y - MenuRa  / 2 * 3 + MenuRa / 4, MenuP);
+            canvas.drawText("粗",MenuX - MenuRa / 2 + MenuRa / 3 * 2, MenuY - MenuRa / 4, MenuP);
+            canvas.drawText("细",MenuX - MenuRa / 2 + MenuRa / 3 * 2, MenuY + MenuRa / 4, MenuP);
 
         }else { //关闭菜单
             canvas.drawColor(0,PorterDuff.Mode.CLEAR); //其实就是清除画布
