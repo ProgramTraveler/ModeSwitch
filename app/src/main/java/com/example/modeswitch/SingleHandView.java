@@ -154,7 +154,6 @@ public class SingleHandView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-
         //绘制第一个环
         canvas.drawCircle(hoop.getCircle_X(1), hoop.getCircle_Y(1), hoop.getBigCircleR(), MyPaint);
         canvas.drawCircle(hoop.getCircle_X(1), hoop.getCircle_Y(1), hoop.getSmallCircleR(), MyPaint);

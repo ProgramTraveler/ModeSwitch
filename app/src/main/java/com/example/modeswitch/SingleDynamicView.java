@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -43,21 +44,31 @@ public class SingleDynamicView extends View {
     private Canvas canvas; //内存中创建的Canvas
     private Bitmap bitmap; //缓存绘制的内容
 
+    /*
+    一级菜单变量
+     */
+    private float MenuLen = 0; //菜单长度
+    private float MenuWith = 0; //菜单宽度
+
+    //一级菜单出现的位置
+    private float Menu_X = 0;
+    private float Menu_Y = 0;
+
+
+
     public SingleDynamicView(Context context) {
         super(context);
         init();
-        System.out.println("1");
+
     }
 
     public SingleDynamicView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        System.out.println("2");
         init();
     }
 
     public SingleDynamicView(Context context, AttributeSet attributeSet, int defStyleAttr) {
         super(context, attributeSet, defStyleAttr);
-        System.out.println("3");
         init();
     }
 
@@ -95,6 +106,13 @@ public class SingleDynamicView extends View {
         hoop.setCircle(2, high / 6 * 11 / 2, width / 3);
         hoop.setCircle(3, high / 6 * 10, width / 3);
 
+        //设置菜单的长和宽
+        MenuLen = high / 3;
+        MenuWith = width / 30;
+
+        //设置菜单的起始位置（左上角坐标）
+        Menu_X = high / 2;
+        Menu_Y = 0;
 
         //初始化bitmap和canvas
         bitmap = Bitmap.createBitmap(width, high, Bitmap.Config.ARGB_8888);
@@ -119,7 +137,8 @@ public class SingleDynamicView extends View {
             canvas.drawCircle(hoop.getCircle_X(3), hoop.getCircle_Y(3), hoop.getSmallCircleR(), MyPaint);
 
         }
-        
+        ShowColMenu(); //显示颜色一级菜单
+        ShowPixMenu(); //显示像素一级菜单
         drawPath();
         canvas.drawBitmap(bitmap, 0, 0, null);
     }
@@ -233,4 +252,37 @@ public class SingleDynamicView extends View {
         invalidate();
         return true;
     }
+    //颜色一级菜单的显示
+    public void ShowColMenu() {
+        //控制文字的画笔
+        Paint MenuP = new Paint();
+        MenuP.setTextSize(MenuWith); //文字大小
+        MenuP.setStyle(Paint.Style.FILL); //画笔风格为填充
+        MenuP.setTypeface(Typeface.DEFAULT_BOLD); //粗体
+
+       //显示菜单
+       canvas.drawRect(Menu_X, Menu_Y, Menu_X + MenuLen, Menu_Y + MenuWith, MyPaint);
+
+       //绘制文字
+       canvas.drawText("颜", Menu_X + MenuLen / 3, Menu_Y + MenuWith - 10, MenuP);
+       canvas.drawText("色", Menu_X + MenuLen / 3 + MenuWith, Menu_Y + MenuWith - 10, MenuP);
+
+
+    }
+    //像素一级菜单的显示
+    public void ShowPixMenu() {
+        //控制文字的画笔
+        Paint MenuP = new Paint();
+        MenuP.setTextSize(MenuWith); //文字大小
+        MenuP.setStyle(Paint.Style.FILL); //画笔风格为填充
+        MenuP.setTypeface(Typeface.DEFAULT_BOLD); //粗体
+
+        //显示菜单
+        canvas.drawRect(Menu_X + MenuLen,  Menu_Y, Menu_X + MenuLen * 2, Menu_Y + MenuWith, MyPaint);
+
+        //绘制文字
+        canvas.drawText("粗", Menu_X + MenuLen + MenuLen / 3, Menu_Y + MenuWith - 10, MenuP);
+        canvas.drawText("细", Menu_X + MenuLen + MenuLen / 3 + MenuWith, Menu_Y + MenuWith - 10, MenuP);
+    }
+
 }
