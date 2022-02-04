@@ -96,13 +96,16 @@ public class SingleHandView extends View {
     public SingleHandView(Context context) { //在new的时候调用
         super(context);
         init();
+        System.out.println("1");
     }
     public SingleHandView(Context context, AttributeSet attr) { //在布局中使用(layout)
         super(context, attr);
+        System.out.println("2");
         init();
     }
     public SingleHandView(Context context, AttributeSet attr, int defStyleAttr) { //会在layout中使用，但会有style
         super(context, attr, defStyleAttr);
+        System.out.println("3");
         init();
     }
 
