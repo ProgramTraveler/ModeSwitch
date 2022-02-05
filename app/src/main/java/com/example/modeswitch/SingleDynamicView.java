@@ -25,6 +25,7 @@ public class SingleDynamicView extends View {
     private int PathInfNum = 0; //当前下标
 
     private Paint MyPaint; //绘制图形的画笔
+    private Paint MyMenu; //绘制菜单的画笔
 
     private Hoop hoop; //环
     //进入环内的坐标
@@ -78,6 +79,13 @@ public class SingleDynamicView extends View {
         MyPaint.setColor(Color.BLACK);
         MyPaint.setStrokeWidth(3);
         MyPaint.setStyle(Paint.Style.STROKE);
+
+        MyMenu = new Paint();
+        MyMenu.setColor(Color.BLACK);
+        MyMenu.setStrokeWidth(5);
+        MyMenu.setStyle(Paint.Style.STROKE);
+
+
 
         pathInfArrayList = new ArrayList<>(); //记录不同情况的路径
 
@@ -137,8 +145,12 @@ public class SingleDynamicView extends View {
             canvas.drawCircle(hoop.getCircle_X(3), hoop.getCircle_Y(3), hoop.getSmallCircleR(), MyPaint);
 
         }
-        ShowColMenu(); //显示颜色一级菜单
-        ShowPixMenu(); //显示像素一级菜单
+        showColMenu(); //显示颜色一级菜单
+        showPixMenu(); //显示像素一级菜单
+
+        //显示二级菜单
+        showSeMenu(true, true);
+
         drawPath();
         canvas.drawBitmap(bitmap, 0, 0, null);
     }
@@ -253,7 +265,7 @@ public class SingleDynamicView extends View {
         return true;
     }
     //颜色一级菜单的显示
-    public void ShowColMenu() {
+    public void showColMenu() {
         //控制文字的画笔
         Paint MenuP = new Paint();
         MenuP.setTextSize(MenuWith); //文字大小
@@ -261,7 +273,7 @@ public class SingleDynamicView extends View {
         MenuP.setTypeface(Typeface.DEFAULT_BOLD); //粗体
 
        //显示菜单
-       canvas.drawRect(Menu_X, Menu_Y, Menu_X + MenuLen, Menu_Y + MenuWith, MyPaint);
+       canvas.drawRect(Menu_X, Menu_Y, Menu_X + MenuLen, Menu_Y + MenuWith,MyMenu);
 
        //绘制文字
        canvas.drawText("颜", Menu_X + MenuLen / 3, Menu_Y + MenuWith - 10, MenuP);
@@ -270,7 +282,7 @@ public class SingleDynamicView extends View {
 
     }
     //像素一级菜单的显示
-    public void ShowPixMenu() {
+    public void showPixMenu() {
         //控制文字的画笔
         Paint MenuP = new Paint();
         MenuP.setTextSize(MenuWith); //文字大小
@@ -278,11 +290,31 @@ public class SingleDynamicView extends View {
         MenuP.setTypeface(Typeface.DEFAULT_BOLD); //粗体
 
         //显示菜单
-        canvas.drawRect(Menu_X + MenuLen,  Menu_Y, Menu_X + MenuLen * 2, Menu_Y + MenuWith, MyPaint);
-
+        canvas.drawRect(Menu_X + MenuLen,  Menu_Y, Menu_X + MenuLen * 2, Menu_Y + MenuWith, MyMenu);
         //绘制文字
         canvas.drawText("粗", Menu_X + MenuLen + MenuLen / 3, Menu_Y + MenuWith - 10, MenuP);
         canvas.drawText("细", Menu_X + MenuLen + MenuLen / 3 + MenuWith, Menu_Y + MenuWith - 10, MenuP);
     }
+    //二级菜单显示
+    public  void showSeMenu(boolean Col, boolean Pix) {
+        Paint SePaint = new Paint();
+        SePaint.setStrokeWidth(5);
+        SePaint.setStyle(Paint.Style.FILL);
+        SePaint.setTextSize(50);
 
+        SePaint.setColor(Color.RED);
+        canvas.drawRect(Menu_X, Menu_Y + MenuWith, Menu_X + MenuLen, Menu_Y + MenuWith * 2, SePaint);
+        canvas.drawRect(Menu_X, Menu_Y + MenuWith, Menu_X + MenuLen, Menu_Y + MenuWith * 2, MyMenu);
+
+        SePaint.setColor(Color.YELLOW);
+        canvas.drawRect(Menu_X, Menu_Y + MenuWith * 2, Menu_X + MenuLen, Menu_Y + MenuWith * 3, SePaint);
+        canvas.drawRect(Menu_X, Menu_Y + MenuWith * 2, Menu_X + MenuLen, Menu_Y + MenuWith * 3, MyMenu);
+
+        SePaint.setColor(Color.BLUE);
+        canvas.drawRect(Menu_X, Menu_Y + MenuWith * 3, Menu_X + MenuLen, Menu_Y + MenuWith * 4, SePaint);
+        canvas.drawRect(Menu_X, Menu_Y + MenuWith * 3, Menu_X + MenuLen, Menu_Y + MenuWith * 4, MyMenu);
+
+
+
+    }
 }

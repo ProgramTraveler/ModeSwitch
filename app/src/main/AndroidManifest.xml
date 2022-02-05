@@ -21,7 +21,7 @@
         <activity
             android:name=".MainMenu"
             android:exported="true"
-            android:label="主菜单"
+            android:label="模式切换"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
