@@ -323,10 +323,12 @@ public class SingleDynamicView extends View {
             SeColPaint.setColor(Color.BLUE);
             canvas.drawRect(Menu_X, Menu_Y + MenuWith * 3, Menu_X + MenuLen, Menu_Y + MenuWith * 4, SeColPaint);
             canvas.drawRect(Menu_X, Menu_Y + MenuWith * 3, Menu_X + MenuLen, Menu_Y + MenuWith * 4, MyMenu);
+
+
         }
 
         if (!Col && Pix) {
-            
+
             canvas.drawRect(Menu_X + MenuLen, Menu_Y + MenuWith, Menu_X + MenuLen * 2, Menu_Y + MenuWith * 2, MyMenu);
             canvas.drawText("4px", Menu_X + MenuLen + MenuLen / 3, Menu_Y + MenuWith * 2 - 10, SePixPaint);
 
