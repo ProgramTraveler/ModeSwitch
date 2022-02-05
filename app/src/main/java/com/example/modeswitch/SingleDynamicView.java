@@ -297,24 +297,44 @@ public class SingleDynamicView extends View {
     }
     //二级菜单显示
     public  void showSeMenu(boolean Col, boolean Pix) {
-        Paint SePaint = new Paint();
-        SePaint.setStrokeWidth(5);
-        SePaint.setStyle(Paint.Style.FILL);
-        SePaint.setTextSize(50);
+        //二级颜色菜单画笔
+        Paint SeColPaint = new Paint();
+        SeColPaint.setStrokeWidth(5);
+        SeColPaint.setStyle(Paint.Style.FILL);
+        SeColPaint.setTextSize(50);
 
-        SePaint.setColor(Color.RED);
-        canvas.drawRect(Menu_X, Menu_Y + MenuWith, Menu_X + MenuLen, Menu_Y + MenuWith * 2, SePaint);
-        canvas.drawRect(Menu_X, Menu_Y + MenuWith, Menu_X + MenuLen, Menu_Y + MenuWith * 2, MyMenu);
-
-        SePaint.setColor(Color.YELLOW);
-        canvas.drawRect(Menu_X, Menu_Y + MenuWith * 2, Menu_X + MenuLen, Menu_Y + MenuWith * 3, SePaint);
-        canvas.drawRect(Menu_X, Menu_Y + MenuWith * 2, Menu_X + MenuLen, Menu_Y + MenuWith * 3, MyMenu);
-
-        SePaint.setColor(Color.BLUE);
-        canvas.drawRect(Menu_X, Menu_Y + MenuWith * 3, Menu_X + MenuLen, Menu_Y + MenuWith * 4, SePaint);
-        canvas.drawRect(Menu_X, Menu_Y + MenuWith * 3, Menu_X + MenuLen, Menu_Y + MenuWith * 4, MyMenu);
+        //二级像素画笔
+        Paint SePixPaint = new Paint();
+        SePixPaint.setColor(Color.BLACK);
+        SePixPaint.setTextSize(MenuWith);
+        SePixPaint.setStyle(Paint.Style.FILL);
 
 
+        if (Col && !Pix) { //颜色二级菜单展开
 
+            SeColPaint.setColor(Color.RED);
+            canvas.drawRect(Menu_X, Menu_Y + MenuWith, Menu_X + MenuLen, Menu_Y + MenuWith * 2, SeColPaint);
+            canvas.drawRect(Menu_X, Menu_Y + MenuWith, Menu_X + MenuLen, Menu_Y + MenuWith * 2, MyMenu);
+
+            SeColPaint.setColor(Color.YELLOW);
+            canvas.drawRect(Menu_X, Menu_Y + MenuWith * 2, Menu_X + MenuLen, Menu_Y + MenuWith * 3, SeColPaint);
+            canvas.drawRect(Menu_X, Menu_Y + MenuWith * 2, Menu_X + MenuLen, Menu_Y + MenuWith * 3, MyMenu);
+
+            SeColPaint.setColor(Color.BLUE);
+            canvas.drawRect(Menu_X, Menu_Y + MenuWith * 3, Menu_X + MenuLen, Menu_Y + MenuWith * 4, SeColPaint);
+            canvas.drawRect(Menu_X, Menu_Y + MenuWith * 3, Menu_X + MenuLen, Menu_Y + MenuWith * 4, MyMenu);
+        }
+
+        if (!Col && Pix) {
+            
+            canvas.drawRect(Menu_X + MenuLen, Menu_Y + MenuWith, Menu_X + MenuLen * 2, Menu_Y + MenuWith * 2, MyMenu);
+            canvas.drawText("4px", Menu_X + MenuLen + MenuLen / 3, Menu_Y + MenuWith * 2 - 10, SePixPaint);
+
+            canvas.drawRect(Menu_X + MenuLen, Menu_Y + MenuWith * 2, Menu_X + MenuLen * 2, Menu_Y + MenuWith * 3, MyMenu);
+            canvas.drawText("8px", Menu_X + MenuLen + MenuLen / 3, Menu_Y + MenuWith * 3 - 10, SePixPaint);
+
+            canvas.drawRect(Menu_X + MenuLen, Menu_Y + MenuWith * 3, Menu_X + MenuLen * 2, Menu_Y + MenuWith * 4, MyMenu);
+            canvas.drawText("16px", Menu_X + MenuLen + MenuLen / 3, Menu_Y + MenuWith * 4 - 10, SePixPaint);
+        }
     }
 }
