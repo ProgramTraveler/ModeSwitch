@@ -288,8 +288,6 @@ public class SingleHandView extends View {
             case MotionEvent.ACTION_POINTER_UP: //非第一根手指抬起触发
                 pathInfArrayList.get(PathInfNum).paint.setColor(colorNow);
                 pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(pixNow);
-
-
                 pathInfArrayList.get(PathInfNum).path.moveTo(event.getX(0), event.getY(0)); //第一根手指可能会有移动，更新一下位置，不然会出现直接将两点连线
 
                 MenuIn = false;

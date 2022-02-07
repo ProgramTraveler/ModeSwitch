@@ -12,6 +12,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import java.io.SyncFailedException;
 import java.util.ArrayList;
 
 /*
@@ -55,6 +56,18 @@ public class SingleDynamicView extends View {
     private float Menu_X = 0;
     private float Menu_Y = 0;
 
+    //按下的毫秒数，用于检测双击
+    private ArrayList<Long> TimeArr = new ArrayList<>();
+
+    //一级菜单的中心位置
+    private float center_x = 0;
+    private float center_y = 0;
+
+    //记录第一根手指的Y轴的坐标（第一根手指只是上下滑动控制）
+    ArrayList<Float> first_finger_y = new ArrayList<>();
+
+    //记录第二根手指的X轴的坐标（弟二根手指只是左右滑动控制）
+    ArrayList<Float> second_finger_x = new ArrayList<>();
 
 
     public SingleDynamicView(Context context) {
@@ -122,6 +135,10 @@ public class SingleDynamicView extends View {
         Menu_X = high / 2;
         Menu_Y = 0;
 
+        //菜单的中心位置
+        center_x = Menu_X + MenuLen;
+        center_y = Menu_Y + MenuWith / 2;
+
         //初始化bitmap和canvas
         bitmap = Bitmap.createBitmap(width, high, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
@@ -157,9 +174,7 @@ public class SingleDynamicView extends View {
 
     //绘制线条
     private void drawPath() {
-        for (int i = 0; i < pathInfArrayList.size(); i++) {
-            canvas.drawPath(pathInfArrayList.get(i).path, pathInfArrayList.get(i).paint);
-        }
+        for (int i = 0; i < pathInfArrayList.size(); i++) { canvas.drawPath(pathInfArrayList.get(i).path, pathInfArrayList.get(i).paint); }
     }
 
     @Override
@@ -237,7 +252,6 @@ public class SingleDynamicView extends View {
 
             case MotionEvent.ACTION_MOVE:
 
-
                 if (event.getPointerId(event.getActionIndex()) == 0 && event.getPointerCount() == 1) { //判断是否是第一个手指（释放后，再次按下会默认是0）
                     float dx = Math.abs(x - LastX);
                     float dy = Math.abs(y - LastY);
@@ -246,16 +260,40 @@ public class SingleDynamicView extends View {
                     LastX = x;
                     LastY = y;
                 }
+
+                if (event.getPointerCount() == 2) { //如果第二根手指按下
+                    System.out.println("second move");
+                    second_finger_x.add(event.getX(1)); //获取第二根手指的位置
+                }
+                if (second_finger_x.size() > 1) { //如果第二根手指有移动
+                    System.out.println("ceShi");
+                    int n = second_finger_x.size();
+                    if ((second_finger_x.get(n - 1) - second_finger_x.get(0)) >= MenuLen / 3) { //如果当前的坐标超过之前的坐标为菜单长度一半时，认为是选择像素菜单
+                        System.out.println("come in Pix");
+                        showSeMenu(false, true);
+                    }
+                    if ((second_finger_x.get(0) - second_finger_x.get(n - 1) >= MenuLen / 3)) { //选择颜色菜单
+                        System.out.println("come in Col");
+                        showSeMenu(true, false);
+                    }
+                }
                 break;
 
             case MotionEvent.ACTION_POINTER_UP: //非第一根手指抬起触发
 
                 pathInfArrayList.get(PathInfNum).path.moveTo(event.getX(0), event.getY(0)); //第一根手指可能会有移动，更新一下位置，不然会出现直接将两点连线
 
-
                 break;
             case MotionEvent.ACTION_POINTER_DOWN: //多指按下时触发
-
+                TimeArr.add(System.currentTimeMillis()); //当前毫秒数
+                if (TimeArr.size() > 1) {
+                    if (event.getPointerCount() > 1 && ((TimeArr.get(TimeArr.size() - 1) - TimeArr.get(TimeArr.size() - 2)) <= 500)) { //双击判断
+                        //记录第一根手指的X轴坐标
+                        first_finger_y.add(event.getY(0));
+                        //记录第二根手指的Y轴坐标
+                        second_finger_x.add(event.getX(1));
+                    }
+                }
                 break;
             case MotionEvent.ACTION_UP:
 
@@ -323,8 +361,6 @@ public class SingleDynamicView extends View {
             SeColPaint.setColor(Color.BLUE);
             canvas.drawRect(Menu_X, Menu_Y + MenuWith * 3, Menu_X + MenuLen, Menu_Y + MenuWith * 4, SeColPaint);
             canvas.drawRect(Menu_X, Menu_Y + MenuWith * 3, Menu_X + MenuLen, Menu_Y + MenuWith * 4, MyMenu);
-
-
         }
 
         if (!Col && Pix) {
