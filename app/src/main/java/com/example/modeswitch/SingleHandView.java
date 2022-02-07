@@ -346,7 +346,6 @@ public class SingleHandView extends View {
     public void ShowColMenu(boolean status) { //根据双击位置进行调整
         //菜单圆心
         MenuX = Click_x;
-        //MenuY = Click_y - MenuRa * 3 / 2;
         MenuY = Click_y;
         Paint MenuP = new Paint();
         MenuP.setTextSize(100); //文字大小

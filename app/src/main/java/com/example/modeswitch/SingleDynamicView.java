@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -165,9 +166,6 @@ public class SingleDynamicView extends View {
         showColMenu(); //显示颜色一级菜单
         showPixMenu(); //显示像素一级菜单
 
-        //显示二级菜单
-        showSeMenu(true, true);
-
         drawPath();
         canvas.drawBitmap(bitmap, 0, 0, null);
     }
@@ -262,19 +260,19 @@ public class SingleDynamicView extends View {
                 }
 
                 if (event.getPointerCount() == 2) { //如果第二根手指按下
-                    System.out.println("second move");
+
                     second_finger_x.add(event.getX(1)); //获取第二根手指的位置
                 }
                 if (second_finger_x.size() > 1) { //如果第二根手指有移动
-                    System.out.println("ceShi");
+
                     int n = second_finger_x.size();
                     if ((second_finger_x.get(n - 1) - second_finger_x.get(0)) >= MenuLen / 3) { //如果当前的坐标超过之前的坐标为菜单长度一半时，认为是选择像素菜单
-                        System.out.println("come in Pix");
-                        showSeMenu(false, true);
+                        showSeMenuCol(false);
+                        showSeMenuPix(true);
                     }
                     if ((second_finger_x.get(0) - second_finger_x.get(n - 1) >= MenuLen / 3)) { //选择颜色菜单
-                        System.out.println("come in Col");
-                        showSeMenu(true, false);
+                        showSeMenuPix(false);
+                        showSeMenuCol(true);
                     }
                 }
                 break;
@@ -282,6 +280,16 @@ public class SingleDynamicView extends View {
             case MotionEvent.ACTION_POINTER_UP: //非第一根手指抬起触发
 
                 pathInfArrayList.get(PathInfNum).path.moveTo(event.getX(0), event.getY(0)); //第一根手指可能会有移动，更新一下位置，不然会出现直接将两点连线
+                //清空手指的位置信息
+                while (first_finger_y.size() > 0) { //第一个手指的位置信息
+                    first_finger_y.remove(0);
+                }
+                while (second_finger_x.size() > 0) { //第二根手指的位置信息
+                    second_finger_x.remove(0);
+                }
+                //关闭颜色和像素二级菜单
+                showSeMenuCol(false);
+                showSeMenuPix(false);
 
                 break;
             case MotionEvent.ACTION_POINTER_DOWN: //多指按下时触发
@@ -296,7 +304,8 @@ public class SingleDynamicView extends View {
                 }
                 break;
             case MotionEvent.ACTION_UP:
-
+                //当最后一根手指抬起时，清除所有元素（其实清不清都行，也没节省多少空间）
+                while (TimeArr.size() > 0) { TimeArr.remove(0); }
                 break;
         }
         invalidate();
@@ -333,23 +342,16 @@ public class SingleDynamicView extends View {
         canvas.drawText("粗", Menu_X + MenuLen + MenuLen / 3, Menu_Y + MenuWith - 10, MenuP);
         canvas.drawText("细", Menu_X + MenuLen + MenuLen / 3 + MenuWith, Menu_Y + MenuWith - 10, MenuP);
     }
-    //二级菜单显示
-    public  void showSeMenu(boolean Col, boolean Pix) {
+    //颜色二级菜单显示
+    public  void showSeMenuCol(boolean Col) {
         //二级颜色菜单画笔
         Paint SeColPaint = new Paint();
         SeColPaint.setStrokeWidth(5);
         SeColPaint.setStyle(Paint.Style.FILL);
         SeColPaint.setTextSize(50);
 
-        //二级像素画笔
-        Paint SePixPaint = new Paint();
-        SePixPaint.setColor(Color.BLACK);
-        SePixPaint.setTextSize(MenuWith);
-        SePixPaint.setStyle(Paint.Style.FILL);
-
-
-        if (Col && !Pix) { //颜色二级菜单展开
-
+        if (Col) { //颜色二级菜单展开
+            canvas.drawColor(0, PorterDuff.Mode.CLEAR);
             SeColPaint.setColor(Color.RED);
             canvas.drawRect(Menu_X, Menu_Y + MenuWith, Menu_X + MenuLen, Menu_Y + MenuWith * 2, SeColPaint);
             canvas.drawRect(Menu_X, Menu_Y + MenuWith, Menu_X + MenuLen, Menu_Y + MenuWith * 2, MyMenu);
@@ -361,10 +363,20 @@ public class SingleDynamicView extends View {
             SeColPaint.setColor(Color.BLUE);
             canvas.drawRect(Menu_X, Menu_Y + MenuWith * 3, Menu_X + MenuLen, Menu_Y + MenuWith * 4, SeColPaint);
             canvas.drawRect(Menu_X, Menu_Y + MenuWith * 3, Menu_X + MenuLen, Menu_Y + MenuWith * 4, MyMenu);
+        }else {
+            canvas.drawColor(0, PorterDuff.Mode.CLEAR);
         }
+    }
+    //像素二级菜单展示
+    public void showSeMenuPix(boolean Pix) {
+        //二级像素画笔
+        Paint SePixPaint = new Paint();
+        SePixPaint.setColor(Color.BLACK);
+        SePixPaint.setTextSize(MenuWith);
+        SePixPaint.setStyle(Paint.Style.FILL);
 
-        if (!Col && Pix) {
-
+        if (Pix) {
+            canvas.drawColor(0, PorterDuff.Mode.CLEAR);
             canvas.drawRect(Menu_X + MenuLen, Menu_Y + MenuWith, Menu_X + MenuLen * 2, Menu_Y + MenuWith * 2, MyMenu);
             canvas.drawText("4px", Menu_X + MenuLen + MenuLen / 3, Menu_Y + MenuWith * 2 - 10, SePixPaint);
 
@@ -373,6 +385,9 @@ public class SingleDynamicView extends View {
 
             canvas.drawRect(Menu_X + MenuLen, Menu_Y + MenuWith * 3, Menu_X + MenuLen * 2, Menu_Y + MenuWith * 4, MyMenu);
             canvas.drawText("16px", Menu_X + MenuLen + MenuLen / 3, Menu_Y + MenuWith * 4 - 10, SePixPaint);
+        }else {
+            canvas.drawColor(0, PorterDuff.Mode.CLEAR); //关闭菜单
         }
+
     }
 }
