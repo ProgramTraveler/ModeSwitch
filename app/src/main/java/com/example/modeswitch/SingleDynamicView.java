@@ -298,8 +298,6 @@ public class SingleDynamicView extends View {
                 if (first_finger_y.size() > 0) {
                      index = first_finger_y.get(first_finger_y.size() - 1) - first_finger_y.get(0);
                 }
-
-                System.out.println((index >= MenuWith * 3) + " " + (index < MenuWith * 4) + " " + Col_status);
                 if (index >= MenuWith && index < MenuWith * 2 && Col_status) { //选择红色
                    System.out.println("test");
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.RED);
@@ -450,26 +448,33 @@ public class SingleDynamicView extends View {
         float index = first_finger_y.get(n - 1) - first_finger_y.get(0);
 
         if (Col && !Pix) {
+            showSeMenuCol(true);
             if (index >= MenuWith && index < MenuWith * 2) {
+                System.out.println("red");
                 canvas.drawRect(Menu_X, Menu_Y + MenuWith, Menu_X + MenuLen, Menu_Y + MenuWith * 2, HL);
             }else if (index >= MenuWith * 2 && index < MenuWith * 3) {
+                System.out.println("yel");
                 canvas.drawRect(Menu_X, Menu_Y + MenuWith * 2, Menu_X + MenuLen, Menu_Y + MenuWith * 3, HL);
             }else if (index >= MenuWith * 3 && index <= MenuWith *4) {
+                System.out.println("blu");
                 canvas.drawRect(Menu_X, Menu_Y + MenuWith * 3, Menu_X + MenuLen, Menu_Y + MenuWith * 4, HL);
             }else if (index > MenuWith * 4){ //超出最大的范围就关闭两个二级菜单
                 showSeMenuCol(Col_status = false);
-                showSeMenuPix(Pix_status = false);
             }else {
 
             }
         }
 
         if (!Col && Pix) {
+            showSeMenuPix(true);
             if (index >= MenuWith && index < MenuWith * 2) {
+                System.out.println("4px");
                 canvas.drawRect(Menu_X + MenuLen, Menu_Y + MenuWith, Menu_X + MenuLen * 2, Menu_Y + MenuWith * 2, HL);
             }else if (index >= MenuWith * 2 && index < MenuWith * 3) {
+                System.out.println("8px");
                 canvas.drawRect(Menu_X + MenuLen, Menu_Y + MenuWith * 2, Menu_X + MenuLen * 2, Menu_Y + MenuWith * 3, HL);
             }else if (index >= MenuWith * 3 && index <= MenuWith *4) {
+                System.out.println("16px");
                 canvas.drawRect(Menu_X + MenuLen, Menu_Y + MenuWith * 3, Menu_X + MenuLen * 2, Menu_Y + MenuWith * 4, HL);
             }else if (index > MenuWith * 4) {
                 showSeMenuCol(Col_status = false);
