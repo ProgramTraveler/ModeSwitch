@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
@@ -73,6 +74,9 @@ public class SingleDynamicView extends View {
     //颜色，像素二级菜单的展开状态
     private boolean Col_status = false;
     private boolean Pix_status = false;
+
+    private int colorNow = Color.BLACK;
+    private int pixNow = 2;
 
 
     public SingleDynamicView(Context context) {
@@ -268,26 +272,58 @@ public class SingleDynamicView extends View {
                     second_finger_x.add(event.getX(1)); //获取第二根手指的位置
                 }
 
-                if (first_finger_y.size() > 1) { //如果第一根手指有移动
-                    menuHighLight(Col_status, Pix_status); //根据选择的二级菜单进行高亮显示
-                }
-
                 if (second_finger_x.size() > 1) { //如果第二根手指有移动
                     int n = second_finger_x.size();
-                    if ((second_finger_x.get(n - 1) - second_finger_x.get(0)) >= MenuLen / 3) { //如果当前的坐标超过之前的坐标为菜单长度一半时，认为是选择像素菜单
-                        showSeMenuCol(Col_status = false);
-                        showSeMenuPix(Pix_status = true);
-                    }
-                    if ((second_finger_x.get(0) - second_finger_x.get(n - 1) >= MenuLen / 3)) { //选择颜色菜单
+                    if ((second_finger_x.get(0) - second_finger_x.get(n - 1)) >= MenuLen / 4) { //选择颜色菜单
                         showSeMenuPix(Pix_status = false);
                         showSeMenuCol(Col_status = true);
                     }
+                    if ((second_finger_x.get(n - 1) - second_finger_x.get(0)) >= MenuLen / 4) { //如果当前的坐标超过之前的坐标为菜单长度一半时，认为是选择像素菜单
+                        showSeMenuCol(Col_status = false);
+                        showSeMenuPix(Pix_status = true);
+                    }
+                }
+
+                if (first_finger_y.size() > 1) { //如果第一根手指有移动
+                    menuHighLight(Col_status, Pix_status); //根据选择的二级菜单进行高亮显示
                 }
                 break;
 
             case MotionEvent.ACTION_POINTER_UP: //非第一根手指抬起触发
-
+                pathInfArrayList.get(PathInfNum).paint.setColor(colorNow);
+                pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(pixNow);
                 pathInfArrayList.get(PathInfNum).path.moveTo(event.getX(0), event.getY(0)); //第一根手指可能会有移动，更新一下位置，不然会出现直接将两点连线
+
+                float index = 0;
+                if (first_finger_y.size() > 0) {
+                     index = first_finger_y.get(first_finger_y.size() - 1) - first_finger_y.get(0);
+                }
+
+                System.out.println((index >= MenuWith * 3) + " " + (index < MenuWith * 4) + " " + Col_status);
+                if (index >= MenuWith && index < MenuWith * 2 && Col_status) { //选择红色
+                   System.out.println("test");
+                    pathInfArrayList.get(PathInfNum).paint.setColor(Color.RED);
+                   colorNow = Color.RED;
+                }else if (index >= MenuWith * 2 && index < MenuWith * 3 && Col_status) { //选择黄色
+                    pathInfArrayList.get(PathInfNum).paint.setColor(Color.YELLOW);
+                    colorNow = Color.YELLOW;
+                }else if (index >= MenuWith * 3 && index < MenuWith * 4 && Col_status) { //选择蓝色
+                    System.out.println("test");
+                    pathInfArrayList.get(PathInfNum).paint.setColor(Color.BLUE);
+                    colorNow = Color.BLUE;
+                }else if (index >= MenuWith && index < MenuWith * 2 && Pix_status) {
+                    pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(4);
+                    pixNow = 4;
+                }else if (index >= MenuWith * 2 && index < MenuWith * 3 && Pix_status) {
+                    pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(8);
+                    pixNow = 8;
+                }else if (index >= MenuWith * 3 && index < MenuWith * 4 && Pix_status) {
+                    pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(16);
+                    pixNow = 16;
+                }else {
+
+                }
+
                 //清空手指的位置信息
                 while (first_finger_y.size() > 0) { //第一个手指的位置信息
                     first_finger_y.remove(0);
@@ -295,6 +331,7 @@ public class SingleDynamicView extends View {
                 while (second_finger_x.size() > 0) { //第二根手指的位置信息
                     second_finger_x.remove(0);
                 }
+
                 //关闭颜色和像素二级菜单
                 showSeMenuCol(Col_status = false);
                 showSeMenuPix(Pix_status = false);
@@ -307,6 +344,10 @@ public class SingleDynamicView extends View {
                         first_finger_y.add(event.getY(0));
                         //记录第二根手指的Y轴坐标
                         second_finger_x.add(event.getX(1));
+
+                        //产生一个新的对象
+                        PathInfNum ++;
+                        pathInfArrayList.add(new PathInf());
                     }
                 }
                 break;
@@ -401,42 +442,41 @@ public class SingleDynamicView extends View {
     //因为颜色和像素二级菜单的判断是一样的，就写在一起
     public void menuHighLight(boolean Col, boolean Pix) {
         Paint HL = new Paint();
-        HL.setStyle(Paint.Style.FILL);
-        HL.setColor(Color.BLUE);
-        HL.setStrokeWidth(100);
+        HL.setStyle(Paint.Style.STROKE);
+        HL.setColor(Color.BLACK);
+        HL.setStrokeWidth(15);
 
         int n = first_finger_y.size();
         float index = first_finger_y.get(n - 1) - first_finger_y.get(0);
 
-
-
         if (Col && !Pix) {
-
             if (index >= MenuWith && index < MenuWith * 2) {
-                //System.out.println("A");
                 canvas.drawRect(Menu_X, Menu_Y + MenuWith, Menu_X + MenuLen, Menu_Y + MenuWith * 2, HL);
-            } else if (index >= MenuWith * 2 && index < MenuWith * 3) {
-                //System.out.println("B");
+            }else if (index >= MenuWith * 2 && index < MenuWith * 3) {
                 canvas.drawRect(Menu_X, Menu_Y + MenuWith * 2, Menu_X + MenuLen, Menu_Y + MenuWith * 3, HL);
-            } else if (index >= MenuWith * 3 && index < MenuWith *4) {
-                //System.out.println("C");
+            }else if (index >= MenuWith * 3 && index <= MenuWith *4) {
                 canvas.drawRect(Menu_X, Menu_Y + MenuWith * 3, Menu_X + MenuLen, Menu_Y + MenuWith * 4, HL);
-            } else {
-                showSeMenuCol(false);
+            }else if (index > MenuWith * 4){ //超出最大的范围就关闭两个二级菜单
+                showSeMenuCol(Col_status = false);
+                showSeMenuPix(Pix_status = false);
+            }else {
+
             }
         }
 
         if (!Col && Pix) {
             if (index >= MenuWith && index < MenuWith * 2) {
                 canvas.drawRect(Menu_X + MenuLen, Menu_Y + MenuWith, Menu_X + MenuLen * 2, Menu_Y + MenuWith * 2, HL);
-            } else if (index >= MenuWith * 2 && index < MenuWith * 3) {
+            }else if (index >= MenuWith * 2 && index < MenuWith * 3) {
                 canvas.drawRect(Menu_X + MenuLen, Menu_Y + MenuWith * 2, Menu_X + MenuLen * 2, Menu_Y + MenuWith * 3, HL);
-            } else if (index >= MenuWith * 3 && index < MenuWith *4) {
+            }else if (index >= MenuWith * 3 && index <= MenuWith *4) {
                 canvas.drawRect(Menu_X + MenuLen, Menu_Y + MenuWith * 3, Menu_X + MenuLen * 2, Menu_Y + MenuWith * 4, HL);
-            } else {
-                showSeMenuPix(false);
+            }else if (index > MenuWith * 4) {
+                showSeMenuCol(Col_status = false);
+                showSeMenuPix(Pix_status = false);
+            }else {
+
             }
         }
-
     }
 }
