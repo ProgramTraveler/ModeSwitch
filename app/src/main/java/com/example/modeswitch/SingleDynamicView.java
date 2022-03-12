@@ -141,7 +141,7 @@ public class SingleDynamicView extends View {
         MenuWith = width / 30;
 
         //设置菜单的起始位置（左上角坐标）
-        Menu_X = high / 2;
+        Menu_X = 0;
         Menu_Y = 0;
 
         //菜单的中心位置
@@ -363,7 +363,7 @@ public class SingleDynamicView extends View {
         Paint MenuP = new Paint();
         MenuP.setTextSize(MenuWith); //文字大小
         MenuP.setStyle(Paint.Style.FILL); //画笔风格为填充
-        MenuP.setTypeface(Typeface.DEFAULT_BOLD); //粗体
+        //MenuP.setTypeface(Typeface.DEFAULT_BOLD); //粗体（字体没必要）
 
        //显示菜单
        canvas.drawRect(Menu_X, Menu_Y, Menu_X + MenuLen, Menu_Y + MenuWith,MyMenu);
@@ -371,8 +371,7 @@ public class SingleDynamicView extends View {
        //绘制文字
        canvas.drawText("颜", Menu_X + MenuLen / 3, Menu_Y + MenuWith - 10, MenuP);
        canvas.drawText("色", Menu_X + MenuLen / 3 + MenuWith, Menu_Y + MenuWith - 10, MenuP);
-
-
+       
     }
     //像素一级菜单的显示
     public void showPixMenu() {
@@ -380,7 +379,7 @@ public class SingleDynamicView extends View {
         Paint MenuP = new Paint();
         MenuP.setTextSize(MenuWith); //文字大小
         MenuP.setStyle(Paint.Style.FILL); //画笔风格为填充
-        MenuP.setTypeface(Typeface.DEFAULT_BOLD); //粗体
+        //MenuP.setTypeface(Typeface.DEFAULT_BOLD); //粗体
 
         //显示菜单
         canvas.drawRect(Menu_X + MenuLen,  Menu_Y, Menu_X + MenuLen * 2, Menu_Y + MenuWith, MyMenu);
@@ -441,7 +440,7 @@ public class SingleDynamicView extends View {
     public void menuHighLight(boolean Col, boolean Pix) {
         Paint HL = new Paint();
         HL.setStyle(Paint.Style.STROKE);
-        HL.setColor(Color.BLACK);
+        HL.setColor(Color.GREEN);
         HL.setStrokeWidth(15);
 
         int n = first_finger_y.size();
@@ -450,13 +449,13 @@ public class SingleDynamicView extends View {
         if (Col && !Pix) {
             showSeMenuCol(true);
             if (index >= MenuWith && index < MenuWith * 2) {
-                System.out.println("red");
+                //System.out.println("red");
                 canvas.drawRect(Menu_X, Menu_Y + MenuWith, Menu_X + MenuLen, Menu_Y + MenuWith * 2, HL);
             }else if (index >= MenuWith * 2 && index < MenuWith * 3) {
-                System.out.println("yel");
+                //System.out.println("yel");
                 canvas.drawRect(Menu_X, Menu_Y + MenuWith * 2, Menu_X + MenuLen, Menu_Y + MenuWith * 3, HL);
             }else if (index >= MenuWith * 3 && index <= MenuWith *4) {
-                System.out.println("blu");
+                //System.out.println("blu");
                 canvas.drawRect(Menu_X, Menu_Y + MenuWith * 3, Menu_X + MenuLen, Menu_Y + MenuWith * 4, HL);
             }else if (index > MenuWith * 4){ //超出最大的范围就关闭两个二级菜单
                 showSeMenuCol(Col_status = false);
@@ -468,13 +467,13 @@ public class SingleDynamicView extends View {
         if (!Col && Pix) {
             showSeMenuPix(true);
             if (index >= MenuWith && index < MenuWith * 2) {
-                System.out.println("4px");
+                //System.out.println("4px");
                 canvas.drawRect(Menu_X + MenuLen, Menu_Y + MenuWith, Menu_X + MenuLen * 2, Menu_Y + MenuWith * 2, HL);
             }else if (index >= MenuWith * 2 && index < MenuWith * 3) {
-                System.out.println("8px");
+                //System.out.println("8px");
                 canvas.drawRect(Menu_X + MenuLen, Menu_Y + MenuWith * 2, Menu_X + MenuLen * 2, Menu_Y + MenuWith * 3, HL);
             }else if (index >= MenuWith * 3 && index <= MenuWith *4) {
-                System.out.println("16px");
+                //System.out.println("16px");
                 canvas.drawRect(Menu_X + MenuLen, Menu_Y + MenuWith * 3, Menu_X + MenuLen * 2, Menu_Y + MenuWith * 4, HL);
             }else if (index > MenuWith * 4) {
                 showSeMenuCol(Col_status = false);

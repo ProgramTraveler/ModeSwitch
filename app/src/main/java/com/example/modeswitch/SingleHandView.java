@@ -142,7 +142,7 @@ public class SingleHandView extends View {
         hoop.setCircle(3, high / 6 * 10, width / 3);
 
         //设置菜单的半径
-        MenuRa = high / 6;
+        MenuRa = high / 9;
 
         //初始化bitmap和canvas
         bitmap = Bitmap.createBitmap(width, high, Bitmap.Config.ARGB_8888);
@@ -397,6 +397,8 @@ public class SingleHandView extends View {
 
         //设置圆弧范围
         RectF rectF = new RectF(MenuX - MenuRa, MenuY - MenuRa, MenuX + MenuRa, MenuY + MenuRa);
+        //设置高亮区域的圆弧范围
+        RectF rectH = new RectF(MenuX - MenuRa / 2 , MenuY - MenuRa / 2, MenuX + MenuRa / 2, MenuY + MenuRa / 2);
 
         Paint ArcP = new Paint();
         ArcP.setColor(Color.LTGRAY); //圆弧颜色
@@ -409,7 +411,7 @@ public class SingleHandView extends View {
             MenuSeCol = true; //二级颜色菜单打开
             MenuSePix = false; //二级像素菜单关闭
 
-            showSeMenu(rectF, true, false, in_x, in_y);
+            showSeMenu(rectF, true, false, in_x, in_y, rectH);
 
         }else if (r <= Math.pow(MenuRa, 2) && MenuIn && (in_x > MenuX)) { //像素菜单高亮
 
@@ -417,7 +419,7 @@ public class SingleHandView extends View {
             MenuSeCol = false; //二级颜色菜单不显示
             MenuSePix = true; //二级像素菜单显示
 
-            showSeMenu(rectF, false, true, in_x, in_y);
+            showSeMenu(rectF, false, true, in_x, in_y, rectH);
 
         }else {
             ColMenu = true;
@@ -428,7 +430,7 @@ public class SingleHandView extends View {
         }
     }
     //二级菜单显示
-    public void showSeMenu(RectF rectF, boolean Col, boolean Pix, float inf_x, float inf_y) {
+    public void showSeMenu(RectF rectF, boolean Col, boolean Pix, float inf_x, float inf_y, RectF rectH) {
 
         Paint SePaint = new Paint();
         SePaint.setStrokeWidth(5);
@@ -448,18 +450,18 @@ public class SingleHandView extends View {
 
             //颜色二级菜单高亮显示
             Paint SeCHLPaint = new Paint();
-            SeCHLPaint.setStyle(Paint.Style.STROKE);
-            SeCHLPaint.setColor(Color.BLACK);
+            SeCHLPaint.setStyle(Paint.Style.FILL); //效果为填充
+            SeCHLPaint.setColor(Color.GREEN); //颜色为绿色
             SeCHLPaint.setStrokeWidth(10);
 
             if ((inf_y <= (Math.tan(Math.PI * 30 / 180)) * (inf_x - MenuX) + MenuY) && inf_x <= MenuX) { //红色区域高亮
-                canvas.drawArc(rectF,210, 60, true, SeCHLPaint);
+                canvas.drawArc(rectH,210, 60, true, SeCHLPaint);
             }
             if ((inf_y >= (Math.tan(Math.PI * 30 / 180)) * (inf_x - MenuX) + MenuY) && (inf_y <= (Math.tan(Math.PI * 150 /180)) * (inf_x - MenuX) + MenuY)) { //黄色区域高亮
-                canvas.drawArc(rectF, 150, 60, true, SeCHLPaint);
+                canvas.drawArc(rectH, 150, 60, true, SeCHLPaint);
             }
             if ((inf_y >= (Math.tan(Math.PI * 150 / 180)) * (inf_x - MenuX) + MenuY) && inf_x <= MenuX) { //蓝色区域高亮
-                canvas.drawArc(rectF, 90, 60, true, SeCHLPaint);
+                canvas.drawArc(rectH, 90, 60, true, SeCHLPaint);
             }
         }
         if (!Col && Pix) {
@@ -476,18 +478,18 @@ public class SingleHandView extends View {
 
             //像素二级菜单高亮显示
             Paint SePHLPaint = new Paint();
-            SePHLPaint.setStyle(Paint.Style.STROKE);
-            SePHLPaint.setColor(Color.BLACK);
+            SePHLPaint.setStyle(Paint.Style.FILL);
+            SePHLPaint.setColor(Color.GREEN);
             SePHLPaint.setStrokeWidth(10);
 
             if ((inf_y >= (Math.tan(Math.PI * 30 / 180)) * (inf_x - MenuX) + MenuY) && inf_x >= MenuX) { //最大像素区域高亮
-                canvas.drawArc(rectF,30, 60, true, SePHLPaint);
+                canvas.drawArc(rectH,30, 60, true, SePHLPaint);
             }
             if ((inf_y <= (Math.tan(Math.PI * 30 / 180)) * (inf_x - MenuX) + MenuY) && (inf_y >= (Math.tan(Math.PI * 150 /180)) * (inf_x - MenuX) + MenuY)) { //中等像素区域高亮
-                canvas.drawArc(rectF, 30, -60, true, SePHLPaint);
+                canvas.drawArc(rectH, 30, -60, true, SePHLPaint);
             }
             if ((inf_y <= (Math.tan(Math.PI * 150 / 180)) * (inf_x - MenuX) + MenuY) && inf_x >= MenuX) { //最小像素区域高亮
-                canvas.drawArc(rectF, 270, 60, true, SePHLPaint);
+                canvas.drawArc(rectH, 270, 60, true, SePHLPaint);
             }
 
         }
