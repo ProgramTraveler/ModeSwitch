@@ -151,6 +151,9 @@ public class SingleDynamicView extends View {
         //初始化bitmap和canvas
         bitmap = Bitmap.createBitmap(width, high, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
+
+        showColMenu(); //显示颜色一级菜单
+        showPixMenu(); //显示像素一级菜单
     }
 
     //重写该方法，在这里绘图
@@ -171,8 +174,9 @@ public class SingleDynamicView extends View {
             canvas.drawCircle(hoop.getCircle_X(3), hoop.getCircle_Y(3), hoop.getSmallCircleR(), MyPaint);
 
         }
+        /* 放在这里会导致一级菜单一直处于最上层
         showColMenu(); //显示颜色一级菜单
-        showPixMenu(); //显示像素一级菜单
+        showPixMenu(); //显示像素一级菜单*/
 
         drawPath();
         canvas.drawBitmap(bitmap, 0, 0, null);
@@ -285,6 +289,7 @@ public class SingleDynamicView extends View {
                 }
 
                 if (first_finger_y.size() > 1) { //如果第一根手指有移动
+
                     menuHighLight(Col_status, Pix_status); //根据选择的二级菜单进行高亮显示
                 }
                 break;
@@ -299,14 +304,14 @@ public class SingleDynamicView extends View {
                      index = first_finger_y.get(first_finger_y.size() - 1) - first_finger_y.get(0);
                 }
                 if (index >= MenuWith && index < MenuWith * 2 && Col_status) { //选择红色
-                   System.out.println("test");
+                    //System.out.println("test");
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.RED);
                    colorNow = Color.RED;
                 }else if (index >= MenuWith * 2 && index < MenuWith * 3 && Col_status) { //选择黄色
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.YELLOW);
                     colorNow = Color.YELLOW;
                 }else if (index >= MenuWith * 3 && index < MenuWith * 4 && Col_status) { //选择蓝色
-                    System.out.println("test");
+                    //System.out.println("test");
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.BLUE);
                     colorNow = Color.BLUE;
                 }else if (index >= MenuWith && index < MenuWith * 2 && Pix_status) {
@@ -371,7 +376,7 @@ public class SingleDynamicView extends View {
        //绘制文字
        canvas.drawText("颜", Menu_X + MenuLen / 3, Menu_Y + MenuWith - 10, MenuP);
        canvas.drawText("色", Menu_X + MenuLen / 3 + MenuWith, Menu_Y + MenuWith - 10, MenuP);
-       
+
     }
     //像素一级菜单的显示
     public void showPixMenu() {
@@ -390,6 +395,10 @@ public class SingleDynamicView extends View {
 
     //颜色二级菜单显示
     public  void showSeMenuCol(boolean Col) {
+
+        showColMenu(); //显示颜色一级菜单
+        showPixMenu(); //显示像素一级菜单
+
         //二级颜色菜单画笔
         Paint SeColPaint = new Paint();
         SeColPaint.setStrokeWidth(5);
@@ -415,6 +424,10 @@ public class SingleDynamicView extends View {
     }
     //像素二级菜单展示
     public void showSeMenuPix(boolean Pix) {
+
+        showColMenu(); //显示颜色一级菜单
+        showPixMenu(); //显示像素一级菜单
+
         //二级像素画笔
         Paint SePixPaint = new Paint();
         SePixPaint.setColor(Color.BLACK);
@@ -438,6 +451,9 @@ public class SingleDynamicView extends View {
     }
     //因为颜色和像素二级菜单的判断是一样的，就写在一起
     public void menuHighLight(boolean Col, boolean Pix) {
+        showColMenu(); //显示颜色一级菜单
+        showPixMenu(); //显示像素一级菜单
+
         Paint HL = new Paint();
         HL.setStyle(Paint.Style.STROKE);
         HL.setColor(Color.GREEN);
