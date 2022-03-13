@@ -79,6 +79,7 @@ public class SingleDynamicView extends View {
     private int colorNow = Color.BLACK;
     private int pixNow = 2;
 
+    private boolean Double_click = false; //是否双击的检测
 
     public SingleDynamicView(Context context) {
         super(context);
@@ -270,12 +271,12 @@ public class SingleDynamicView extends View {
                     LastY = y;
                 }
 
-                if (event.getPointerCount() == 2) { //如果第二根手指按下
+                if (event.getPointerCount() == 2) { //如果第二根手指按下，做移动的参照
                     first_finger_y.add(event.getY(0)); //获取第一根手指的位置
                     second_finger_x.add(event.getX(1)); //获取第二根手指的位置
                 }
 
-                if (second_finger_x.size() > 1) { //如果第二根手指有移动
+                if (second_finger_x.size() > 1 && Double_click) { //如果第二根手指有移动而且已经做出了双击
                     int n = second_finger_x.size();
                     if ((second_finger_x.get(0) - second_finger_x.get(n - 1)) >= MenuLen / 4) { //选择颜色菜单
                         showSeMenuPix(Pix_status = false);
@@ -296,6 +297,8 @@ public class SingleDynamicView extends View {
                 pathInfArrayList.get(PathInfNum).paint.setColor(colorNow);
                 pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(pixNow);
                 pathInfArrayList.get(PathInfNum).path.moveTo(event.getX(0), event.getY(0)); //第一根手指可能会有移动，更新一下位置，不然会出现直接将两点连线
+
+                Double_click = false; //非第一根手指抬起设为false
 
                 float index = 0;
                 if (first_finger_y.size() > 0) {
@@ -341,6 +344,8 @@ public class SingleDynamicView extends View {
                 TimeArr.add(System.currentTimeMillis()); //当前毫秒数
                 if (TimeArr.size() > 1) {
                     if (event.getPointerCount() > 1 && ((TimeArr.get(TimeArr.size() - 1) - TimeArr.get(TimeArr.size() - 2)) <= 500)) { //双击判断
+                        Double_click = true; //做出双击操作
+
                         //记录第一根手指的X轴坐标
                         first_finger_y.add(event.getY(0));
                         //记录第二根手指的Y轴坐标
@@ -349,6 +354,8 @@ public class SingleDynamicView extends View {
                         //产生一个新的对象
                         PathInfNum ++;
                         pathInfArrayList.add(new PathInf());
+
+                        Menu_inf(); //按下就显示提示矩形
                     }
                 }
                 break;
@@ -489,4 +496,13 @@ public class SingleDynamicView extends View {
             }
         }
     }
+    public void Menu_inf() { //双击出现的提示矩形
+        Paint inf = new Paint();
+        inf.setStyle(Paint.Style.FILL);
+        inf.setColor(Color.GREEN);
+
+        canvas.drawRect(Menu_X + MenuLen - 15, Menu_Y, Menu_X + MenuLen + 15, Menu_Y + MenuWith, inf);
+
+    }
+
 }
