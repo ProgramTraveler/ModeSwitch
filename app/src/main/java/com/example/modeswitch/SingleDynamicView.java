@@ -1,5 +1,6 @@
 package com.example.modeswitch;
 
+import android.app.usage.UsageEvents;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -107,8 +108,6 @@ public class SingleDynamicView extends View {
         MyMenu.setStrokeWidth(5);
         MyMenu.setStyle(Paint.Style.STROKE);
 
-
-
         pathInfArrayList = new ArrayList<>(); //记录不同情况的路径
 
         pathInfArrayList.add(new PathInf());
@@ -174,9 +173,9 @@ public class SingleDynamicView extends View {
             canvas.drawCircle(hoop.getCircle_X(3), hoop.getCircle_Y(3), hoop.getSmallCircleR(), MyPaint);
 
         }
-        /* 放在这里会导致一级菜单一直处于最上层
+        // 放在这里会导致一级菜单一直处于最上层（但好像没什么好的解决办法）
         showColMenu(); //显示颜色一级菜单
-        showPixMenu(); //显示像素一级菜单*/
+        showPixMenu(); //显示像素一级菜单
 
         drawPath();
         canvas.drawBitmap(bitmap, 0, 0, null);
@@ -289,7 +288,6 @@ public class SingleDynamicView extends View {
                 }
 
                 if (first_finger_y.size() > 1) { //如果第一根手指有移动
-
                     menuHighLight(Col_status, Pix_status); //根据选择的二级菜单进行高亮显示
                 }
                 break;
@@ -396,9 +394,6 @@ public class SingleDynamicView extends View {
     //颜色二级菜单显示
     public  void showSeMenuCol(boolean Col) {
 
-        showColMenu(); //显示颜色一级菜单
-        showPixMenu(); //显示像素一级菜单
-
         //二级颜色菜单画笔
         Paint SeColPaint = new Paint();
         SeColPaint.setStrokeWidth(5);
@@ -425,9 +420,6 @@ public class SingleDynamicView extends View {
     //像素二级菜单展示
     public void showSeMenuPix(boolean Pix) {
 
-        showColMenu(); //显示颜色一级菜单
-        showPixMenu(); //显示像素一级菜单
-
         //二级像素画笔
         Paint SePixPaint = new Paint();
         SePixPaint.setColor(Color.BLACK);
@@ -451,8 +443,6 @@ public class SingleDynamicView extends View {
     }
     //因为颜色和像素二级菜单的判断是一样的，就写在一起
     public void menuHighLight(boolean Col, boolean Pix) {
-        showColMenu(); //显示颜色一级菜单
-        showPixMenu(); //显示像素一级菜单
 
         Paint HL = new Paint();
         HL.setStyle(Paint.Style.STROKE);
