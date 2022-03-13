@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".SingleHandMAndA">
 
 
@@ -13,5 +14,22 @@
         android:layout_margin="10dp"
         android:background="@color/white"
         />
+    <Button
+        android:id="@+id/Back_single_Hand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="856dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="8dp"
+
+        android:text="返回"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        app:layout_constraintVertical_bias="0.012"
+        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

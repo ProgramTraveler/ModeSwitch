@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -80,6 +81,8 @@ public class SingleDynamicView extends View {
     private int pixNow = 2;
 
     private boolean Double_click = false; //是否双击的检测
+
+    private int proportion = 3; //移动比例
 
     public SingleDynamicView(Context context) {
         super(context);
@@ -278,11 +281,11 @@ public class SingleDynamicView extends View {
 
                 if (second_finger_x.size() > 1 && Double_click) { //如果第二根手指有移动而且已经做出了双击
                     int n = second_finger_x.size();
-                    if ((second_finger_x.get(0) - second_finger_x.get(n - 1)) >= MenuLen / 4) { //选择颜色菜单
+                    if ((second_finger_x.get(0) - second_finger_x.get(n - 1)) >= MenuLen / 4 /  proportion) { //选择颜色菜单
                         showSeMenuPix(Pix_status = false);
                         showSeMenuCol(Col_status = true);
                     }
-                    if ((second_finger_x.get(n - 1) - second_finger_x.get(0)) >= MenuLen / 4) { //如果当前的坐标超过之前的坐标为菜单长度一半时，认为是选择像素菜单
+                    if ((second_finger_x.get(n - 1) - second_finger_x.get(0)) >= MenuLen / 4 / proportion) { //如果当前的坐标超过之前的坐标为菜单长度一半时，认为是选择像素菜单
                         showSeMenuCol(Col_status = false);
                         showSeMenuPix(Pix_status = true);
                     }
@@ -302,7 +305,7 @@ public class SingleDynamicView extends View {
 
                 float index = 0;
                 if (first_finger_y.size() > 0) {
-                     index = first_finger_y.get(first_finger_y.size() - 1) - first_finger_y.get(0);
+                     index = (first_finger_y.get(first_finger_y.size() - 1) - first_finger_y.get(0)) * proportion;
                 }
                 if (index >= MenuWith && index < MenuWith * 2 && Col_status) { //选择红色
                     //System.out.println("test");
@@ -457,7 +460,7 @@ public class SingleDynamicView extends View {
         HL.setStrokeWidth(15);
 
         int n = first_finger_y.size();
-        float index = first_finger_y.get(n - 1) - first_finger_y.get(0);
+        float index = (first_finger_y.get(n - 1) - first_finger_y.get(0)) * proportion;
 
         if (Col && !Pix) {
             showSeMenuCol(true);
@@ -504,5 +507,6 @@ public class SingleDynamicView extends View {
         canvas.drawRect(Menu_X + MenuLen - 15, Menu_Y, Menu_X + MenuLen + 15, Menu_Y + MenuWith, inf);
 
     }
+
 
 }
