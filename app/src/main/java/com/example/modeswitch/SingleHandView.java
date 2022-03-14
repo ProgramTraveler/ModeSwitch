@@ -90,7 +90,7 @@ public class SingleHandView extends View {
     private int colorNow = Color.BLACK;
     private int pixNow = 2;
 
-
+    private SwitchInformation switchInformation = new SwitchInformation();
     //重写父类方法
     public SingleHandView(Context context) { //在new的时候调用
         super(context);
@@ -182,6 +182,13 @@ public class SingleHandView extends View {
         }
 
         infShowMenu(Tou_x, Tou_y);
+
+        //提示文字显示
+        canvas.drawText(switchInformation.getCurrent_color_inf(), width / 3, high / 5, switchInformation.getWordInf());
+        canvas.drawText(switchInformation.getCurrent_pixel_inf(), width / 3, high / 5 + 80, switchInformation.getWordInf());
+
+        canvas.drawText(switchInformation.getTarget_color_inf(), width / 3 + 500, high  / 5, switchInformation.getWordInf());
+        canvas.drawText(switchInformation.getCurrent_pixel_inf(), width / 3 + 500, high / 5 + 80, switchInformation.getWordInf());
 
         drawPath();
         canvas.drawBitmap(bitmap, 0, 0, null);
@@ -348,7 +355,7 @@ public class SingleHandView extends View {
         MenuX = Click_x;
         MenuY = Click_y;
         Paint MenuP = new Paint();
-        MenuP.setTextSize(100); //文字大小
+        MenuP.setTextSize(75); //文字大小
         MenuP.setStyle(Paint.Style.FILL); //画笔风格为填充
         MenuP.setTypeface(Typeface.DEFAULT_BOLD); //粗体
 
@@ -371,7 +378,7 @@ public class SingleHandView extends View {
         MenuY = Click_y;
 
         Paint MenuP = new Paint();
-        MenuP.setTextSize(100); //文字大小
+        MenuP.setTextSize(75); //文字大小
         MenuP.setStyle(Paint.Style.FILL); //画笔风格为填充
         MenuP.setTypeface(Typeface.DEFAULT_BOLD); //粗体
 
