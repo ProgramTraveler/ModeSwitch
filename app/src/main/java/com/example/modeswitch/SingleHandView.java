@@ -188,8 +188,11 @@ public class SingleHandView extends View {
         canvas.drawText(switchInformation.getCurrent_pixel_inf(), width / 3, high / 5 + 80, switchInformation.getWordInf());
 
         canvas.drawText(switchInformation.getTarget_color_inf(), width / 3 + 500, high  / 5, switchInformation.getWordInf());
-        canvas.drawText(switchInformation.getCurrent_pixel_inf(), width / 3 + 500, high / 5 + 80, switchInformation.getWordInf());
+        canvas.drawText(switchInformation.getTarget_pixel_inf(), width / 3 + 500, high / 5 + 80, switchInformation.getWordInf());
 
+        //显示颜色和像素提示
+        canvas.drawRect(width / 3 + 230, high / 5 - 40, width / 3 + 350, high / 5, switchInformation.getColorPaint());
+        canvas.drawText(switchInformation.getCurrent_pixel(), width / 3 + 230, high / 5 + 80, switchInformation.getWordInf());
         drawPath();
         canvas.drawBitmap(bitmap, 0, 0, null);
     }

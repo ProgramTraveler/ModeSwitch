@@ -11,7 +11,7 @@ import android.graphics.Paint;
  */
 
 public class SwitchInformation {
-    String current_Pixel = "1PX"; //当前像素
+    String current_pixel = "1PX"; //当前像素
     String target_pixel = ""; //目标像素
 
     /*
@@ -53,6 +53,31 @@ public class SwitchInformation {
         return target_pixel_inf;
     }
 
+    public void setCurrent_color(int n) {
+        current_color = n;
+    }
+    public Paint getColorPaint() { //当前颜色画笔
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setStrokeWidth(1);
+        //根据当前不同的颜色情况设置不同的画笔颜色
+        if (current_color == 1) {
+            paint.setColor(Color.RED);
+        }
+        if (current_color == 2) {
+            paint.setColor(Color.YELLOW);
+        }
+        if (current_color == 3) {
+            paint.setColor(Color.BLUE);
+        }
+        return paint;
+    }
 
+    public void setCurrent_pixel(String s) {
+        current_pixel = s;
+    }
+    public String getCurrent_pixel() {
+        return current_pixel;
+    }
 
 }
