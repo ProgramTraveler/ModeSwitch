@@ -94,6 +94,7 @@ public class SingleHandView extends View {
 
     private Coordinate coordinate;
 
+    private RandomNumber randomNumber = new RandomNumber();
     //重写父类方法
     public SingleHandView(Context context) { //在new的时候调用
         super(context);
@@ -121,6 +122,8 @@ public class SingleHandView extends View {
         pathInfArrayList.add(new PathInf());
 
         hoop = new Hoop();
+
+
 
     }
 
@@ -189,20 +192,14 @@ public class SingleHandView extends View {
         infShowMenu(Tou_x, Tou_y);
 
         //提示文字显示
-        //canvas.drawText(switchInformation.getCurrent_color_inf(), width / 3, high / 5, switchInformation.getWordInf());
         canvas.drawText(switchInformation.getCurrent_color_inf(), coordinate.current_color_x, coordinate.current_color_y, switchInformation.getWordInf());
-        //canvas.drawText(switchInformation.getCurrent_pixel_inf(), width / 3, high / 5 + 80, switchInformation.getWordInf());
         canvas.drawText(switchInformation.getCurrent_pixel_inf(), coordinate.current_pixel_x,  coordinate.current_pixel_y, switchInformation.getWordInf());
 
-        //canvas.drawText(switchInformation.getTarget_color_inf(), width / 3 + 500, high  / 5, switchInformation.getWordInf());
         canvas.drawText(switchInformation.getTarget_color_inf(), coordinate.target_color_x, coordinate.target_color_y, switchInformation.getWordInf());
-        //canvas.drawText(switchInformation.getTarget_pixel_inf(), width / 3 + 500, high / 5 + 80, switchInformation.getWordInf());
         canvas.drawText(switchInformation.getTarget_pixel_inf(), coordinate.target_pixel_x, coordinate.target_pixel_y, switchInformation.getWordInf());
 
         //显示颜色和像素提示
-        //canvas.drawRect(width / 3 + 230, high / 5 - 40, width / 3 + 350, high / 5, switchInformation.getColorPaint());
         canvas.drawRect(coordinate.current_color_left, coordinate.current_color_top, coordinate.current_color_right, coordinate.current_color_bottom, switchInformation.getColorPaint());
-        //canvas.drawText(switchInformation.getCurrent_pixel(), width / 3 + 230, high / 5 + 80, switchInformation.getWordInf());
         canvas.drawText(switchInformation.getCurrent_pixel(), coordinate.current_pixel_word_X, coordinate.current_pixel_word_y, switchInformation.getWordInf());
 
         drawPath();

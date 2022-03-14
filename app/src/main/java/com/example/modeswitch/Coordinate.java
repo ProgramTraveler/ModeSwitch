@@ -37,7 +37,7 @@ public class Coordinate {
 
     public Coordinate(float h, float w) {
         current_color_x = w / 3;
-        current_color_y = h / 3;
+        current_color_y = h / 5;
 
         current_pixel_x = w / 3;
         current_pixel_y = h / 5 + 80;
