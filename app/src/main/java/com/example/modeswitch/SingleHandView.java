@@ -34,8 +34,8 @@ public class SingleHandView extends View {
 
     private Paint MyPaint; //绘制图形的画笔
 
-    private int width = 0; //屏幕的宽度
-    private int high = 0; //屏幕的高度
+    private float width = 0; //屏幕的宽度
+    private float high = 0; //屏幕的高度
 
     private Canvas canvas; //内存中创建的Canvas
     private Bitmap bitmap; //缓存绘制的内容
@@ -91,6 +91,9 @@ public class SingleHandView extends View {
     private int pixNow = 2;
 
     private SwitchInformation switchInformation = new SwitchInformation();
+
+    private Coordinate coordinate;
+
     //重写父类方法
     public SingleHandView(Context context) { //在new的时候调用
         super(context);
@@ -131,9 +134,9 @@ public class SingleHandView extends View {
         high = MeasureSpec.getSize(highMeasureSpec); //获取屏幕高度
 
         //根据屏幕大小来设置大小半径
-        hoop.setSmallCircleR((float) high / 12);
+        hoop.setSmallCircleR(high / 12);
         //BigCircleR = high / 6;
-        hoop.setBigCircleR((float) high / 6);
+        hoop.setBigCircleR(high / 6);
 
 
         //根据屏幕大小来设置每个圆环的圆心位置
@@ -144,8 +147,10 @@ public class SingleHandView extends View {
         //设置菜单的半径
         MenuRa = high / 9;
 
+        coordinate = new Coordinate(high, width);
+
         //初始化bitmap和canvas
-        bitmap = Bitmap.createBitmap(width, high, Bitmap.Config.ARGB_8888);
+        bitmap = Bitmap.createBitmap((int)width, (int)high, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
     }
 
@@ -184,15 +189,22 @@ public class SingleHandView extends View {
         infShowMenu(Tou_x, Tou_y);
 
         //提示文字显示
-        canvas.drawText(switchInformation.getCurrent_color_inf(), width / 3, high / 5, switchInformation.getWordInf());
-        canvas.drawText(switchInformation.getCurrent_pixel_inf(), width / 3, high / 5 + 80, switchInformation.getWordInf());
+        //canvas.drawText(switchInformation.getCurrent_color_inf(), width / 3, high / 5, switchInformation.getWordInf());
+        canvas.drawText(switchInformation.getCurrent_color_inf(), coordinate.current_color_x, coordinate.current_color_y, switchInformation.getWordInf());
+        //canvas.drawText(switchInformation.getCurrent_pixel_inf(), width / 3, high / 5 + 80, switchInformation.getWordInf());
+        canvas.drawText(switchInformation.getCurrent_pixel_inf(), coordinate.current_pixel_x,  coordinate.current_pixel_y, switchInformation.getWordInf());
 
-        canvas.drawText(switchInformation.getTarget_color_inf(), width / 3 + 500, high  / 5, switchInformation.getWordInf());
-        canvas.drawText(switchInformation.getTarget_pixel_inf(), width / 3 + 500, high / 5 + 80, switchInformation.getWordInf());
+        //canvas.drawText(switchInformation.getTarget_color_inf(), width / 3 + 500, high  / 5, switchInformation.getWordInf());
+        canvas.drawText(switchInformation.getTarget_color_inf(), coordinate.target_color_x, coordinate.target_color_y, switchInformation.getWordInf());
+        //canvas.drawText(switchInformation.getTarget_pixel_inf(), width / 3 + 500, high / 5 + 80, switchInformation.getWordInf());
+        canvas.drawText(switchInformation.getTarget_pixel_inf(), coordinate.target_pixel_x, coordinate.target_pixel_y, switchInformation.getWordInf());
 
         //显示颜色和像素提示
-        canvas.drawRect(width / 3 + 230, high / 5 - 40, width / 3 + 350, high / 5, switchInformation.getColorPaint());
-        canvas.drawText(switchInformation.getCurrent_pixel(), width / 3 + 230, high / 5 + 80, switchInformation.getWordInf());
+        //canvas.drawRect(width / 3 + 230, high / 5 - 40, width / 3 + 350, high / 5, switchInformation.getColorPaint());
+        canvas.drawRect(coordinate.current_color_left, coordinate.current_color_top, coordinate.current_color_right, coordinate.current_color_bottom, switchInformation.getColorPaint());
+        //canvas.drawText(switchInformation.getCurrent_pixel(), width / 3 + 230, high / 5 + 80, switchInformation.getWordInf());
+        canvas.drawText(switchInformation.getCurrent_pixel(), coordinate.current_pixel_word_X, coordinate.current_pixel_word_y, switchInformation.getWordInf());
+
         drawPath();
         canvas.drawBitmap(bitmap, 0, 0, null);
     }

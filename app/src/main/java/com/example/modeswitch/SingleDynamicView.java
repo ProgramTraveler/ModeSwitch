@@ -45,8 +45,8 @@ public class SingleDynamicView extends View {
     private boolean error = false; //当状态变为true时说明是第二次遇到符合误差的状态
     private float errorNum = 20.0F;
 
-    private int width = 0; //屏幕的宽度
-    private int high = 0; //屏幕的高度
+    private float width = 0; //屏幕的宽度
+    private float high = 0; //屏幕的高度
     private Canvas canvas; //内存中创建的Canvas
     private Bitmap bitmap; //缓存绘制的内容
 
@@ -152,7 +152,7 @@ public class SingleDynamicView extends View {
         center_y = Menu_Y + MenuWith / 2;
 
         //初始化bitmap和canvas
-        bitmap = Bitmap.createBitmap(width, high, Bitmap.Config.ARGB_8888);
+        bitmap = Bitmap.createBitmap((int)width, (int)high, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
 
         showColMenu(); //显示颜色一级菜单
