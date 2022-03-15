@@ -1,33 +1,39 @@
 package com.example.modeswitch;
 
-
 import android.content.Context;
 import android.os.Environment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 /*
     user:王久铭
     date:2022-03-15
     purpose:用来记录实验数据，并导出csv文件
  */
+
 public class ExperimentalData {
     private RandomAccessFile csv; // 存实验数据的文件
-    private Context context;
-    String name = "aa"; //文件名
+    String name = "bb"; //文件名
 
     public ExperimentalData() {}
 
-
-    /*public void saveInf() throws IOException {
+    public void saveInf() throws IOException {
 
         String temp = name + ".csv"; //添加csv文件后缀
 
@@ -49,30 +55,8 @@ public class ExperimentalData {
         csv.skipBytes(csvLine);
 
         System.out.println("2");
-        saveText = "name" + "," + "number" + "\n"; //美拍存储的数据记录
+        saveText = "name" + "," + "number" + "\n"; //每排存储的数据记录
         csv.write(saveText.getBytes("GBK"));
         csv.close();
-    }*/
-    public void saveInf() throws Exception {
-        String data = "data";
-        FileOutputStream out = null;
-        BufferedWriter writer = null;
-
-        try {
-            out = context.openFileOutput("data", Context.MODE_PRIVATE);
-            writer = new BufferedWriter(new OutputStreamWriter(out));
-            writer.write(data);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (writer != null) {
-                    writer.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
     }
 }
