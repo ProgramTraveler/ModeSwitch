@@ -17,12 +17,15 @@ import android.widget.Toast;
 
 public class MainMenu extends AppCompatActivity {
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         //对单手主辅模式的按钮的监听
         Button buttonSingle = (Button) findViewById(R.id.SingleHand);
+
         buttonSingle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

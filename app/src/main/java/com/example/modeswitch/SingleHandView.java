@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.ColorRes;
 
+import java.io.IOException;
 import java.sql.Ref;
 import java.util.ArrayList;
 
@@ -95,6 +96,9 @@ public class SingleHandView extends View {
     private Coordinate coordinate;
 
     private RandomNumber randomNumber = new RandomNumber();
+
+    ExperimentalData experimentalData = new ExperimentalData();
+
     //重写父类方法
     public SingleHandView(Context context) { //在new的时候调用
         super(context);
@@ -122,13 +126,18 @@ public class SingleHandView extends View {
         pathInfArrayList.add(new PathInf());
 
         hoop = new Hoop();
-
-
-
+        System.out.println("test");
+        try {
+            System.out.println("进入");
+            experimentalData.saveInf();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int highMeasureSpec) {
+
         super.onMeasure(widthMeasureSpec, highMeasureSpec);
         //布局的宽高都是由该方法指定的
 
@@ -155,11 +164,14 @@ public class SingleHandView extends View {
         //初始化bitmap和canvas
         bitmap = Bitmap.createBitmap((int)width, (int)high, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
+
+
     }
 
     //重写该方法，在这里绘图
     @Override
     protected void onDraw(Canvas canvas) {
+
         super.onDraw(canvas);
 
         //绘制第一个环
@@ -385,6 +397,7 @@ public class SingleHandView extends View {
     }
     //像素一级菜单
     public void ShowPixMenu(boolean status) {
+
         //菜单圆心
         MenuX = Click_x;
         MenuY = Click_y;
