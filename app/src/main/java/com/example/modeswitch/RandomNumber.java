@@ -37,8 +37,6 @@ public class RandomNumber {
             Collections.swap(randomN, index, randomN.size() - 1 - i);
 
         }
-
-
     }
 
 
