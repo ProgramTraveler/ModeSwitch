@@ -35,9 +35,21 @@ public class RandomNumber {
         for (int i = 0; i < 9; i ++) {
             index = random.nextInt(9);
             Collections.swap(randomN, index, randomN.size() - 1 - i);
-
         }
     }
 
+    public int getRandom() { //获得随机数
+        //System.out.println(randomN.size());
+        int temp = 0;
+        if (randomN.size() != 0) { //如果还有数
+            temp = randomN.get(0);
+            randomN.remove(0);
+        }
 
+        return temp;
+    }
+
+    public boolean getArrayLength() { //检查容器是否为0
+        return randomN.size() == 0;
+    }
 }

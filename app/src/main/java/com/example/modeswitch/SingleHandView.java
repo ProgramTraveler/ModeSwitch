@@ -97,6 +97,8 @@ public class SingleHandView extends View {
 
     private RandomNumber randomNumber = new RandomNumber();
 
+    private int tips = 0; //记录菜单切换信息
+
     ExperimentalData experimentalData = new ExperimentalData();
 
     //重写父类方法
@@ -126,13 +128,6 @@ public class SingleHandView extends View {
         pathInfArrayList.add(new PathInf());
 
         hoop = new Hoop();
-        System.out.println("test");
-        try {
-            System.out.println("进入");
-            experimentalData.saveInf();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -182,6 +177,8 @@ public class SingleHandView extends View {
         if (hoop.getRing_2()) { //显示第二个环
             canvas.drawCircle(hoop.getCircle_X(2), hoop.getCircle_Y(2), hoop.getBigCircleR(), MyPaint);
             canvas.drawCircle(hoop.getCircle_X(2), hoop.getCircle_Y(2), hoop.getSmallCircleR(), MyPaint);
+
+
         }
         if (hoop.getRing_3()) { //显示第三个环
             canvas.drawCircle(hoop.getCircle_X(3), hoop.getCircle_Y(3), hoop.getBigCircleR(), MyPaint);
@@ -211,8 +208,12 @@ public class SingleHandView extends View {
         canvas.drawText(switchInformation.getTarget_pixel_inf(), coordinate.target_pixel_x, coordinate.target_pixel_y, switchInformation.getWordInf());
 
         //显示颜色和像素提示
-        canvas.drawRect(coordinate.current_color_left, coordinate.current_color_top, coordinate.current_color_right, coordinate.current_color_bottom, switchInformation.getColorPaint());
+        canvas.drawRect(coordinate.current_color_left, coordinate.current_color_top, coordinate.current_color_right, coordinate.current_color_bottom, switchInformation.getCurrent_color());
         canvas.drawText(switchInformation.getCurrent_pixel(), coordinate.current_pixel_word_X, coordinate.current_pixel_word_y, switchInformation.getWordInf());
+
+        //显示颜色切换目标和像素切换目标
+        canvas.drawRect(coordinate.target_color_left, coordinate.target_color_top, coordinate.target_color_right, coordinate.target_color_bottom, switchInformation.getTarget_color());
+        canvas.drawText(switchInformation.getTarget_pixel(), coordinate.target_pixel_word_x, coordinate.target_pixel_word_y, switchInformation.getWordInf());
 
         drawPath();
         canvas.drawBitmap(bitmap, 0, 0, null);
@@ -253,9 +254,15 @@ public class SingleHandView extends View {
                     }
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
                         hoop.setRing_2(true);// 当误差满足条件的时候就当做是一个闭环
+
                         //重新初始化条件
                         index = false;
                         error = false;
+
+                        //获得颜色提示
+                        tips = randomNumber.getRandom();
+
+                        switchInformation.setTarget_color(tips / 10);
                     }
                 }
             }else { //要是画出环的处理，暂时还没有想法
@@ -282,6 +289,9 @@ public class SingleHandView extends View {
                     }
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
                         hoop.setRing_3(true);//当误差满足条件的时候就当做是一个闭环
+
+                        //像素提示
+                        switchInformation.setTarget_pixel(tips % 10);
                     }
                 }
             }else { //要是画出环的处理，暂时还没有想法
@@ -327,21 +337,39 @@ public class SingleHandView extends View {
                 if ((Tou_y <= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x <= MenuX && MenuSeCol && !MenuSePix) { //选择红色
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.RED);
                     colorNow = Color.RED;
+
+                    switchInformation.setCurrent_color(1); //设置当前颜色
+
                 } else if ((Tou_y >= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && (Tou_y <= (Math.tan(Math.PI * 150 /180)) * (Tou_x - MenuX) + MenuY) && MenuSeCol && !MenuSePix) { //选择黄色
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.YELLOW);
                     colorNow = Color.YELLOW;
+
+                    switchInformation.setCurrent_color(2);
+
                 } else if ((Tou_y >= (Math.tan(Math.PI * 150 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x <= MenuX && MenuSeCol && !MenuSePix) { //选择蓝色
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.BLUE);
                     colorNow = Color.BLUE;
+
+                    switchInformation.setCurrent_color(3);
+
                 } else if ((Tou_y >= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x >= MenuX && !MenuSeCol && MenuSePix) { //最大像素区域高亮
                     pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(16);
                     pixNow = 16;
-                } else if ((Tou_y <= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && (Tou_x >= (Math.tan(Math.PI * 150 /180)) * (Tou_x - MenuX) + MenuY) && !MenuSeCol && MenuSePix) { //中等像素区域高亮
+
+                    switchInformation.setCurrent_pixel("16PX");
+
+                } else if ((Tou_y <= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && (Tou_y >= (Math.tan(Math.PI * 150 /180)) * (Tou_x - MenuX) + MenuY) && Tou_x >= MenuX && !MenuSeCol && MenuSePix) { //中等像素区域高亮
                     pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(8);
                     pixNow = 8;
+                    //System.out.println("come in 8PX");
+                    switchInformation.setCurrent_pixel("8PX");
+
                 } else if ((Tou_y <= (Math.tan(Math.PI * 150 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x >= MenuX && !MenuSeCol && MenuSePix) { //最小像素区域高亮
                     pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(4);
                     pixNow = 4;
+                    //System.out.println("come in 4PX");
+                    switchInformation.setCurrent_pixel("4PX");
+
                 }else { //否则就和之前保持一致
                 }
                 //将二级菜单重新关闭

@@ -56,10 +56,12 @@ public class SwitchInformation {
     public void setCurrent_color(int n) {
         current_color = n;
     }
-    public Paint getColorPaint() { //当前颜色画笔
+    public Paint getCurrent_color() { //当前颜色画笔
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
         paint.setStrokeWidth(1);
+        paint.setColor(Color.BLACK); //默认为黑色
+
         //根据当前不同的颜色情况设置不同的画笔颜色
         if (current_color == 1) {
             paint.setColor(Color.RED);
@@ -79,5 +81,26 @@ public class SwitchInformation {
     public String getCurrent_pixel() {
         return current_pixel;
     }
+
+    public void setTarget_color(int n) { target_color = n; }
+    public Paint getTarget_color() {
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setStrokeWidth(1);
+        paint.setColor(Color.WHITE); //默认为白色（背景色）
+
+        if (target_color == 1) paint.setColor(Color.RED);
+        if (target_color == 2) paint.setColor(Color.YELLOW);
+        if (target_color == 3) paint.setColor(Color.BLUE);
+
+        return paint;
+    }
+
+    public void setTarget_pixel(int  n) {
+        if (n == 1) target_pixel = "4PX";
+        if (n == 2) target_pixel = "8PX";
+        if (n == 3) target_pixel = "16PX";
+    }
+    public String getTarget_pixel() { return target_pixel; }
 
 }

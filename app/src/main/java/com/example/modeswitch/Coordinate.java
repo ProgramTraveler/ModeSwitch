@@ -24,7 +24,7 @@ public class Coordinate {
     public float target_pixel_y = 0;
 
     /*
-        提示颜色块和像素文字坐标
+        颜色块和像素文字坐标
      */
     //当前颜色块坐标
     public float current_color_left = 0;
@@ -34,6 +34,14 @@ public class Coordinate {
     //当前像素文字坐标
     public float current_pixel_word_X = 0;
     public float current_pixel_word_y = 0;
+    //目标颜色块坐标
+    public float target_color_left = 0;
+    public float target_color_top = 0;
+    public float target_color_right = 0;
+    public float target_color_bottom = 0;
+    //目标像素文字坐标
+    public float target_pixel_word_x = 0;
+    public float target_pixel_word_y = 0;
 
     public Coordinate(float h, float w) {
         current_color_x = w / 3;
@@ -50,12 +58,19 @@ public class Coordinate {
 
         current_color_left = w / 3 + 230;
         current_color_top = h / 5 - 40;
-        current_color_right = w / 3 + 350;
-        current_color_bottom = h /5;
+        current_color_right = w / 3 + 230 + 120;
+        current_color_bottom = h / 5;
 
         current_pixel_word_X = w / 3 + 230;
         current_pixel_word_y = h / 5 + 80;
 
+        target_color_left = w / 3 + 500 + 230;
+        target_color_top = h / 5 - 40;
+        target_color_right = w / 3 + 500 + 230 + 120;
+        target_color_bottom = h / 5;
+
+        target_pixel_word_x = w / 3 + 500 + 230;
+        target_pixel_word_y = h / 5 + 80;
     }
 
 }
