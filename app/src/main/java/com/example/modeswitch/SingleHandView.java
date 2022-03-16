@@ -99,7 +99,7 @@ public class SingleHandView extends View {
 
     private int tips = 0; //记录菜单切换信息
 
-    ExperimentalData experimentalData = new ExperimentalData();
+    private ExperimentalData experimentalData = new ExperimentalData(); //数据记录
 
     //重写父类方法
     public SingleHandView(Context context) { //在new的时候调用
@@ -261,7 +261,6 @@ public class SingleHandView extends View {
 
                         //获得颜色提示
                         tips = randomNumber.getRandom();
-
                         switchInformation.setTarget_color(tips / 10);
                     }
                 }

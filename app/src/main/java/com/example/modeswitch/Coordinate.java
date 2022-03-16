@@ -43,6 +43,7 @@ public class Coordinate {
     public float target_pixel_word_x = 0;
     public float target_pixel_word_y = 0;
 
+
     public Coordinate(float h, float w) {
         current_color_x = w / 3;
         current_color_y = h / 5;

@@ -84,6 +84,16 @@ public class SingleDynamicView extends View {
 
     private int proportion = 3; //移动比例
 
+    private SwitchInformation switchInformation = new SwitchInformation();
+
+    private Coordinate coordinate;
+
+    private RandomNumber randomNumber = new RandomNumber();
+
+    private int tips = 0;
+
+    private ExperimentalData experimentalData = new ExperimentalData();
+
     public SingleDynamicView(Context context) {
         super(context);
         init();
@@ -140,7 +150,7 @@ public class SingleDynamicView extends View {
         hoop.setCircle(3, high / 6 * 10, width / 3);
 
         //设置菜单的长和宽
-        MenuLen = high / 3;
+        MenuLen = high * 10 / 35;
         MenuWith = width / 30;
 
         //设置菜单的起始位置（左上角坐标）
@@ -150,6 +160,8 @@ public class SingleDynamicView extends View {
         //菜单的中心位置
         center_x = Menu_X + MenuLen;
         center_y = Menu_Y + MenuWith / 2;
+
+        coordinate = new Coordinate(high, width);
 
         //初始化bitmap和canvas
         bitmap = Bitmap.createBitmap((int)width, (int)high, Bitmap.Config.ARGB_8888);
@@ -180,6 +192,22 @@ public class SingleDynamicView extends View {
         // 放在这里会导致一级菜单一直处于最上层（但好像没什么好的解决办法）
         showColMenu(); //显示颜色一级菜单
         showPixMenu(); //显示像素一级菜单
+
+        //提示文字显示
+        canvas.drawText(switchInformation.getCurrent_color_inf(), coordinate.current_color_x, coordinate.current_color_y, switchInformation.getWordInf());
+        canvas.drawText(switchInformation.getCurrent_pixel_inf(), coordinate.current_pixel_x,  coordinate.current_pixel_y, switchInformation.getWordInf());
+
+        canvas.drawText(switchInformation.getTarget_color_inf(), coordinate.target_color_x, coordinate.target_color_y, switchInformation.getWordInf());
+        canvas.drawText(switchInformation.getTarget_pixel_inf(), coordinate.target_pixel_x, coordinate.target_pixel_y, switchInformation.getWordInf());
+
+        //显示颜色和像素提示
+        canvas.drawRect(coordinate.current_color_left, coordinate.current_color_top, coordinate.current_color_right, coordinate.current_color_bottom, switchInformation.getCurrent_color());
+        canvas.drawText(switchInformation.getCurrent_pixel(), coordinate.current_pixel_word_X, coordinate.current_pixel_word_y, switchInformation.getWordInf());
+
+        //显示颜色切换目标和像素切换目标
+        canvas.drawRect(coordinate.target_color_left, coordinate.target_color_top, coordinate.target_color_right, coordinate.target_color_bottom, switchInformation.getTarget_color());
+        canvas.drawText(switchInformation.getTarget_pixel(), coordinate.target_pixel_word_x, coordinate.target_pixel_word_y, switchInformation.getWordInf());
+
 
         drawPath();
         canvas.drawBitmap(bitmap, 0, 0, null);
@@ -222,6 +250,10 @@ public class SingleDynamicView extends View {
                         //重新初始化条件
                         index = false;
                         error = false;
+
+                        //获得颜色提示
+                        tips = randomNumber.getRandom();
+                        switchInformation.setTarget_color(tips / 10);
                     }
                 }
             } else { //要是画出环的处理，暂时还没有想法
@@ -247,6 +279,9 @@ public class SingleDynamicView extends View {
                     }
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
                         hoop.setRing_3(true);//当误差满足条件的时候就当做是一个闭环
+
+                        //像素提示
+                        switchInformation.setTarget_pixel(tips % 10);
                     }
                 }
             } else { //要是画出环的处理，暂时还没有想法
@@ -310,23 +345,42 @@ public class SingleDynamicView extends View {
                 if (index >= MenuWith && index < MenuWith * 2 && Col_status) { //选择红色
                     //System.out.println("test");
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.RED);
-                   colorNow = Color.RED;
+                    colorNow = Color.RED;
+
+                    switchInformation.setCurrent_color(1);
+
                 }else if (index >= MenuWith * 2 && index < MenuWith * 3 && Col_status) { //选择黄色
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.YELLOW);
                     colorNow = Color.YELLOW;
+
+                    switchInformation.setCurrent_color(2);
+
                 }else if (index >= MenuWith * 3 && index < MenuWith * 4 && Col_status) { //选择蓝色
                     //System.out.println("test");
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.BLUE);
                     colorNow = Color.BLUE;
+
+                    switchInformation.setCurrent_color(3);
+
                 }else if (index >= MenuWith && index < MenuWith * 2 && Pix_status) {
                     pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(4);
                     pixNow = 4;
+
+                    switchInformation.setCurrent_pixel("4PX");
+
+
                 }else if (index >= MenuWith * 2 && index < MenuWith * 3 && Pix_status) {
                     pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(8);
                     pixNow = 8;
+
+                    switchInformation.setCurrent_pixel("8PX");
+
                 }else if (index >= MenuWith * 3 && index < MenuWith * 4 && Pix_status) {
                     pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(16);
                     pixNow = 16;
+
+                    switchInformation.setCurrent_pixel("16PX");
+
                 }else {
 
                 }
