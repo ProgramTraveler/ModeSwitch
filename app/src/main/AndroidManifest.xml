@@ -3,9 +3,7 @@
     package="com.example.modeswitch">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-    <!-- 使该代码适应多种分辨率 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 使该代码适应多种分辨率 -->
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -17,34 +15,41 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="模式切换"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ModeSwitch"
-        android:requestLegacyExternalStorage="true"
-        >
+        android:theme="@style/Theme.ModeSwitch">
 
-        <!--主菜单-->
+        <!-- 主菜单 -->
         <activity
             android:name=".MainMenu"
             android:exported="true"
-            android:label="模式切换"
-            >
+            android:label="模式切换">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--单手主辅模式-->
+
+        <!-- 传统模式 -->
         <activity
-            android:label="单手主辅模式"
+            android:name=".traditional"
+            android:exported="false"
+            android:label="传统对照模式"
+            />
+
+        <!-- 单手主辅模式 -->
+        <activity
             android:name=".SingleHandMAndA"
-            android:exported="false"></activity>
-        <!--动态区域单手模式-->
+            android:exported="false"
+            android:label="单手主辅模式" />
+
+        <!-- 动态区域单手模式 -->
         <activity
-            android:label="单手动态模式"
             android:name=".SingleDynamic"
             android:exported="false"
-            />
+            android:label="单手动态模式" />
     </application>
 
 </manifest>

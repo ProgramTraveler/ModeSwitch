@@ -13,16 +13,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
+        tools:layout_editor_absoluteX="335dp"
+        tools:layout_editor_absoluteY="294dp">
 
         <Button
-            android:id="@+id/SingleHand"
+            android:id="@+id/Traditional"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:layout_marginLeft="150dp"
-            android:layout_marginTop="3dp"
+            android:layout_marginLeft="400dp"
+            android:layout_marginTop="150dp"
+            android:layout_marginBottom="8dp"
+
+            android:text="传统对照模式"
+            android:textSize="25dp"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/SingleHand"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="400dp"
+            android:layout_marginTop="50dp"
             android:layout_marginBottom="8dp"
 
             android:text="单手主辅模式"
@@ -34,11 +52,12 @@
 
         <Button
             android:id="@+id/SingDynamic"
-            android:layout_width="wrap_content"
-            android:layout_height="47dp"
 
-            android:layout_marginLeft="150dp"
-            android:layout_marginTop="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="400dp"
+            android:layout_marginTop="50dp"
             android:layout_marginBottom="8dp"
 
             android:text="单手动态模式"

@@ -17,15 +17,24 @@ import android.widget.Toast;
 
 public class MainMenu extends AppCompatActivity {
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+
+        //对传统模式按钮进行监听
+        Button buttonTra = (Button) findViewById(R.id.Traditional);
+        buttonTra.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainMenu.this, TraditionalView.class);
+                startActivity(intent);
+                Toast.makeText(MainMenu.this, "已选择传统对照模式", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         //对单手主辅模式的按钮的监听
         Button buttonSingle = (Button) findViewById(R.id.SingleHand);
-
         buttonSingle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -35,6 +44,7 @@ public class MainMenu extends AppCompatActivity {
                 Toast.makeText(MainMenu.this, "已选择单手主辅模式", Toast.LENGTH_SHORT).show();
             }
         });
+
         //对单手动态模式按钮的监听
         Button buttonSingleD = (Button) findViewById(R.id.SingDynamic);
         buttonSingleD.setOnClickListener(new View.OnClickListener() {

@@ -166,9 +166,6 @@ public class SingleDynamicView extends View {
         //初始化bitmap和canvas
         bitmap = Bitmap.createBitmap((int)width, (int)high, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
-
-        showColMenu(); //显示颜色一级菜单
-        showPixMenu(); //显示像素一级菜单
     }
 
     //重写该方法，在这里绘图
