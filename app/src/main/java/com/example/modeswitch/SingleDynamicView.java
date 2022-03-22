@@ -288,7 +288,6 @@ public class SingleDynamicView extends View {
 
         //根据不同状态，获取坐标进行画线
         switch (action & MotionEvent.ACTION_MASK) { //
-
             case MotionEvent.ACTION_DOWN: //单指按下触发
                 LastX = x;
                 LastY = y;
@@ -296,7 +295,6 @@ public class SingleDynamicView extends View {
                 break;
 
             case MotionEvent.ACTION_MOVE:
-
                 if (event.getPointerId(event.getActionIndex()) == 0 && event.getPointerCount() == 1) { //判断是否是第一个手指（释放后，再次按下会默认是0）
                     float dx = Math.abs(x - LastX);
                     float dy = Math.abs(y - LastY);

@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -87,6 +88,8 @@ public class TraditionalView extends View {
     }
 
     public void init() {
+        System.out.println("come in");
+
         MyPaint = new Paint();
         MyPaint.setColor(Color.BLACK);
         MyPaint.setStrokeWidth(3);
@@ -189,7 +192,98 @@ public class TraditionalView extends View {
         for (int i = 0; i < pathInfArrayList.size(); i++) { canvas.drawPath(pathInfArrayList.get(i).path, pathInfArrayList.get(i).paint); }
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        int  action = event.getAction();
 
+        float x = event.getX();
+        float y = event.getY();
+
+        if (hoop.getRing_1() && !hoop.getRing_2()) { //当前只显示第一个圆环
+            //求出当前位置与圆心坐标差值的平方
+            double xr = Math.pow((x - hoop.getCircle_X(1)), 2);
+            double yr = Math.pow((y - hoop.getCircle_Y(1)), 2);
+
+            double ra = xr + yr;
+
+            if ((ra >= Math.pow((hoop.getSmallCircleR()), 2)) && (ra <= Math.pow((hoop.getBigCircleR()), 2))) { //如果落在圆环内
+
+                if (!index) { //如果之前没有进入过
+                    index = true; //表示已经进入
+                    //初次进入的坐标
+                    StartX = x;
+                    StartY = y;
+                } else { //已经进入，这个用来检测是否是一个闭环
+
+                    if (!error && (Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) >= hoop.getSmallCircleR() * 2)) { //根据两点距离判断
+                        error = true;
+                    }
+                    if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
+                        hoop.setRing_2(true);// 当误差满足条件的时候就当做是一个闭环
+                        //重新初始化条件
+                        index = false;
+                        error = false;
+
+                        //获得颜色提示
+                        tips = randomNumber.getRandom();
+                        switchInformation.setTarget_color(tips / 10);
+                    }
+                }
+            } else { //要是画出环的处理，暂时还没有想法
+
+            }
+        }
+        if (hoop.getRing_2() && !hoop.getRing_3()) { //第二个圆环已经显示，与环1的判断一样
+
+            double xr = Math.pow((x - hoop.getCircle_X(2)), 2);
+            double yr = Math.pow((y - hoop.getCircle_Y(2)), 2);
+            double ra = xr + yr;
+
+            if (ra >= Math.pow((hoop.getSmallCircleR()), 2) && ra <= Math.pow((hoop.getBigCircleR()), 2)) { //如果落在圆环内
+
+                if (!index) { //如果之前没有进入过
+                    index = true; //表示已经进入
+                    //初次进入的坐标
+                    StartX = x;
+                    StartY = y;
+                } else { //已经进入，这个用来检测是否是一个闭环
+                    if (!error && (Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) >= hoop.getSmallCircleR() * 2)) {
+                        error = true;
+                    }
+                    if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
+                        hoop.setRing_3(true);//当误差满足条件的时候就当做是一个闭环
+
+                        //像素提示
+                        switchInformation.setTarget_pixel(tips % 10);
+                    }
+                }
+            } else { //要是画出环的处理，暂时还没有想法
+
+            }
+        }
+
+        switch (action & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN: //单指按下时触发
+                LastX = x;
+                LastY = y;
+                pathInfArrayList.get(PathInfNum).path.moveTo(LastX, LastY);
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                float dx = Math.abs(x - LastX);
+                float dy = Math.abs(y - LastY);
+                if (dx > 3 || dy > 3)
+                    pathInfArrayList.get(PathInfNum).path.lineTo(x, y);
+                LastX = x;
+                LastY = y;
+
+            case MotionEvent.ACTION_UP: //当手指抬起时（选择的结果在这里实现）
+
+
+        }
+        invalidate();
+        return true;
+    }
 
     //颜色一级菜单的显示
     public void showColMenu() {

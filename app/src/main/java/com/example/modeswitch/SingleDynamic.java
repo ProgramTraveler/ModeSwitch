@@ -18,6 +18,7 @@ public class SingleDynamic extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_dynamic);
+
         //对返回按钮的监听
         Button buttonBack = (Button) findViewById(R.id.Back_single_dynamic);
         buttonBack.setOnClickListener(new View.OnClickListener() {

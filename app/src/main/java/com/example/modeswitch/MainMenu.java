@@ -27,7 +27,8 @@ public class MainMenu extends AppCompatActivity {
         buttonTra.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainMenu.this, TraditionalView.class);
+                //System.out.println("in");
+                Intent intent = new Intent(MainMenu.this, traditional.class);
                 startActivity(intent);
                 Toast.makeText(MainMenu.this, "已选择传统对照模式", Toast.LENGTH_SHORT).show();
             }
