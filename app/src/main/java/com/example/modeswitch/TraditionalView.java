@@ -267,6 +267,10 @@ public class TraditionalView extends View {
                 LastX = x;
                 LastY = y;
                 pathInfArrayList.get(PathInfNum).path.moveTo(LastX, LastY);
+
+                if () {
+
+                }
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -291,7 +295,7 @@ public class TraditionalView extends View {
         Paint MenuP = new Paint();
         MenuP.setTextSize(MenuWith); //文字大小
         MenuP.setStyle(Paint.Style.FILL); //画笔风格为填充
-        //MenuP.setTypeface(Typeface.DEFAULT_BOLD); //粗体（字体没必要）
+        //MenuP.setTypeface(Typeface.DEFAULT_BOLD); //粗体（字体写不写无所谓）
 
         //显示菜单
         canvas.drawRect(Menu_X, Menu_Y, Menu_X + MenuLen, Menu_Y + MenuWith,MyMenu);
