@@ -343,39 +343,32 @@ public class SingleDynamicView extends View {
                     colorNow = Color.RED;
 
                     switchInformation.setCurrent_color(1);
-
                 }else if (index >= MenuWith * 2 && index < MenuWith * 3 && Col_status) { //选择黄色
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.YELLOW);
                     colorNow = Color.YELLOW;
 
                     switchInformation.setCurrent_color(2);
-
                 }else if (index >= MenuWith * 3 && index < MenuWith * 4 && Col_status) { //选择蓝色
                     //System.out.println("test");
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.BLUE);
                     colorNow = Color.BLUE;
 
                     switchInformation.setCurrent_color(3);
-
                 }else if (index >= MenuWith && index < MenuWith * 2 && Pix_status) {
                     pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(4);
                     pixNow = 4;
 
                     switchInformation.setCurrent_pixel("4PX");
-
-
                 }else if (index >= MenuWith * 2 && index < MenuWith * 3 && Pix_status) {
                     pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(8);
                     pixNow = 8;
 
                     switchInformation.setCurrent_pixel("8PX");
-
                 }else if (index >= MenuWith * 3 && index < MenuWith * 4 && Pix_status) {
                     pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(16);
                     pixNow = 16;
 
                     switchInformation.setCurrent_pixel("16PX");
-
                 }else {
 
                 }
