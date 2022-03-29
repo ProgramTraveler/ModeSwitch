@@ -59,6 +59,10 @@ public class TraditionalView extends View {
     private float center_x = 0;
     private float center_y = 0;
 
+    //二级菜单展示信号
+    private boolean menuColor = false; //false 表示未站开
+    private boolean menuPixel = false;
+
     //控制在菜单区域禁止绘制
     private boolean inf_pen = true; //true表示允许绘制
 
@@ -274,6 +278,7 @@ public class TraditionalView extends View {
                     //允许绘制
                     inf_pen = true;
                 }
+
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -285,51 +290,76 @@ public class TraditionalView extends View {
                 LastY = y;
 
             case MotionEvent.ACTION_UP: //当手指抬起时（选择的结果在这里实现）
+                //pathInfArrayList.get(PathInfNum).path.moveTo(event.getX(0), event.getY(0)); //第一根手指可能会有移动，更新一下位置，不然会出现直接将两点连线
+
                  /*
                     一级菜单触发
                  */
                 if (x > Menu_X && x < (Menu_X + MenuLen) && y > Menu_Y && y < (Menu_Y + MenuWith)) { //点击颜色菜单位置
+
+
                     //关闭像素二级菜单（如果之前打开的话）
-                    showSeMenuPix(false);
+                    showSeMenuPix(menuPixel = false);
                     //显示颜色二级菜单
-                    showSeMenuCol(true);
+                    showSeMenuCol(menuColor = true);
+
+                    PathInfNum++;
+                    pathInfArrayList.add(new PathInf());
                 }
                 if (x > (Menu_X + MenuLen) && x < (Menu_X + MenuLen * 2) && y > Menu_Y && y < (Menu_Y + MenuWith)) { //点击像素菜单位置
                     //关闭颜色二级菜单
-                    showSeMenuCol(false);
+                    showSeMenuCol(menuColor = false);
                     //显示像素二级菜单
-                    showSeMenuPix(true);
+                    showSeMenuPix(menuPixel = true);
+
+                    PathInfNum++;
+                    pathInfArrayList.add(new PathInf());
                 }
                 /*
                     二级菜单选择（不用多级判断）
                  */
                 boolean col_inf = ((x > Menu_X) && x < (Menu_X + MenuLen)); //所有颜色的x轴判断都是这个
 
-                if (col_inf && y > (Menu_Y + MenuWith) && y < (Menu_Y + MenuLen * 2)) { //红色
-                    pathInfArrayList.get(PathInfNum).paint.setColor(Color.RED);
-                    colorNow = Color.RED;
+                if (col_inf && menuColor) {
+                    if (y > (Menu_Y + MenuWith) && y < (Menu_Y + MenuLen * 2)) { //红色
+                        System.out.println("red");
 
-                    switchInformation.setCurrent_color(1);
+                        pathInfArrayList.get(PathInfNum).paint.setColor(Color.RED);
+                        colorNow = Color.RED;
 
-                    //关闭颜色二级菜单
-                    showSeMenuCol(false);
+                        switchInformation.setCurrent_color(1);
+
+                        //关闭颜色二级菜单
+                        showSeMenuCol(menuColor = false);
+
+                    }
+                    if (y > (Menu_Y + MenuWith * 2) && y < (Menu_Y + MenuWith * 3)) { //黄色
+                        System.out.println("yellow");
+
+                        pathInfArrayList.get(PathInfNum).paint.setColor(Color.YELLOW);
+                        colorNow = Color.YELLOW;
+
+                        switchInformation.setCurrent_color(2);
+
+                        showSeMenuCol(menuColor = false);
+
+                    }
+                    if (y > (Menu_Y + MenuWith * 3) && y < (Menu_Y + MenuWith * 4)) { //蓝色
+                        System.out.println("blue");
+
+                        pathInfArrayList.get(PathInfNum).paint.setColor(Color.BLUE);
+                        colorNow = Color.BLUE;
+
+                        switchInformation.setCurrent_color(3);
+
+                        showSeMenuCol(menuColor = false);
+
+                    }
                 }
-                if (col_inf && y > (Menu_Y + MenuWith * 2) && y < (Menu_Y + MenuWith * 3)) { //黄色
-                    pathInfArrayList.get(PathInfNum).paint.setColor(Color.YELLOW);
-                    colorNow = Color.YELLOW;
+                pathInfArrayList.get(PathInfNum).paint.setColor(colorNow);
+                pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(pixNow);
 
-                    switchInformation.setCurrent_color(2);
 
-                    showSeMenuCol(false);
-                }
-                if (col_inf && y > (Menu_Y + MenuWith * 3) && y < (Menu_Y + MenuWith * 4)) { //蓝色
-                    pathInfArrayList.get(PathInfNum).paint.setColor(Color.BLUE);
-                    colorNow = Color.BLUE;
-
-                    switchInformation.setCurrent_color(3);
-
-                    showSeMenuCol(false);
-                }
         }
         invalidate();
         return true;
