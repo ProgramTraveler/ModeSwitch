@@ -268,7 +268,8 @@ public class TraditionalView extends View {
 
         switch (action & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN: //单指按下时触发
-                if (x > Menu_X && x < (Menu_X + MenuLen * 2) && y > Menu_Y && y < (Menu_Y + MenuLen * 4)) { //菜单区域禁止绘制
+                /*if ((x > Menu_X) && (x < (Menu_X + MenuLen * 2)) && (y > Menu_Y) && (y < (Menu_Y + MenuLen * 4))) { //菜单区域禁止绘制
+                    System.out.println("come in");
                     //禁止绘制
                     inf_pen = false;
                 }else {
@@ -277,14 +278,25 @@ public class TraditionalView extends View {
                     pathInfArrayList.get(PathInfNum).path.moveTo(LastX, LastY);
                     //允许绘制
                     inf_pen = true;
-                }
+                }*/
+                LastX = x;
+                LastY = y;
+                pathInfArrayList.get(PathInfNum).path.moveTo(LastX, LastY);
 
                 break;
 
             case MotionEvent.ACTION_MOVE:
+                /*
+                System.out.println(inf_pen);
+                if ((x > Menu_X) && (x < (Menu_X + MenuLen * 2)) && (y > Menu_Y) && (y < (Menu_Y + MenuLen * 4))){
+                    inf_pen = false;
+                }else {
+                    inf_pen = true;
+                }*/
+
                 float dx = Math.abs(x - LastX);
                 float dy = Math.abs(y - LastY);
-                if ((dx > 3 || dy > 3) && inf_pen)
+                if ((dx > 3 || dy > 3))
                     pathInfArrayList.get(PathInfNum).path.lineTo(x, y);
                 LastX = x;
                 LastY = y;
@@ -329,7 +341,6 @@ public class TraditionalView extends View {
 
                         //关闭颜色二级菜单
                         showSeMenuCol(menuColor = false);
-
                     }
                     if (y > (Menu_Y + MenuWith * 2) && y < (Menu_Y + MenuWith * 3)) { //黄色
                         pathInfArrayList.get(PathInfNum).paint.setColor(Color.YELLOW);
@@ -354,18 +365,32 @@ public class TraditionalView extends View {
                 boolean pix_inf = ((x > Menu_X + MenuLen) && (x < (Menu_X + MenuLen * 2)));
                 if (pix_inf && menuPixel) {
                     if (y > (Menu_Y + MenuWith) && y < (Menu_Y + MenuLen * 2)) { //4px
+                        pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(4);
+                        pixNow = 4;
 
+                        switchInformation.setCurrent_pixel("4PX");
+
+                        showSeMenuPix(false); //关闭像素二级菜单
                     }
                     if (y > (Menu_Y + MenuWith * 2) && y < (Menu_Y + MenuWith * 3)) { //8px
+                        pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(8);
+                        pixNow = 8;
 
+                        switchInformation.setCurrent_pixel("8PX");
+
+                        showSeMenuPix(false);
                     }
                     if (y > (Menu_Y + MenuWith * 3) && y < (Menu_Y + MenuWith * 4)) { //16px
+                        pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(16);
+                        pixNow = 16;
 
+                        switchInformation.setCurrent_pixel("16PX");
+
+                        showSeMenuPix(false);
                     }
                 }
                 pathInfArrayList.get(PathInfNum).paint.setColor(colorNow);
                 pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(pixNow);
-
 
         }
         invalidate();
