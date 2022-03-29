@@ -320,10 +320,8 @@ public class TraditionalView extends View {
                  */
                 boolean col_inf = ((x > Menu_X) && x < (Menu_X + MenuLen)); //所有颜色的x轴判断都是这个
 
-                if (col_inf && menuColor) {
+                if (col_inf && menuColor) { //颜色二级菜单的展开
                     if (y > (Menu_Y + MenuWith) && y < (Menu_Y + MenuLen * 2)) { //红色
-                        System.out.println("red");
-
                         pathInfArrayList.get(PathInfNum).paint.setColor(Color.RED);
                         colorNow = Color.RED;
 
@@ -334,8 +332,6 @@ public class TraditionalView extends View {
 
                     }
                     if (y > (Menu_Y + MenuWith * 2) && y < (Menu_Y + MenuWith * 3)) { //黄色
-                        System.out.println("yellow");
-
                         pathInfArrayList.get(PathInfNum).paint.setColor(Color.YELLOW);
                         colorNow = Color.YELLOW;
 
@@ -345,14 +341,25 @@ public class TraditionalView extends View {
 
                     }
                     if (y > (Menu_Y + MenuWith * 3) && y < (Menu_Y + MenuWith * 4)) { //蓝色
-                        System.out.println("blue");
-
                         pathInfArrayList.get(PathInfNum).paint.setColor(Color.BLUE);
                         colorNow = Color.BLUE;
 
                         switchInformation.setCurrent_color(3);
 
                         showSeMenuCol(menuColor = false);
+
+                    }
+                }
+
+                boolean pix_inf = ((x > Menu_X + MenuLen) && (x < (Menu_X + MenuLen * 2)));
+                if (pix_inf && menuPixel) {
+                    if (y > (Menu_Y + MenuWith) && y < (Menu_Y + MenuLen * 2)) { //4px
+
+                    }
+                    if (y > (Menu_Y + MenuWith * 2) && y < (Menu_Y + MenuWith * 3)) { //8px
+
+                    }
+                    if (y > (Menu_Y + MenuWith * 3) && y < (Menu_Y + MenuWith * 4)) { //16px
 
                     }
                 }
