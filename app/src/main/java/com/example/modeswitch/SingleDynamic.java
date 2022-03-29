@@ -24,8 +24,7 @@ public class SingleDynamic extends AppCompatActivity {
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(SingleDynamic.this, MainMenu.class);
-                startActivity(intent);
+                SingleDynamic.super.onBackPressed();
             }
         });
     }

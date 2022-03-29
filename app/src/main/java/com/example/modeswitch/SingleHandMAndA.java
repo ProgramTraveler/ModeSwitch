@@ -26,8 +26,11 @@ public class SingleHandMAndA extends AppCompatActivity {
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(SingleHandMAndA.this, MainMenu.class);
-                startActivity(intent);
+                /*
+                    Intent intent = new Intent(SingleHandMAndA.this, MainMenu.class);
+                    startActivity(intent);
+                */
+                SingleHandMAndA.super.onBackPressed();
             }
         });
     }
