@@ -13,7 +13,6 @@ import android.widget.Button;
     purpose:活动 单手动态模式
  */
 public class SingleDynamic extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -16,7 +16,6 @@ import android.widget.Button;
     purpose:活动 单手主辅模式
  */
 public class SingleHandMAndA extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
