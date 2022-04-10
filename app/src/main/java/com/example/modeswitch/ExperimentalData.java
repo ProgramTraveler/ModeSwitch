@@ -29,10 +29,47 @@ import java.util.ArrayList;
 
 public class ExperimentalData {
     private RandomAccessFile csv; // 存实验数据的文件
-    String name = "bb"; //文件名
+    private String name = "information"; //文件名
+
+    private String user_Name = ""; //测试者的姓名
+
+    private int group = 0; //实验的组数
+    private int num = 0; //当前组的第几次
+
+    private String mode = ""; //切换模式技术
+
+    private String target_Col = ""; //切换的目标颜色
+    private String target_Pix = ""; //切换的目标像素
+
+    private int false_tig = 0; //误触发次数
+
+    private int false_Col = 0; //颜色切换错误次数
+    private int false_Pix = 0; //像素切换错误次数
+    private int false_All = 0; //切换的总的错误次数
 
     public ExperimentalData() {}
 
+    //目标颜色
+    public void Set_Tar_Col(String s) { //保存目标颜色
+        target_Col = s;
+    }
+    //目标像素
+    public void Set_Tar_Pix(String s) { //保存目标像素
+        target_Pix = s;
+    }
+    //误触发错误数
+    public void Add_Tig () { //误触发次数
+        false_tig ++;
+    }
+
+    public void Add_Col () { //颜色切换错误次数
+        false_Col ++;
+        false_All ++;
+    }
+    public void Add_Pix () { //像素切换错误次数
+        false_Pix ++;
+        false_All ++;
+    }
     public void saveInf() throws IOException {
 
         String temp = name + ".csv"; //添加csv文件后缀
@@ -49,13 +86,28 @@ public class ExperimentalData {
 
         if (csvLine == 0) {
             System.out.println("1");
-            saveText = "姓名" + "," + "学号" + "\n"; //第一排的命名名称
+            saveText = "姓名" + ","
+                    + "实验组数" + ","
+                    + "实验组编号" + ","
+                    + "切换模式技术"  + ","
+                    + "目标颜色" + ","
+                    + "目标像素" + ","
+                    + "误触发错误总数" + ","
+                    + "颜色切换错误数" + ","
+                    + "像素切换错误数" + ","
+                    + "模式切换总错误数"
+                    + "\n"; //第一排的命名名称
             csv.write(saveText.getBytes("GBK"));
         }
         csv.skipBytes(csvLine);
 
-        System.out.println("2");
-        saveText = "name" + "," + "number" + "\n"; //每排存储的数据记录
+        //注意和第一行数据的文字对应
+        saveText = user_Name + ","
+                + group + ","
+                + num + ","
+                + mode + ","
+                + 
+                + "\n"; //每排存储的数据记录
         csv.write(saveText.getBytes("GBK"));
         csv.close();
     }
