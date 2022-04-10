@@ -13,8 +13,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="335dp"
-        tools:layout_editor_absoluteY="294dp">
+        tools:layout_editor_absoluteX="217dp"
+        tools:layout_editor_absoluteY="269dp">
+
+        <EditText
+            android:id="@+id/edit_text"
+            android:layout_width="175dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="150dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="0dp"
+
+            android:hint="Type name here"
+            android:textColorHint="@color/black"
+            android:maxLines="1"
+            />
+
 
         <Button
             android:id="@+id/Traditional"
@@ -22,8 +37,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:layout_marginLeft="400dp"
-            android:layout_marginTop="150dp"
+            android:layout_marginLeft="650dp"
+            android:layout_marginTop="0dp"
             android:layout_marginBottom="8dp"
 
             android:text="传统对照模式"
@@ -39,8 +54,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:layout_marginLeft="400dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginLeft="650dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="8dp"
 
             android:text="单手主辅模式"
@@ -56,8 +71,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:layout_marginLeft="400dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginLeft="650dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="8dp"
 
             android:text="单手动态模式"

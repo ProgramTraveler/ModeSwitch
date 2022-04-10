@@ -49,6 +49,14 @@ public class ExperimentalData {
 
     public ExperimentalData() {}
 
+    //测试者姓名
+    public void Set_user_name(String s) {
+        user_Name = s;
+    }
+
+    //实验组数
+    public void Set_group(int n) {group = n;}
+
     //目标颜色
     public void Set_Tar_Col(String s) { //保存目标颜色
         target_Col = s;
@@ -85,7 +93,6 @@ public class ExperimentalData {
         String saveText = "";
 
         if (csvLine == 0) {
-            System.out.println("1");
             saveText = "姓名" + ","
                     + "实验组数" + ","
                     + "实验组编号" + ","
@@ -106,7 +113,12 @@ public class ExperimentalData {
                 + group + ","
                 + num + ","
                 + mode + ","
-                + 
+                + target_Col + ","
+                + target_Pix + ","
+                + false_tig + ","
+                + false_Col + ","
+                + false_Pix + ","
+                + false_All + ","
                 + "\n"; //每排存储的数据记录
         csv.write(saveText.getBytes("GBK"));
         csv.close();
