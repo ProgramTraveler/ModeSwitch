@@ -84,6 +84,7 @@ public class SwitchInformation {
 
     public void setCurrent_pixel(String s) {
         current_pixel = s;
+        current_pix = 0;
 
         if (current_pixel == "4PX") current_pix = 1;
         if (current_pixel == "8PX") current_pix = 2;

@@ -216,6 +216,10 @@ public class TraditionalView extends View {
                     //初次进入的坐标
                     StartX = x;
                     StartY = y;
+
+                    //再次入环后，允许下一次数据记录
+                    experimentalData.set_Save(false);
+
                 } else { //已经进入，这个用来检测是否是一个闭环
 
                     if (!error && (Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) >= hoop.getSmallCircleR() * 2)) { //根据两点距离判断
@@ -542,6 +546,7 @@ public class TraditionalView extends View {
         pathInfArrayList.clear();
         pathInfArrayList.add(new PathInf());
         PathInfNum = 0;
+        pathInfArrayList.get(PathInfNum).path.moveTo(LastX, LastY);
 
         //清除测试圆环
         hoop.setRing_1(true);
@@ -551,6 +556,9 @@ public class TraditionalView extends View {
         index = false;
         error = false;
 
+        //还原提示菜单
+        switchInformation.setCurrent_color(0); //像素块
+        switchInformation.setCurrent_pixel("1PX");
 
     }
 }
