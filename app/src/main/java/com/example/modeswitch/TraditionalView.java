@@ -12,6 +12,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /*
@@ -165,8 +166,8 @@ public class TraditionalView extends View {
         if (hoop.getRing_3()) { //显示第三个环
             canvas.drawCircle(hoop.getCircle_X(3), hoop.getCircle_Y(3), hoop.getBigCircleR(), MyPaint);
             canvas.drawCircle(hoop.getCircle_X(3), hoop.getCircle_Y(3), hoop.getSmallCircleR(), MyPaint);
-
         }
+
         // 放在这里会导致一级菜单一直处于最上层（但好像没什么好的解决办法）
         showColMenu(); //显示颜色一级菜单
         showPixMenu(); //显示像素一级菜单
@@ -185,7 +186,6 @@ public class TraditionalView extends View {
         //显示颜色切换目标和像素切换目标
         canvas.drawRect(coordinate.target_color_left, coordinate.target_color_top, coordinate.target_color_right, coordinate.target_color_bottom, switchInformation.getTarget_color());
         canvas.drawText(switchInformation.getTarget_pixel(), coordinate.target_pixel_word_x, coordinate.target_pixel_word_y, switchInformation.getWordInf());
-
 
         drawPath();
         canvas.drawBitmap(bitmap, 0, 0, null);
@@ -231,9 +231,12 @@ public class TraditionalView extends View {
                         //获得颜色提示
                         tips = randomNumber.getRandom();
                         switchInformation.setTarget_color(tips / 10);
+
+                        //将目标颜色存入
+                        experimentalData.Set_Tar_Col(tips / 10);
                     }
                 }
-            } else { //要是画出环的处理，暂时还没有想法
+            }else { //要是画出环的处理，暂时还没有想法
 
             }
         }
@@ -250,19 +253,58 @@ public class TraditionalView extends View {
                     //初次进入的坐标
                     StartX = x;
                     StartY = y;
-                } else { //已经进入，这个用来检测是否是一个闭环
+                }else { //已经进入，这个用来检测是否是一个闭环
                     if (!error && (Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) >= hoop.getSmallCircleR() * 2)) {
                         error = true;
                     }
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
                         hoop.setRing_3(true);//当误差满足条件的时候就当做是一个闭环
+                        //重新初始化条件
+                        index = false;
+                        error = false;
 
                         //像素提示
                         switchInformation.setTarget_pixel(tips % 10);
+
+                        //将目标像素存入
+                        experimentalData.Set_Tar_Pix(tips % 10);
                     }
                 }
-            } else { //要是画出环的处理，暂时还没有想法
+            }else { //要是画出环的处理，暂时还没有想法
 
+            }
+        }
+
+        if (hoop.getRing_3()) { //第三个圆环展开
+            double xr = Math.pow(x - hoop.getCircle_X(3), 2);
+            double yr = Math.pow(y - hoop.getCircle_Y(3), 2);
+            double ra = xr + yr;
+
+            if ((ra >= Math.pow((hoop.getSmallCircleR()), 2)) && (ra <= Math.pow(hoop.getBigCircleR(), 2))) { //如果落在圆环内
+                if (!index) { //如果之前没有进入过
+                    index = true;
+
+                    StartX = x;
+                    StartY = y;
+                }else { //已经进入，检测是否是一个闭环
+                    if (!error && (Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) >= hoop.getSmallCircleR() * 2)) {
+                        error = true;
+                    }
+                    if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
+                        //当误差满足时，视为一次测试结束
+                        if (switchInformation.get_target_color() != switchInformation.get_current_color()) { //如果当前颜色和目标颜色不一致
+                            experimentalData.Add_Col(); //颜色切换错误数加一
+                        }
+
+
+                        try { //将这一次的数据保存
+                            experimentalData.saveInf();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
             }
         }
 
@@ -308,7 +350,10 @@ public class TraditionalView extends View {
                     一级菜单触发
                  */
                 if (x > Menu_X && x < (Menu_X + MenuLen) && y > Menu_Y && y < (Menu_Y + MenuWith)) { //点击颜色菜单位置
-
+                    //误触发检测
+                    if (!hoop.getRing_2()) { //如果环二还未出现，误触发
+                        experimentalData.Add_Tig();
+                    }
 
                     //关闭像素二级菜单（如果之前打开的话）
                     showSeMenuPix(menuPixel = false);
@@ -319,6 +364,11 @@ public class TraditionalView extends View {
                     pathInfArrayList.add(new PathInf());
                 }
                 if (x > (Menu_X + MenuLen) && x < (Menu_X + MenuLen * 2) && y > Menu_Y && y < (Menu_Y + MenuWith)) { //点击像素菜单位置
+                    //误触发检测
+                    if (!hoop.getRing_3()) { //如果环三还未出现，误触发
+                        experimentalData.Add_Tig();
+                    }
+
                     //关闭颜色二级菜单
                     showSeMenuCol(menuColor = false);
                     //显示像素二级菜单

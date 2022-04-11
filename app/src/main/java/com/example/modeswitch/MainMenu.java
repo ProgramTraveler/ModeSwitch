@@ -7,7 +7,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
+
+import java.io.IOException;
 
 /*
     user:王久铭
@@ -16,6 +19,7 @@ import android.widget.Toast;
  */
 
 public class MainMenu extends AppCompatActivity {
+    private ExperimentalData experimentalData = new ExperimentalData(); //数据保存
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,5 +61,13 @@ public class MainMenu extends AppCompatActivity {
             }
         });
 
+        //对测试者输入框进行监听
+        EditText editText = (EditText) findViewById(R.id.edit_text_user);
+        editText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                experimentalData.Set_user_name(editText.getText().toString()); //保存测试者姓名
+            }
+        });
     }
 }

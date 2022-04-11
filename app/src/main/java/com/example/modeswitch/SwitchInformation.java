@@ -21,6 +21,9 @@ public class SwitchInformation {
     int current_color = 0;
     int target_color = -1; //目标初始为白色和背景一个颜色
 
+    int current_pix = 0; //当前像素
+    int target_pix = 0; //目标像素
+
     String current_color_inf = "当前颜色：";
     String current_pixel_inf = "当前像素：";
 
@@ -56,6 +59,9 @@ public class SwitchInformation {
     public void setCurrent_color(int n) {
         current_color = n;
     }
+    public int get_current_color() {
+        return current_color; //返回当前颜色代号
+    }
     public Paint getCurrent_color() { //当前颜色画笔
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
@@ -77,12 +83,22 @@ public class SwitchInformation {
 
     public void setCurrent_pixel(String s) {
         current_pixel = s;
+
+        if (current_pixel == "4PX") current_pix = 1;
+        if (current_pixel == "8PX") current_pix = 2;
+        if (current_pixel == "16PX") current_pix = 4;
+    }
+    public int get_current_pixel() {
+        return current_pix; //返回当前像素的代号
     }
     public String getCurrent_pixel() {
         return current_pixel;
     }
 
     public void setTarget_color(int n) { target_color = n; }
+    public int get_target_color() {
+        return target_color; //返回目标颜色代号
+    }
     public Paint getTarget_color() {
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
@@ -97,10 +113,16 @@ public class SwitchInformation {
     }
 
     public void setTarget_pixel(int  n) {
+        target_pix = n;
+
         if (n == 1) target_pixel = "4PX";
         if (n == 2) target_pixel = "8PX";
         if (n == 3) target_pixel = "16PX";
     }
+    public int get_target_pixel() {
+        return target_pix; //返回目标像素的代号
+    }
+
     public String getTarget_pixel() { return target_pixel; }
 
 }

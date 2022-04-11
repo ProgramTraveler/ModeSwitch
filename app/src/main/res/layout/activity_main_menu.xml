@@ -17,7 +17,7 @@
         tools:layout_editor_absoluteY="269dp">
 
         <EditText
-            android:id="@+id/edit_text"
+            android:id="@+id/edit_text_user"
             android:layout_width="175dp"
             android:layout_height="wrap_content"
 
@@ -25,12 +25,25 @@
             android:layout_marginTop="100dp"
             android:layout_marginBottom="0dp"
 
-            android:hint="Type name here"
+            android:hint="Input name here"
             android:textColorHint="@color/black"
             android:maxLines="1"
             />
 
+        <EditText
+            android:id="@+id/edit_text_group"
 
+            android:layout_width="175dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="150dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+
+            android:hint="Input group number"
+            android:textColorHint="@color/black"
+            android:maxLines="1"
+            />
         <Button
             android:id="@+id/Traditional"
 

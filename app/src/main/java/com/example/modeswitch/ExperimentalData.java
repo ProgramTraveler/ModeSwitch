@@ -1,6 +1,7 @@
 package com.example.modeswitch;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,12 +59,16 @@ public class ExperimentalData {
     public void Set_group(int n) {group = n;}
 
     //目标颜色
-    public void Set_Tar_Col(String s) { //保存目标颜色
-        target_Col = s;
+    public void Set_Tar_Col(int n) { //保存目标颜色
+        if (n == 1) target_Col = "红色";
+        if (n == 2) target_Col = "黄色";
+        if (n == 3) target_Col = "蓝色";
     }
     //目标像素
-    public void Set_Tar_Pix(String s) { //保存目标像素
-        target_Pix = s;
+    public void Set_Tar_Pix(int n) { //保存目标像素
+        if (n == 1) target_Pix = "4PX";
+        if (n == 2) target_Pix = "8PX";
+        if (n == 3) target_Pix = "16PX";
     }
     //误触发错误数
     public void Add_Tig () { //误触发次数
