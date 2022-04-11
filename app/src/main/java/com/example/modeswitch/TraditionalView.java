@@ -296,11 +296,18 @@ public class TraditionalView extends View {
                             experimentalData.Add_Col(); //颜色切换错误数加一
                         }
 
+                        if (switchInformation.get_target_pixel() != switchInformation.get_current_pixel()) { //如果当前像素和目标像素不一致
+                            experimentalData.Add_Pix(); //像素切换错误数加一
+                        }
 
-                        try { //将这一次的数据保存
-                            experimentalData.saveInf();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        if (!experimentalData.get_Save()) {
+                            try { //将这一次的数据保存
+                                experimentalData.saveInf();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            experimentalData.set_Save(true);
                         }
                     }
 

@@ -48,6 +48,8 @@ public class ExperimentalData {
     private int false_Pix = 0; //像素切换错误次数
     private int false_All = 0; //切换的总的错误次数
 
+    private boolean save = false; //是否存储过 false 表示没有储存
+
     public ExperimentalData() {}
 
     //测试者姓名
@@ -83,6 +85,14 @@ public class ExperimentalData {
         false_Pix ++;
         false_All ++;
     }
+    //当前测试是否存储过
+    public void set_Save(boolean b) {
+        save = b;
+    }
+    public boolean get_Save() {
+        return save;
+    }
+
     public void saveInf() throws IOException {
 
         String temp = name + ".csv"; //添加csv文件后缀
