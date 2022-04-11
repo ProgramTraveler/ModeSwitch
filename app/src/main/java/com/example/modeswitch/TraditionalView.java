@@ -158,7 +158,6 @@ public class TraditionalView extends View {
         canvas.drawCircle(hoop.getCircle_X(1), hoop.getCircle_Y(1), hoop.getBigCircleR(), MyPaint);
         canvas.drawCircle(hoop.getCircle_X(1), hoop.getCircle_Y(1), hoop.getSmallCircleR(), MyPaint);
 
-
         if (hoop.getRing_2()) { //显示第二个环
             canvas.drawCircle(hoop.getCircle_X(2), hoop.getCircle_Y(2), hoop.getBigCircleR(), MyPaint);
             canvas.drawCircle(hoop.getCircle_X(2), hoop.getCircle_Y(2), hoop.getSmallCircleR(), MyPaint);
@@ -306,9 +305,10 @@ public class TraditionalView extends View {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-
                             experimentalData.set_Save(true);
                         }
+
+                        initialization();
                     }
 
                 }
@@ -345,7 +345,7 @@ public class TraditionalView extends View {
 
                 float dx = Math.abs(x - LastX);
                 float dy = Math.abs(y - LastY);
-                if ((dx > 3 || dy > 3))
+                if ((dx > 3 || dy > 3) && !experimentalData.get_Save())
                     pathInfArrayList.get(PathInfNum).path.lineTo(x, y);
                 LastX = x;
                 LastY = y;
@@ -533,6 +533,24 @@ public class TraditionalView extends View {
         }else {
             canvas.drawColor(0, PorterDuff.Mode.CLEAR); //关闭菜单
         }
+    }
+    //初始化
+    public void initialization() {
+        canvas.drawColor(0, PorterDuff.Mode.CLEAR); //清除画布
+
+        //画笔清空
+        pathInfArrayList.clear();
+        pathInfArrayList.add(new PathInf());
+        PathInfNum = 0;
+
+        //清除测试圆环
+        hoop.setRing_1(true);
+        hoop.setRing_2(false);
+        hoop.setRing_3(false);
+
+        index = false;
+        error = false;
+
 
     }
 }

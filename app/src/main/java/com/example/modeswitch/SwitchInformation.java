@@ -17,6 +17,7 @@ public class SwitchInformation {
     /*
         颜色的识别用数字作为识别条件，识别代码如下
         -1:白色  0:黑色  1:红色  2:黄色  3:蓝色
+
      */
     int current_color = 0;
     int target_color = -1; //目标初始为白色和背景一个颜色
