@@ -116,6 +116,7 @@ public class SwitchInformation {
 
     public void setTarget_pixel(int  n) {
         target_pix = n;
+        target_pixel = "";
 
         if (n == 1) target_pixel = "4PX";
         if (n == 2) target_pixel = "8PX";

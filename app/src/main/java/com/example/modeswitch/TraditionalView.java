@@ -548,6 +548,10 @@ public class TraditionalView extends View {
         PathInfNum = 0;
         pathInfArrayList.get(PathInfNum).path.moveTo(LastX, LastY);
 
+        //初始化画笔
+        colorNow = Color.BLACK;
+        pixNow = 2;
+
         //清除测试圆环
         hoop.setRing_1(true);
         hoop.setRing_2(false);
@@ -560,5 +564,10 @@ public class TraditionalView extends View {
         switchInformation.setCurrent_color(0); //像素块
         switchInformation.setCurrent_pixel("1PX");
 
+        switchInformation.setTarget_color(0);
+        switchInformation.setTarget_pixel(0);
+
+        menuColor = false;
+        menuPixel = false;
     }
 }
