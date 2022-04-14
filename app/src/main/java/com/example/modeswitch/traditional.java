@@ -14,13 +14,32 @@ import android.widget.Button;
  */
 
 public class traditional extends AppCompatActivity {
+
+    private String user_name = "";
+    private String group = "";
+
+    public String get_user_name() {
+        return user_name;
+    }
+
+    public String get_group() {
+        return group;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //获取主菜单的输入的测试者的姓名
+        Intent intent = getIntent();
+        user_name = intent.getStringExtra("user_name");
+        group = intent.getStringExtra("group");
+        //获取主菜单的输入的测试组数
+
         setContentView(R.layout.activity_traditional);
 
-        Intent intent = getIntent();
-        System.out.println(intent.getStringExtra("user_name"));
+
+        //System.out.println(intent.getStringExtra("user_name"));
 
         //对返回按钮进行监听
         Button buttonBack = (Button) findViewById(R.id.Back_traditional);

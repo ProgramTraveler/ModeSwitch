@@ -146,6 +146,7 @@ public class ExperimentalData {
         csv.skipBytes(csvLine);
 
         //注意和第一行数据的文字对应
+        System.out.println("save: " + user_Name);
         saveText = user_Name + ","
                 + group + ","
                 + num + ","

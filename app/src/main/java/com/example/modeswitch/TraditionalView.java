@@ -1,5 +1,6 @@
 package com.example.modeswitch;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -81,16 +82,26 @@ public class TraditionalView extends View {
 
     private ExperimentalData experimentalData = new ExperimentalData();
 
+    private traditional traditional;
+
     public TraditionalView (Context context) {
         super(context);
+
         init();
     }
     public TraditionalView (Context context, AttributeSet attr) {
         super(context, attr);
+
+        //获取活动
+        traditional = (traditional) context;
+        experimentalData.Set_user_name(traditional.get_user_name()); //测试者的姓名
+        experimentalData.Set_group(traditional.get_group()); //测试组数
+
         init();
     }
     public TraditionalView (Context context, AttributeSet attr, int defStyleAttr) {
         super(context, attr, defStyleAttr);
+
         init();
     }
 
@@ -577,5 +588,6 @@ public class TraditionalView extends View {
 
         menuColor = false;
         menuPixel = false;
+
     }
 }

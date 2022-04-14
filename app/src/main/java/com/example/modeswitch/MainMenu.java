@@ -34,8 +34,12 @@ public class MainMenu extends AppCompatActivity {
         buttonTra.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //主菜单输入的测试者的姓名
                 Intent intent = new Intent(MainMenu.this, traditional.class);
                 intent.putExtra("user_name", edit_user.getText().toString());
+
+                //主菜单输入的测试组数
+                intent.putExtra("group", edit_group.getText().toString());
 
                 startActivity(intent);
                 Toast.makeText(MainMenu.this, "已选择传统对照模式", Toast.LENGTH_SHORT).show();
