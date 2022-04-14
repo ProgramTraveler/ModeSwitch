@@ -19,22 +19,27 @@ import java.io.IOException;
  */
 
 public class MainMenu extends AppCompatActivity {
-    private ExperimentalData experimentalData = new ExperimentalData(); //数据保存
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+
+        EditText edit_user = (EditText) findViewById(R.id.edit_text_user);
+        EditText edit_group = (EditText) findViewById(R.id.edit_text_group);
+
+        ExperimentalData experimentalData = new ExperimentalData();
 
         //对传统模式按钮进行监听
         Button buttonTra = (Button) findViewById(R.id.Traditional);
         buttonTra.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //System.out.println("in");
                 Intent intent = new Intent(MainMenu.this, traditional.class);
+                intent.putExtra("user_name", edit_user.getText().toString());
+
                 startActivity(intent);
                 Toast.makeText(MainMenu.this, "已选择传统对照模式", Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -62,12 +67,14 @@ public class MainMenu extends AppCompatActivity {
         });
 
         //对测试者输入框进行监听
-        EditText editText = (EditText) findViewById(R.id.edit_text_user);
+        /*EditText editText = (EditText) findViewById(R.id.edit_text_user);
         editText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ExperimentalData experimentalData = new ExperimentalData(); //数据保存
+
                 experimentalData.Set_user_name(editText.getText().toString()); //保存测试者姓名
             }
-        });
+        });*/
     }
 }

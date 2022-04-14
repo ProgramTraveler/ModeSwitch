@@ -15,7 +15,7 @@ public class PathInf {
     public Path path; //画线的路径
     public Paint paint; //画笔
 
-    public PathInf() {
+    public PathInf () {
 
         path = new Path();
         paint = new Paint();

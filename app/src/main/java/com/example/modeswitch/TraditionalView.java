@@ -1,6 +1,7 @@
 package com.example.modeswitch;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -80,21 +81,20 @@ public class TraditionalView extends View {
 
     private ExperimentalData experimentalData = new ExperimentalData();
 
-
-    public TraditionalView(Context context) {
+    public TraditionalView (Context context) {
         super(context);
         init();
     }
-    public TraditionalView(Context context, AttributeSet attr) {
+    public TraditionalView (Context context, AttributeSet attr) {
         super(context, attr);
         init();
     }
-    public TraditionalView(Context context, AttributeSet attr, int defStyleAttr) {
+    public TraditionalView (Context context, AttributeSet attr, int defStyleAttr) {
         super(context, attr, defStyleAttr);
         init();
     }
 
-    public void init() {
+    public void init () {
         MyPaint = new Paint();
         MyPaint.setColor(Color.BLACK);
         MyPaint.setStrokeWidth(3);
@@ -110,10 +110,12 @@ public class TraditionalView extends View {
         pathInfArrayList.add(new PathInf());
 
         hoop = new Hoop();
+
+        experimentalData.Set_mode("传统对照模式");
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int highMeasureSpec) {
+    protected void onMeasure (int widthMeasureSpec, int highMeasureSpec) {
         super.onMeasure(widthMeasureSpec, highMeasureSpec);
         //布局的宽高都是由该方法指定的
 
@@ -152,7 +154,7 @@ public class TraditionalView extends View {
     }
     //重写该方法，在这里绘图
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw (Canvas canvas) {
         super.onDraw(canvas);
         //绘制第一个环
         canvas.drawCircle(hoop.getCircle_X(1), hoop.getCircle_Y(1), hoop.getBigCircleR(), MyPaint);
@@ -191,12 +193,12 @@ public class TraditionalView extends View {
     }
 
     //绘制线条
-    private void drawPath() {
+    private void drawPath () {
         for (int i = 0; i < pathInfArrayList.size(); i++) { canvas.drawPath(pathInfArrayList.get(i).path, pathInfArrayList.get(i).paint); }
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent (MotionEvent event) {
         int  action = event.getAction();
 
         float x = event.getX();
@@ -220,7 +222,7 @@ public class TraditionalView extends View {
                     //再次入环后，允许下一次数据记录
                     experimentalData.set_Save(false);
 
-                } else { //已经进入，这个用来检测是否是一个闭环
+                }else { //已经进入，这个用来检测是否是一个闭环
 
                     if (!error && (Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) >= hoop.getSmallCircleR() * 2)) { //根据两点距离判断
                         error = true;
@@ -459,7 +461,7 @@ public class TraditionalView extends View {
     }
 
     //颜色一级菜单的显示
-    public void showColMenu() {
+    public void showColMenu () {
         //控制文字的画笔
         Paint MenuP = new Paint();
         MenuP.setTextSize(MenuWith); //文字大小
@@ -475,7 +477,7 @@ public class TraditionalView extends View {
 
     }
     //像素一级菜单的显示
-    public void showPixMenu() {
+    public void showPixMenu () {
         //控制文字的画笔
         Paint MenuP = new Paint();
         MenuP.setTextSize(MenuWith); //文字大小
@@ -490,7 +492,7 @@ public class TraditionalView extends View {
     }
 
     //颜色二级菜单显示
-    public  void showSeMenuCol(boolean Col) {
+    public void showSeMenuCol (boolean Col) {
 
         //二级颜色菜单画笔
         Paint SeColPaint = new Paint();
@@ -516,7 +518,7 @@ public class TraditionalView extends View {
         }
     }
     //像素二级菜单展示
-    public void showSeMenuPix(boolean Pix) {
+    public void showSeMenuPix (boolean Pix) {
 
         //二级像素画笔
         Paint SePixPaint = new Paint();
@@ -539,7 +541,7 @@ public class TraditionalView extends View {
         }
     }
     //初始化
-    public void initialization() {
+    public void initialization () {
         canvas.drawColor(0, PorterDuff.Mode.CLEAR); //清除画布
 
         //画笔清空
@@ -566,6 +568,12 @@ public class TraditionalView extends View {
 
         switchInformation.setTarget_color(0);
         switchInformation.setTarget_pixel(0);
+
+        //更新单次数据记录
+        experimentalData.Init_Col();
+        experimentalData.Init_Pix();
+
+        experimentalData.Add_num(); //次数加一
 
         menuColor = false;
         menuPixel = false;

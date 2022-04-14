@@ -50,24 +50,39 @@ public class ExperimentalData {
 
     private boolean save = false; //是否存储过 false 表示没有储存
 
-    public ExperimentalData() {}
+    public ExperimentalData () {}
 
     //测试者姓名
-    public void Set_user_name(String s) {
+    public void Set_user_name (String s) {
         user_Name = s;
     }
 
     //实验组数
-    public void Set_group(int n) {group = n;}
+    public void Set_group (String s) {
+        group = Integer.parseInt(s);
+    }
+
+    //当前组数的第几次
+    public void Init_num () {
+        num = 0;
+    }
+    public void Add_num () {
+        num ++;
+    }
+
+    //切换模式
+    public void Set_mode (String s) {
+        mode = s;
+    }
 
     //目标颜色
-    public void Set_Tar_Col(int n) { //保存目标颜色
+    public void Set_Tar_Col (int n) { //保存目标颜色
         if (n == 1) target_Col = "红色";
         if (n == 2) target_Col = "黄色";
         if (n == 3) target_Col = "蓝色";
     }
     //目标像素
-    public void Set_Tar_Pix(int n) { //保存目标像素
+    public void Set_Tar_Pix (int n) { //保存目标像素
         if (n == 1) target_Pix = "4PX";
         if (n == 2) target_Pix = "8PX";
         if (n == 3) target_Pix = "16PX";
@@ -77,23 +92,30 @@ public class ExperimentalData {
         false_tig ++;
     }
 
+    public void Init_Col () {
+        false_Col = 0; //初始化
+    }
     public void Add_Col () { //颜色切换错误次数
         false_Col ++;
         false_All ++;
+    }
+
+    public void Init_Pix () {
+        false_Pix = 0;
     }
     public void Add_Pix () { //像素切换错误次数
         false_Pix ++;
         false_All ++;
     }
     //当前测试是否存储过
-    public void set_Save(boolean b) {
+    public void set_Save (boolean b) {
         save = b;
     }
-    public boolean get_Save() {
+    public boolean get_Save () {
         return save;
     }
 
-    public void saveInf() throws IOException {
+    public void saveInf () throws IOException {
 
         String temp = name + ".csv"; //添加csv文件后缀
 

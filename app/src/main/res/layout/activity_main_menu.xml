@@ -16,34 +16,6 @@
         tools:layout_editor_absoluteX="217dp"
         tools:layout_editor_absoluteY="269dp">
 
-        <EditText
-            android:id="@+id/edit_text_user"
-            android:layout_width="175dp"
-            android:layout_height="wrap_content"
-
-            android:layout_marginLeft="150dp"
-            android:layout_marginTop="100dp"
-            android:layout_marginBottom="0dp"
-
-            android:hint="Input name here"
-            android:textColorHint="@color/black"
-            android:maxLines="1"
-            />
-
-        <EditText
-            android:id="@+id/edit_text_group"
-
-            android:layout_width="175dp"
-            android:layout_height="wrap_content"
-
-            android:layout_marginLeft="150dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="0dp"
-
-            android:hint="Input group number"
-            android:textColorHint="@color/black"
-            android:maxLines="1"
-            />
         <Button
             android:id="@+id/Traditional"
 
@@ -51,7 +23,7 @@
             android:layout_height="wrap_content"
 
             android:layout_marginLeft="650dp"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="80dp"
             android:layout_marginBottom="8dp"
 
             android:text="传统对照模式"
@@ -61,22 +33,52 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/SingleHand"
-
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/edit_text_user"
+            android:layout_width="175dp"
             android:layout_height="wrap_content"
 
-            android:layout_marginLeft="650dp"
+            android:layout_marginLeft="150dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+
+            android:hint="Input name here"
+            android:textColorHint="@color/black"
+            android:maxLines="1"
+            />
+
+        <Button
+        android:id="@+id/SingleHand"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="650dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="8dp"
+
+        android:text="单手主辅模式"
+        android:textSize="25dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/edit_text_group"
+
+            android:layout_width="175dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="150dp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="0dp"
 
-            android:text="单手主辅模式"
-            android:textSize="25dp"
+            android:hint="Input group number"
+            android:textColorHint="@color/black"
+            android:maxLines="1"
+            />
 
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/SingDynamic"

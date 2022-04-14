@@ -19,6 +19,9 @@ public class traditional extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_traditional);
 
+        Intent intent = getIntent();
+        System.out.println(intent.getStringExtra("user_name"));
+
         //对返回按钮进行监听
         Button buttonBack = (Button) findViewById(R.id.Back_traditional);
         buttonBack.setOnClickListener(new View.OnClickListener() {
