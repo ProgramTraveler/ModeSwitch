@@ -43,7 +43,6 @@ public class MainMenu extends AppCompatActivity implements AdapterView.OnItemSel
                 Intent intent = new Intent(MainMenu.this, traditional.class);
                 intent.putExtra("user_name", edit_user.getText().toString());
                 //主菜单选择的测试组数
-                System.out.println(group_context);
                 intent.putExtra("group", group_context);
 
                 startActivity(intent);
@@ -79,7 +78,7 @@ public class MainMenu extends AppCompatActivity implements AdapterView.OnItemSel
     //对选择的组数进行监听
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        System.out.println(adapterView.getItemAtPosition(i).toString());
+        //System.out.println(adapterView.getItemAtPosition(i).toString());
         switch (adapterView.getItemAtPosition(i).toString()) {
             case "1组" :
                 //System.out.println("come 1");
