@@ -64,21 +64,18 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/edit_text_group"
+        <!--android:spinnerMode="dialog" 这个放在 Spinner中 就是让选择在菜单中间显示-->
+        <Spinner
+            android:id="@+id/spinner_group"
+            android:entries="@array/groups"
 
             android:layout_width="175dp"
             android:layout_height="wrap_content"
 
             android:layout_marginLeft="150dp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="0dp"
-
-            android:hint="Input group number"
-            android:textColorHint="@color/black"
-            android:maxLines="1"
+            android:layout_marginBottom="8dp"
             />
-
 
         <Button
             android:id="@+id/SingDynamic"

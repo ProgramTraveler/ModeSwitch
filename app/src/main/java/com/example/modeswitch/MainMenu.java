@@ -6,8 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -18,16 +21,18 @@ import java.io.IOException;
     purpose:活动 主选择模式菜单
  */
 
-public class MainMenu extends AppCompatActivity {
+public class MainMenu extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+    private String group_context = ""; //记录选择的组数
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
-        EditText edit_user = (EditText) findViewById(R.id.edit_text_user);
-        EditText edit_group = (EditText) findViewById(R.id.edit_text_group);
+        EditText edit_user = (EditText) findViewById(R.id.edit_text_user); //获取输入的用户名
 
-        ExperimentalData experimentalData = new ExperimentalData();
+        Spinner spinner_group = (Spinner) findViewById(R.id.spinner_group); //获取选中的组数
+        spinner_group.setOnItemSelectedListener(this); //为组数设置监听器
 
         //对传统模式按钮进行监听
         Button buttonTra = (Button) findViewById(R.id.Traditional);
@@ -37,9 +42,9 @@ public class MainMenu extends AppCompatActivity {
                 //主菜单输入的测试者的姓名
                 Intent intent = new Intent(MainMenu.this, traditional.class);
                 intent.putExtra("user_name", edit_user.getText().toString());
-
-                //主菜单输入的测试组数
-                intent.putExtra("group", edit_group.getText().toString());
+                //主菜单选择的测试组数
+                System.out.println(group_context);
+                intent.putExtra("group", group_context);
 
                 startActivity(intent);
                 Toast.makeText(MainMenu.this, "已选择传统对照模式", Toast.LENGTH_SHORT).show();
@@ -69,16 +74,56 @@ public class MainMenu extends AppCompatActivity {
                 Toast.makeText(MainMenu.this, "已选择单手动态模式", Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
-        //对测试者输入框进行监听
-        /*EditText editText = (EditText) findViewById(R.id.edit_text_user);
-        editText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ExperimentalData experimentalData = new ExperimentalData(); //数据保存
+    //对选择的组数进行监听
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        System.out.println(adapterView.getItemAtPosition(i).toString());
+        switch (adapterView.getItemAtPosition(i).toString()) {
+            case "1组" :
+                //System.out.println("come 1");
+                group_context = "1";
+                break;
+            case "2组" :
+                //System.out.println("come 2");
+                group_context = "2";
+                break;
+            case "3组" :
+                //System.out.println("come 3");
+                group_context = "3";
+                break;
+            case "4组" :
+                //System.out.println("come 4");
+                group_context = "4";
+                break;
+            case "5组" :
+                //System.out.println("come 5");
+                group_context = "5";
+                break;
+            case "6组" :
+                //System.out.println("come 6");
+                group_context = "6";
+                break;
+            case "7组" :
+                //System.out.println("come 7");
+                group_context = "7";
+                break;
+            case "8组" :
+                //System.out.println("come 8");
+                group_context = "8";
+                break;
+            case "9组" :
+                //System.out.println("come 9");
+                group_context = "9";
+                break;
+            default: break;
+        }
 
-                experimentalData.Set_user_name(editText.getText().toString()); //保存测试者姓名
-            }
-        });*/
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }
