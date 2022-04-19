@@ -11,7 +11,7 @@ import android.graphics.Paint;
  */
 
 public class SwitchInformation {
-    String current_pixel = "1PX"; //当前像素
+    String current_pixel = "2PX"; //当前像素
     String target_pixel = ""; //目标像素
 
     /*

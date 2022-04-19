@@ -49,6 +49,7 @@ public class RandomNumber {
         return temp;
     }
 
+    //检测一组是否做完
     public boolean getArrayLength() { //检查容器是否为0
         return randomN.size() == 0;
     }

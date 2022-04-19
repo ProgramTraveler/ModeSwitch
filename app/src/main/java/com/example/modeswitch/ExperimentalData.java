@@ -35,7 +35,7 @@ public class ExperimentalData {
     private String user_Name = ""; //测试者的姓名
 
     private int group = 0; //实验的组数
-    private int num = 0; //当前组的第几次
+    private int num = 1; //当前组的第几次
 
     private String mode = ""; //切换模式技术
 
@@ -47,6 +47,41 @@ public class ExperimentalData {
     private int false_Col = 0; //颜色切换错误次数
     private int false_Pix = 0; //像素切换错误次数
     private int false_All = 0; //切换的总的错误次数
+
+    /*
+    绘制第一个圆环的时间
+     */
+    private long start_hoop_1 = 0;
+    private long end_hoop_1 = 0;
+
+    /*
+    绘制第二个圆环的时间
+     */
+    private long start_hoop_2 = 0;
+    private long end_hoop_2 = 0;
+
+    /*
+    绘制第三个圆环的时间
+     */
+    private long start_hoop_3 = 0;
+    private long end_hoop_3 = 0;
+
+    /*
+    模式切换时间
+     */
+    private long start_mode = 0;
+    private long end_mode = 0;
+
+    /*
+    整个操作时间
+     */
+    private long whole_start = 0;
+    private long whole_end = 0;
+
+    //颜色切换时间
+    private long swi_color = 0;
+    private long swi_pixel = 0;
+    //
 
     private boolean save = false; //是否存储过 false 表示没有储存
 
