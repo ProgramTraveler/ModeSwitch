@@ -49,41 +49,38 @@ public class ExperimentalData {
     private int false_All = 0; //切换的总的错误次数
 
     /*
-    绘制第一个圆环的时间
+        绘制第一个圆环的时间
      */
     private long start_hoop_1 = 0;
     private long end_hoop_1 = 0;
 
     /*
-    绘制第二个圆环的时间
+        绘制第二个圆环的时间
      */
     private long start_hoop_2 = 0;
     private long end_hoop_2 = 0;
 
     /*
-    绘制第三个圆环的时间
+        绘制第三个圆环的时间
      */
     private long start_hoop_3 = 0;
     private long end_hoop_3 = 0;
 
     /*
-    模式切换时间
+        模式切换时间
      */
-    private long start_mode = 0;
-    private long end_mode = 0;
-
-    /*
-    整个操作时间
-     */
-    private long whole_start = 0;
-    private long whole_end = 0;
-
     //颜色切换时间
     private long swi_start_color = 0;
     private long swi_end_color = 0;
     //像素切换时间
     private long swi_start_pixel = 0;
     private long swi_end_pixel = 0;
+
+    /*
+        整个操作时间
+     */
+    private long whole_start = 0;
+    private long whole_end = 0;
 
 
     private boolean save = false; //是否存储过 false 表示没有储存
@@ -162,6 +159,56 @@ public class ExperimentalData {
         return save;
     }
 
+    //记录环一时间
+    public void set_start_hoop_1 (long l) {
+        start_hoop_1 = l;
+    }
+    public void set_end_hoop_1 (long l) {
+        end_hoop_1 = l;
+    }
+
+    //记录环二时间
+    public void set_start_hoop_2 (long l) {
+        start_hoop_2 = l;
+    }
+    public void set_end_hoop_2 (long l) {
+        end_hoop_2 = l;
+    }
+
+    //记录环三时间
+    public void set_start_hoop_3 (long l) {
+        start_hoop_3 = l;
+    }
+    public void set_end_hoop_3 (long l) {
+        end_hoop_3 = l;
+    }
+
+    /*
+        模式切换时间
+     */
+    //颜色
+    public void set_start_color (long l) {
+        swi_start_color = l;
+    }
+    public void set_end_color (long l) {
+        swi_end_color = l;
+    }
+    //像素
+    public void set_start_pixel (long l) {
+        swi_start_pixel = l;
+    }
+    public void set_end_pixel (long l) {
+        swi_end_pixel = l;
+    }
+
+    //整个操作时间
+    public void set_start_whole (long l) {
+        whole_start = l;
+    }
+    public void set_end_whole (long l) {
+        whole_end = l;
+    }
+
     public void saveInf () throws IOException {
 
         String temp = name + ".csv"; //添加csv文件后缀
@@ -187,6 +234,13 @@ public class ExperimentalData {
                     + "颜色切换错误数" + ","
                     + "像素切换错误数" + ","
                     + "模式切换总错误数" + ","
+                    + "第一个圆环绘制时间" + ","
+                    + "第二个圆环绘制时间" + ","
+                    + "第三个圆环绘制时间" + ","
+                    + "颜色菜单切换时间" + ","
+                    + "像素菜单切换时间" + ","
+                    + "模式切换总时间" + ","
+                    + "总操作时间" + ","
                     + "\n"; //第一排的命名名称
             csv.write(saveText.getBytes("GBK"));
         }
@@ -204,6 +258,13 @@ public class ExperimentalData {
                 + false_Col + ","
                 + false_Pix + ","
                 + false_All + ","
+                + (end_hoop_1 - start_hoop_1) + ","
+                + (end_hoop_2 - start_hoop_2) + ","
+                + (end_hoop_3 - start_hoop_3) + ","
+                + (swi_end_color - swi_start_color) + ","
+                + (swi_end_pixel - swi_start_pixel) + ","
+                + (swi_end_color + swi_end_pixel - swi_start_color - swi_start_pixel) + ","
+                + (whole_end - whole_start) + ","
                 + "\n"; //每排存储的数据记录
         csv.write(saveText.getBytes("GBK"));
         csv.close();
