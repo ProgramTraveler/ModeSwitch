@@ -334,20 +334,44 @@ public class TraditionalView extends View {
 
         switch (action & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN: //单指按下时触发
-                /*if ((x > Menu_X) && (x < (Menu_X + MenuLen * 2)) && (y > Menu_Y) && (y < (Menu_Y + MenuLen * 4))) { //菜单区域禁止绘制
-                    System.out.println("come in");
-                    //禁止绘制
-                    inf_pen = false;
-                }else {
-                    LastX = x;
-                    LastY = y;
-                    pathInfArrayList.get(PathInfNum).path.moveTo(LastX, LastY);
-                    //允许绘制
-                    inf_pen = true;
-                }*/
+
                 LastX = x;
                 LastY = y;
                 pathInfArrayList.get(PathInfNum).path.moveTo(LastX, LastY);
+
+                /*
+                    一级菜单触发
+                 */
+                if (x > Menu_X && x < (Menu_X + MenuLen) && y > Menu_Y && y < (Menu_Y + MenuWith)) { //点击颜色菜单位置
+                    //误触发检测
+                    if (!hoop.getRing_2()) { //如果环二还未出现，误触发
+                        experimentalData.Add_Tig();
+                    }
+
+                    //关闭像素二级菜单（如果之前打开的话）
+                    showSeMenuPix(menuPixel = false);
+                    //显示颜色二级菜单
+                    showSeMenuCol(menuColor = true);
+
+                    PathInfNum++;
+                    pathInfArrayList.add(new PathInf());
+                }
+
+                if (x > (Menu_X + MenuLen) && x < (Menu_X + MenuLen * 2) && y > Menu_Y && y < (Menu_Y + MenuWith)) { //点击像素菜单位置
+                    //误触发检测
+                    if (!hoop.getRing_3()) { //如果环三还未出现，误触发
+                        experimentalData.Add_Tig();
+                    }
+
+                    //关闭颜色二级菜单
+                    showSeMenuCol(menuColor = false);
+                    //显示像素二级菜单
+                    showSeMenuPix(menuPixel = true);
+
+                    PathInfNum++;
+                    pathInfArrayList.add(new PathInf());
+                }
+
 
                 /*
                     二级菜单选择（不用多级判断）
@@ -417,17 +441,10 @@ public class TraditionalView extends View {
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                /*
-                System.out.println(inf_pen);
-                if ((x > Menu_X) && (x < (Menu_X + MenuLen * 2)) && (y > Menu_Y) && (y < (Menu_Y + MenuLen * 4))){
-                    inf_pen = false;
-                }else {
-                    inf_pen = true;
-                }*/
 
                 float dx = Math.abs(x - LastX);
                 float dy = Math.abs(y - LastY);
-                System.out.println(menuColor + "---" + menuPixel);
+
                 if ((dx > 3 || dy > 3) && !experimentalData.get_Save() && !menuPixel && !menuColor)
                     pathInfArrayList.get(PathInfNum).path.lineTo(x, y);
                 LastX = x;
@@ -436,37 +453,6 @@ public class TraditionalView extends View {
             case MotionEvent.ACTION_UP: //当手指抬起时（选择的结果在这里实现）
                 //pathInfArrayList.get(PathInfNum).path.moveTo(event.getX(0), event.getY(0)); //第一根手指可能会有移动，更新一下位置，不然会出现直接将两点连线
 
-                 /*
-                    一级菜单触发
-                 */
-                if (x > Menu_X && x < (Menu_X + MenuLen) && y > Menu_Y && y < (Menu_Y + MenuWith)) { //点击颜色菜单位置
-                    //误触发检测
-                    if (!hoop.getRing_2()) { //如果环二还未出现，误触发
-                        experimentalData.Add_Tig();
-                    }
-
-                    //关闭像素二级菜单（如果之前打开的话）
-                    showSeMenuPix(menuPixel = false);
-                    //显示颜色二级菜单
-                    showSeMenuCol(menuColor = true);
-
-                    PathInfNum++;
-                    pathInfArrayList.add(new PathInf());
-                }
-                if (x > (Menu_X + MenuLen) && x < (Menu_X + MenuLen * 2) && y > Menu_Y && y < (Menu_Y + MenuWith)) { //点击像素菜单位置
-                    //误触发检测
-                    if (!hoop.getRing_3()) { //如果环三还未出现，误触发
-                        experimentalData.Add_Tig();
-                    }
-
-                    //关闭颜色二级菜单
-                    showSeMenuCol(menuColor = false);
-                    //显示像素二级菜单
-                    showSeMenuPix(menuPixel = true);
-
-                    PathInfNum++;
-                    pathInfArrayList.add(new PathInf());
-                }
 
         }
         invalidate();
@@ -557,6 +543,23 @@ public class TraditionalView extends View {
     public void initialization () {
         canvas.drawColor(0, PorterDuff.Mode.CLEAR); //清除画布
 
+        /*
+            当将所有的测试用例做完，对当前组数进行判断，如果还未做完就继续做，否则退回到主界面
+         */
+        if (randomNumber.getArrayLength()) { //如果测试用例做完
+            if (experimentalData.Get_group() - 1 <= 0) { //组数做完
+                //返回主界面
+                traditional.onBackPressed();
+            }else {
+                //更新组数
+                experimentalData.Update_group();
+
+                //更新测试用例
+                randomNumber = new RandomNumber();
+            }
+
+        }
+
         //画笔清空
         pathInfArrayList.clear();
         pathInfArrayList.add(new PathInf());
@@ -585,6 +588,10 @@ public class TraditionalView extends View {
         //更新单次数据记录
         experimentalData.Init_Col();
         experimentalData.Init_Pix();
+
+        experimentalData.Init_Tig();
+        experimentalData.Init_false_all();
+
 
         experimentalData.Add_num(); //次数加一
 

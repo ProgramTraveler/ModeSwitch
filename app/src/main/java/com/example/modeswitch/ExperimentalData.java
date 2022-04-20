@@ -79,9 +79,12 @@ public class ExperimentalData {
     private long whole_end = 0;
 
     //颜色切换时间
-    private long swi_color = 0;
-    private long swi_pixel = 0;
-    //
+    private long swi_start_color = 0;
+    private long swi_end_color = 0;
+    //像素切换时间
+    private long swi_start_pixel = 0;
+    private long swi_end_pixel = 0;
+
 
     private boolean save = false; //是否存储过 false 表示没有储存
 
@@ -96,6 +99,8 @@ public class ExperimentalData {
     public void Set_group (String s) {
         group = Integer.parseInt(s);
     }
+    public int Get_group () {return group;}
+    public void Update_group () {group --;}
 
     //当前组数的第几次
     public void Init_num () {
@@ -126,6 +131,7 @@ public class ExperimentalData {
     public void Add_Tig () { //误触发次数
         false_tig ++;
     }
+    public void Init_Tig () {false_tig = 0;}
 
     public void Init_Col () {
         false_Col = 0; //初始化
@@ -142,6 +148,12 @@ public class ExperimentalData {
         false_Pix ++;
         false_All ++;
     }
+
+    //初始化切换总错误
+    public void Init_false_all () {
+        false_All = 0;
+    }
+
     //当前测试是否存储过
     public void set_Save (boolean b) {
         save = b;
@@ -174,7 +186,7 @@ public class ExperimentalData {
                     + "误触发错误总数" + ","
                     + "颜色切换错误数" + ","
                     + "像素切换错误数" + ","
-                    + "模式切换总错误数"
+                    + "模式切换总错误数" + ","
                     + "\n"; //第一排的命名名称
             csv.write(saveText.getBytes("GBK"));
         }
