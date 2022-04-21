@@ -216,6 +216,7 @@ public class TraditionalView extends View {
         float y = event.getY();
 
         if (hoop.getRing_1() && !hoop.getRing_2()) { //当前只显示第一个圆环
+
             //求出当前位置与圆心坐标差值的平方
             double xr = Math.pow((x - hoop.getCircle_X(1)), 2);
             double yr = Math.pow((y - hoop.getCircle_Y(1)), 2);
@@ -223,6 +224,11 @@ public class TraditionalView extends View {
             double ra = xr + yr;
 
             if ((ra >= Math.pow((hoop.getSmallCircleR()), 2)) && (ra <= Math.pow((hoop.getBigCircleR()), 2))) { //如果落在圆环内
+                //如果之前没有记录环一第一次落下时间
+                if (!hoop.get_Ring_1_start()) {
+                    experimentalData.set_start_hoop_1(System.currentTimeMillis()); //当前系统毫秒数
+                    hoop.set_Ring_1_start(true);
+                }
 
                 if (!index) { //如果之前没有进入过
                     index = true; //表示已经进入
@@ -240,6 +246,10 @@ public class TraditionalView extends View {
                     }
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
                         hoop.setRing_2(true);// 当误差满足条件的时候就当做是一个闭环
+
+                        //当条件满足时视为环绘制完成，因此不需要变量约束
+                        experimentalData.set_end_hoop_1(System.currentTimeMillis());
+
                         //重新初始化条件
                         index = false;
                         error = false;
@@ -263,6 +273,11 @@ public class TraditionalView extends View {
             double ra = xr + yr;
 
             if (ra >= Math.pow((hoop.getSmallCircleR()), 2) && ra <= Math.pow((hoop.getBigCircleR()), 2)) { //如果落在圆环内
+                //如果之前没有记录环二第一次落下的时间
+                if (!hoop.get_Ring_2_start()) {
+                    experimentalData.set_start_hoop_2(System.currentTimeMillis());
+                    hoop.set_Ring_2_start(true);
+                }
 
                 if (!index) { //如果之前没有进入过
                     index = true; //表示已经进入
@@ -275,6 +290,10 @@ public class TraditionalView extends View {
                     }
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
                         hoop.setRing_3(true);//当误差满足条件的时候就当做是一个闭环
+
+                        //满足条件。绘制完成
+                        experimentalData.set_end_hoop_2(System.currentTimeMillis());
+
                         //重新初始化条件
                         index = false;
                         error = false;
@@ -297,6 +316,11 @@ public class TraditionalView extends View {
             double ra = xr + yr;
 
             if ((ra >= Math.pow((hoop.getSmallCircleR()), 2)) && (ra <= Math.pow(hoop.getBigCircleR(), 2))) { //如果落在圆环内
+                if (!hoop.get_Ring_3_start()) {
+                    experimentalData.set_start_hoop_3(System.currentTimeMillis());
+                    hoop.set_Ring_3_start(true);
+                }
+
                 if (!index) { //如果之前没有进入过
                     index = true;
 
@@ -307,6 +331,9 @@ public class TraditionalView extends View {
                         error = true;
                     }
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
+
+                        experimentalData.set_end_hoop_3(System.currentTimeMillis());
+
                         //当误差满足时，视为一次测试结束
                         if (switchInformation.get_target_color() != switchInformation.get_current_color()) { //如果当前颜色和目标颜色不一致
                             experimentalData.Add_Col(); //颜色切换错误数加一
@@ -574,6 +601,10 @@ public class TraditionalView extends View {
         hoop.setRing_1(true);
         hoop.setRing_2(false);
         hoop.setRing_3(false);
+
+        //更新时间记录
+        hoop.set_Ring_1_start(false);
+        hoop.set_Ring_2_start(false);
 
         index = false;
         error = false;
