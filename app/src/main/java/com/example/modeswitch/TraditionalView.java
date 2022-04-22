@@ -333,6 +333,7 @@ public class TraditionalView extends View {
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
 
                         experimentalData.set_end_hoop_3(System.currentTimeMillis());
+                        experimentalData.set_end_whole(System.currentTimeMillis());
 
                         //当误差满足时，视为一次测试结束
                         if (switchInformation.get_target_color() != switchInformation.get_current_color()) { //如果当前颜色和目标颜色不一致
@@ -361,6 +362,11 @@ public class TraditionalView extends View {
 
         switch (action & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN: //单指按下时触发
+
+                if (!experimentalData.get_whole_index()) { //第一次按下
+                    experimentalData.set_start_whole(System.currentTimeMillis());
+                    experimentalData.set_whole_index(true);
+                }
 
                 LastX = x;
                 LastY = y;
@@ -406,6 +412,11 @@ public class TraditionalView extends View {
                 boolean col_inf = ((x > Menu_X) && x < (Menu_X + MenuLen)); //所有颜色的x轴判断都是这个
 
                 if (col_inf && menuColor) { //颜色二级菜单的展开
+                    if (hoop.getRing_2() && !experimentalData.get_color_index_e()) { //如果环显示且是第一次选择
+                        experimentalData.set_end_color(System.currentTimeMillis());
+                        experimentalData.set_color_index_e(true);
+                    }
+
                     if (y > (Menu_Y + MenuWith) && y < (Menu_Y + MenuLen * 2)) { //红色
                         pathInfArrayList.get(PathInfNum).paint.setColor(Color.RED);
                         colorNow = Color.RED;
@@ -437,6 +448,11 @@ public class TraditionalView extends View {
 
                 boolean pix_inf = ((x > Menu_X + MenuLen) && (x < (Menu_X + MenuLen * 2)));
                 if (pix_inf && menuPixel) {
+                    if (hoop.getRing_3() && !experimentalData.get_pixel_index_e()) { //同颜色
+                        experimentalData.set_end_pixel(System.currentTimeMillis());
+                        experimentalData.set_pixel_index_e(true);
+                    }
+
                     if (y > (Menu_Y + MenuWith) && y < (Menu_Y + MenuLen * 2)) { //4px
                         pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(4);
                         pixNow = 4;
@@ -478,8 +494,16 @@ public class TraditionalView extends View {
                 LastY = y;
 
             case MotionEvent.ACTION_UP: //当手指抬起时（选择的结果在这里实现）
-                //pathInfArrayList.get(PathInfNum).path.moveTo(event.getX(0), event.getY(0)); //第一根手指可能会有移动，更新一下位置，不然会出现直接将两点连线
 
+                if (hoop.getRing_2() && !experimentalData.get_color_index_s()) { //如果环二出现且是第一次抬手，作为颜色切换时间的开始标志
+                    experimentalData.set_start_color(System.currentTimeMillis());
+                    experimentalData.set_color_index_s(true);
+                }
+
+                if (hoop.getRing_3() && !experimentalData.get_pixel_index_s()) { //如果环三出现且是第一次抬手，作为像素切换时间的开始标志
+                    experimentalData.set_start_pixel(System.currentTimeMillis());
+                    experimentalData.set_pixel_index_s(true);
+                }
 
         }
         invalidate();
@@ -580,6 +604,8 @@ public class TraditionalView extends View {
             }else {
                 //更新组数
                 experimentalData.Update_group();
+                //初始化组内次数
+                experimentalData.Init_num();
 
                 //更新测试用例
                 randomNumber = new RandomNumber();
@@ -602,9 +628,16 @@ public class TraditionalView extends View {
         hoop.setRing_2(false);
         hoop.setRing_3(false);
 
-        //更新时间记录
+        //更新时间记录（环的绘制时间）
         hoop.set_Ring_1_start(false);
         hoop.set_Ring_2_start(false);
+
+        //更新时间（模式切换时间）
+        experimentalData.set_color_index_s(false);
+        experimentalData.set_color_index_e(false);
+        experimentalData.set_pixel_index_s(false);
+        experimentalData.set_pixel_index_e(false);
+        experimentalData.set_whole_index(false);
 
         index = false;
         error = false;

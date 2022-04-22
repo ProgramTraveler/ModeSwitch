@@ -6,7 +6,7 @@ package com.example.modeswitch;
  */
 public class Hoop {
     //每个操作环的状态，true表示已经出现
-    private boolean ring1 = true; //第一个环是一个出现的，所以只能是true
+    private boolean ring1 = true; //第一个环是默认是出现的，所以只能是true
     private boolean ring2 = false;
     private boolean ring3 = false;
 

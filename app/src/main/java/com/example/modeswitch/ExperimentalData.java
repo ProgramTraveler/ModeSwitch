@@ -72,15 +72,21 @@ public class ExperimentalData {
     //颜色切换时间
     private long swi_start_color = 0;
     private long swi_end_color = 0;
+    private boolean swi_color_index_s = false; //第一次开始切换标志
+    private boolean swi_color_index_e = false; //第一次结束切换标志
+
     //像素切换时间
     private long swi_start_pixel = 0;
     private long swi_end_pixel = 0;
+    private boolean swi_pixel_index_s = false; //第一次开始切换标志
+    private boolean swi_pixel_index_e = false; //第一次结束切换标志
 
     /*
         整个操作时间
      */
     private long whole_start = 0;
     private long whole_end = 0;
+    private boolean whole_index = false;
 
 
     private boolean save = false; //是否存储过 false 表示没有储存
@@ -101,7 +107,7 @@ public class ExperimentalData {
 
     //当前组数的第几次
     public void Init_num () {
-        num = 0;
+        num = 1;
     }
     public void Add_num () {
         num ++;
@@ -193,6 +199,20 @@ public class ExperimentalData {
     public void set_end_color (long l) {
         swi_end_color = l;
     }
+
+    public void set_color_index_s (boolean b) {
+        swi_color_index_s = b;
+    }
+    public boolean get_color_index_s () {
+        return swi_color_index_s;
+    }
+
+    public void set_color_index_e (boolean b) {
+        swi_color_index_e = b;
+    }
+    public boolean get_color_index_e () {
+        return swi_color_index_e;
+    }
     //像素
     public void set_start_pixel (long l) {
         swi_start_pixel = l;
@@ -201,12 +221,31 @@ public class ExperimentalData {
         swi_end_pixel = l;
     }
 
+    public void set_pixel_index_s (boolean b) {
+        swi_pixel_index_s = b;
+    }
+    public boolean get_pixel_index_s () {
+        return swi_pixel_index_s;
+    }
+
+    public void set_pixel_index_e (boolean b) {
+        swi_pixel_index_e = b;
+    }
+    public boolean get_pixel_index_e () {
+        return swi_pixel_index_e;
+    }
     //整个操作时间
     public void set_start_whole (long l) {
         whole_start = l;
     }
     public void set_end_whole (long l) {
         whole_end = l;
+    }
+    public void set_whole_index (boolean b) {
+        whole_index = b;
+    }
+    public boolean get_whole_index () {
+        return whole_index;
     }
 
     public void saveInf () throws IOException {
