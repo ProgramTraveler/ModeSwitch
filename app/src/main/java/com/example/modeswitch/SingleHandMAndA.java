@@ -16,19 +16,33 @@ import android.widget.Button;
     purpose:活动 单手主辅模式
  */
 public class SingleHandMAndA extends AppCompatActivity {
+
+    private String user_name = "";
+    private String group = "";
+
+    public String get_user_name () {
+        return user_name;
+    }
+
+    public String get_group () {
+        return group;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //获取输入的姓名和组数
+        Intent intent = getIntent();
+        user_name = intent.getStringExtra("user_name");
+        group = intent.getStringExtra("group");
+
         setContentView(R.layout.activity_single_hand_mand);
 
         Button buttonBack = (Button) findViewById(R.id.Back_single_Hand);
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*
-                    Intent intent = new Intent(SingleHandMAndA.this, MainMenu.class);
-                    startActivity(intent);
-                */
                 SingleHandMAndA.super.onBackPressed();
             }
         });

@@ -22,6 +22,7 @@ import java.io.IOException;
  */
 
 public class MainMenu extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+
     private String group_context = ""; //记录选择的组数
 
     @Override
@@ -57,6 +58,9 @@ public class MainMenu extends AppCompatActivity implements AdapterView.OnItemSel
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainMenu.this, SingleHandMAndA.class); //由当前模式跳往单手主辅模式
+                intent.putExtra("user_name", edit_user.getText().toString());
+                intent.putExtra("group", group_context);
+
                 startActivity(intent);
                 //对选择的模式进行提示
                 Toast.makeText(MainMenu.this, "已选择单手主辅模式", Toast.LENGTH_SHORT).show();

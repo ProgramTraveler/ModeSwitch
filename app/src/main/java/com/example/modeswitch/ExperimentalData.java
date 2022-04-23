@@ -213,6 +213,7 @@ public class ExperimentalData {
     public boolean get_color_index_e () {
         return swi_color_index_e;
     }
+
     //像素
     public void set_start_pixel (long l) {
         swi_start_pixel = l;

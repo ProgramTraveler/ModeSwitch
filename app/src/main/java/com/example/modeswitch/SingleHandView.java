@@ -101,16 +101,26 @@ public class SingleHandView extends View {
 
     private ExperimentalData experimentalData = new ExperimentalData(); //数据记录
 
+    private SingleHandMAndA singleHandMAndA;
+
     //重写父类方法
     public SingleHandView(Context context) { //在new的时候调用
         super(context);
         init();
 
     }
+
     public SingleHandView(Context context, AttributeSet attr) { //在布局中使用(layout)
         super(context, attr);
+
+        //获取活动
+        singleHandMAndA = (SingleHandMAndA) context;
+        experimentalData.Set_user_name(singleHandMAndA.get_user_name());
+        experimentalData.Set_group(singleHandMAndA.get_group());
+
         init();
     }
+
     public SingleHandView(Context context, AttributeSet attr, int defStyleAttr) { //会在layout中使用，但会有style
         super(context, attr, defStyleAttr);
         init();
@@ -128,6 +138,8 @@ public class SingleHandView extends View {
         pathInfArrayList.add(new PathInf());
 
         hoop = new Hoop();
+
+        experimentalData.Set_mode("单手主辅模式");
     }
 
     @Override
@@ -157,9 +169,8 @@ public class SingleHandView extends View {
         coordinate = new Coordinate(high, width);
 
         //初始化bitmap和canvas
-        bitmap = Bitmap.createBitmap((int)width, (int)high, Bitmap.Config.ARGB_8888);
+        bitmap = Bitmap.createBitmap((int) width, (int) high, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
-
 
     }
 
@@ -193,7 +204,7 @@ public class SingleHandView extends View {
 
             if (PixMenu) ShowPixMenu(true);
             else ShowPixMenu(false);
-        }else {
+        } else {
             ShowColMenu(false);
             ShowPixMenu(false);
         }
@@ -202,7 +213,7 @@ public class SingleHandView extends View {
 
         //提示文字显示
         canvas.drawText(switchInformation.getCurrent_color_inf(), coordinate.current_color_x, coordinate.current_color_y, switchInformation.getWordInf());
-        canvas.drawText(switchInformation.getCurrent_pixel_inf(), coordinate.current_pixel_x,  coordinate.current_pixel_y, switchInformation.getWordInf());
+        canvas.drawText(switchInformation.getCurrent_pixel_inf(), coordinate.current_pixel_x, coordinate.current_pixel_y, switchInformation.getWordInf());
 
         canvas.drawText(switchInformation.getTarget_color_inf(), coordinate.target_color_x, coordinate.target_color_y, switchInformation.getWordInf());
         canvas.drawText(switchInformation.getTarget_pixel_inf(), coordinate.target_pixel_x, coordinate.target_pixel_y, switchInformation.getWordInf());
@@ -221,7 +232,9 @@ public class SingleHandView extends View {
 
     //绘制线条
     private void drawPath() {
-        for (int i = 0; i < pathInfArrayList.size(); i ++) { canvas.drawPath(pathInfArrayList.get(i).path, pathInfArrayList.get(i).paint); }
+        for (int i = 0; i < pathInfArrayList.size(); i++) {
+            canvas.drawPath(pathInfArrayList.get(i).path, pathInfArrayList.get(i).paint);
+        }
     }
 
     @Override
@@ -240,20 +253,32 @@ public class SingleHandView extends View {
             double ra = xr + yr;
 
             if ((ra >= Math.pow((hoop.getSmallCircleR()), 2)) && (ra <= Math.pow((hoop.getBigCircleR()), 2))) { //如果落在圆环内
+                //如果之前没有记录环一第一次落下时间
+                if (!hoop.get_Ring_1_start()) {
+                    experimentalData.set_start_hoop_1(System.currentTimeMillis()); //当前系统毫秒数
+                    hoop.set_Ring_1_start(true);
+                }
+
 
                 if (!index) { //如果之前没有进入过
                     index = true; //表示已经进入
                     //初次进入的坐标
                     StartX = x;
                     StartY = y;
-                }
-                else { //已经进入，这个用来检测是否是一个闭环
+
+                    //再次入环
+                    experimentalData.set_Save(false);
+                } else { //已经进入，这个用来检测是否是一个闭环
 
                     if (!error && (Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) >= hoop.getSmallCircleR() * 2)) { //根据两点距离判断
                         error = true;
                     }
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
                         hoop.setRing_2(true);// 当误差满足条件的时候就当做是一个闭环
+
+                        //当条件满足时视为环绘制完成，因此不需要变量约束
+                        experimentalData.set_end_hoop_1(System.currentTimeMillis());
+
 
                         //重新初始化条件
                         index = false;
@@ -262,9 +287,12 @@ public class SingleHandView extends View {
                         //获得颜色提示
                         tips = randomNumber.getRandom();
                         switchInformation.setTarget_color(tips / 10);
+
+                        //将目标颜色存入
+                        experimentalData.Set_Tar_Col(tips / 10);
                     }
                 }
-            }else { //要是画出环的处理，暂时还没有想法
+            } else { //要是画出环的处理，暂时还没有想法
 
             }
         }
@@ -275,33 +303,103 @@ public class SingleHandView extends View {
             double ra = xr + yr;
 
             if (ra >= Math.pow((hoop.getSmallCircleR()), 2) && ra <= Math.pow((hoop.getBigCircleR()), 2)) { //如果落在圆环内
+                //如果之前没有记录环二第一次落下的时间
+                if (!hoop.get_Ring_2_start()) {
+                    experimentalData.set_start_hoop_2(System.currentTimeMillis());
+                    hoop.set_Ring_2_start(true);
+                }
 
                 if (!index) { //如果之前没有进入过
                     index = true; //表示已经进入
                     //初次进入的坐标
                     StartX = x;
                     StartY = y;
-                }
-                else { //已经进入，这个用来检测是否是一个闭环
+                } else { //已经进入，这个用来检测是否是一个闭环
                     if (!error && (Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) >= hoop.getSmallCircleR() * 2)) {
                         error = true;
                     }
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
                         hoop.setRing_3(true);//当误差满足条件的时候就当做是一个闭环
 
+                        //满足条件。绘制完成
+                        experimentalData.set_end_hoop_2(System.currentTimeMillis());
+
+                        //重新初始化条件
+                        index = false;
+                        error = false;
+
                         //像素提示
                         switchInformation.setTarget_pixel(tips % 10);
+
+                        //存入像素目标
+                        experimentalData.Set_Tar_Pix(tips % 10);
                     }
                 }
-            }else { //要是画出环的处理，暂时还没有想法
+            } else { //要是画出环的处理，暂时还没有想法
 
             }
         }
 
+        if (hoop.getRing_3()) { //第三个圆环已经展开
+            double xr = Math.pow(x - hoop.getCircle_X(3), 2);
+            double yr = Math.pow(y - hoop.getCircle_Y(3), 2);
+            double ra = xr + yr;
+
+            if ((ra >= Math.pow((hoop.getSmallCircleR()), 2)) && (ra <= Math.pow(hoop.getBigCircleR(), 2))) {
+                if (!hoop.get_Ring_3_start()) {
+                    experimentalData.set_start_hoop_3(System.currentTimeMillis());
+                    hoop.set_Ring_3_start(true);
+                }
+
+                if (!index) { //之前没有进入过
+                    index = true;
+
+                    StartX = x;
+                    StartY = y;
+                } else { //进入了，检测是否是一个闭环
+                    if (!error && (Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) >= hoop.getSmallCircleR() * 2)) {
+                        error = true;
+                    }
+
+                    if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
+
+                        experimentalData.set_end_hoop_3(System.currentTimeMillis());
+                        experimentalData.set_end_whole(System.currentTimeMillis());
+
+                        //满足条件，视为一次测试结束
+                        if (switchInformation.get_target_color() != switchInformation.get_current_color()) {
+                            experimentalData.Add_Col();
+                        }
+
+                        if (switchInformation.get_target_pixel() != switchInformation.get_current_pixel()) {
+                            experimentalData.Add_Pix();
+                        }
+
+                        if (!experimentalData.get_Save()) {
+                            try { //将这一次的数据保存
+                                experimentalData.saveInf();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            experimentalData.set_Save(true);
+                        }
+
+                        initialization();
+                    }
+                }
+            }
+
+        }
         //根据不同状态，获取坐标进行画线
-        switch (action & MotionEvent.ACTION_MASK) { //
+        switch (action & MotionEvent.ACTION_MASK) {
 
             case MotionEvent.ACTION_DOWN: //单指按下触发
+
+                if (!experimentalData.get_whole_index()) { //第一次按下
+                    experimentalData.set_start_whole(System.currentTimeMillis());
+                    experimentalData.set_whole_index(true);
+                }
+
                 LastX = x;
                 LastY = y;
                 pathInfArrayList.get(PathInfNum).path.moveTo(LastX, LastY);
@@ -339,7 +437,7 @@ public class SingleHandView extends View {
 
                     switchInformation.setCurrent_color(1); //设置当前颜色
 
-                } else if ((Tou_y >= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && (Tou_y <= (Math.tan(Math.PI * 150 /180)) * (Tou_x - MenuX) + MenuY) && MenuSeCol && !MenuSePix) { //选择黄色
+                } else if ((Tou_y >= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && (Tou_y <= (Math.tan(Math.PI * 150 / 180)) * (Tou_x - MenuX) + MenuY) && MenuSeCol && !MenuSePix) { //选择黄色
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.YELLOW);
                     colorNow = Color.YELLOW;
 
@@ -357,7 +455,7 @@ public class SingleHandView extends View {
 
                     switchInformation.setCurrent_pixel("16PX");
 
-                } else if ((Tou_y <= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && (Tou_y >= (Math.tan(Math.PI * 150 /180)) * (Tou_x - MenuX) + MenuY) && Tou_x >= MenuX && !MenuSeCol && MenuSePix) { //中等像素区域高亮
+                } else if ((Tou_y <= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && (Tou_y >= (Math.tan(Math.PI * 150 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x >= MenuX && !MenuSeCol && MenuSePix) { //中等像素区域高亮
                     pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(8);
                     pixNow = 8;
                     //System.out.println("come in 8PX");
@@ -369,7 +467,7 @@ public class SingleHandView extends View {
                     //System.out.println("come in 4PX");
                     switchInformation.setCurrent_pixel("4PX");
 
-                }else { //否则就和之前保持一致
+                } else { //否则就和之前保持一致
                 }
                 //将二级菜单重新关闭
                 MenuSeCol = false;
@@ -382,11 +480,12 @@ public class SingleHandView extends View {
                     if (event.getPointerCount() > 1 && (TimeArr.get(TimeArr.size() - 1) - TimeArr.get(TimeArr.size() - 2)) <= 500) { //如果前后间隔的差值在500以内，而且有一个以上触摸点，那么就是双击
                         //显示菜单，并传入菜单出现的位置
                         MenuIn = true;
+
                         Click_x = event.getX(1); //双击位置
                         Click_y = event.getY(1);
 
                         //每次双击产生一个新的对象
-                        PathInfNum ++;
+                        PathInfNum++;
                         pathInfArrayList.add(new PathInf());
 
                     }
@@ -394,34 +493,39 @@ public class SingleHandView extends View {
                 break;
             case MotionEvent.ACTION_UP:
                 //当最后一根手指抬起时，清除所有元素（其实清不清都行，也没节省多少空间）
-                while (TimeArr.size() > 0) { TimeArr.remove(0); }
+                while (TimeArr.size() > 0) {
+                    TimeArr.remove(0);
+                }
                 break;
         }
         invalidate();
         return true;
     }
+
     //颜色一级菜单显示
     public void ShowColMenu(boolean status) { //根据双击位置进行调整
         //菜单圆心
         MenuX = Click_x;
         MenuY = Click_y;
         Paint MenuP = new Paint();
-        MenuP.setTextSize(75); //文字大小
+        MenuP.setTextSize(50); //文字大小
         MenuP.setStyle(Paint.Style.FILL); //画笔风格为填充
-        MenuP.setTypeface(Typeface.DEFAULT_BOLD); //粗体
+
+
 
         if (status) { //展开菜单
             canvas.drawCircle(MenuX, MenuY, MenuRa, MyPaint); //设置菜单的图形数据
             canvas.drawLine(MenuX, MenuY - MenuRa, MenuX, MenuY + MenuRa, MyPaint); //菜单的左右分割线
 
             //设置文字的位置
-            canvas.drawText("颜",MenuX - MenuRa / 2 - MenuRa / 4, MenuY - MenuRa / 4, MenuP);
-            canvas.drawText("色",MenuX - MenuRa / 2 - MenuRa / 4, MenuY + MenuRa / 4, MenuP);
+            canvas.drawText("颜", MenuX - MenuRa / 2 - MenuRa / 4, MenuY - MenuRa / 4, MenuP);
+            canvas.drawText("色", MenuX - MenuRa / 2 - MenuRa / 4, MenuY + MenuRa / 4, MenuP);
 
-        }else { //关闭菜单
-            canvas.drawColor(0,PorterDuff.Mode.CLEAR); //其实就是清除画布
+        } else { //关闭菜单
+            canvas.drawColor(0, PorterDuff.Mode.CLEAR); //其实就是清除画布
         }
     }
+
     //像素一级菜单
     public void ShowPixMenu(boolean status) {
 
@@ -430,23 +534,22 @@ public class SingleHandView extends View {
         MenuY = Click_y;
 
         Paint MenuP = new Paint();
-        MenuP.setTextSize(75); //文字大小
+        MenuP.setTextSize(50); //文字大小
         MenuP.setStyle(Paint.Style.FILL); //画笔风格为填充
-        MenuP.setTypeface(Typeface.DEFAULT_BOLD); //粗体
-
 
         if (status) { //展开菜单
             canvas.drawCircle(MenuX, MenuY, MenuRa, MyPaint); //设置菜单的图形数据
             canvas.drawLine(MenuX, MenuY - MenuRa, MenuX, MenuY + MenuRa, MyPaint); //菜单的左右分割线
 
             //设置文字的位置
-            canvas.drawText("粗",MenuX - MenuRa / 2 + MenuRa / 3 * 2, MenuY - MenuRa / 4, MenuP);
-            canvas.drawText("细",MenuX - MenuRa / 2 + MenuRa / 3 * 2, MenuY + MenuRa / 4, MenuP);
+            canvas.drawText("粗", MenuX - MenuRa / 2 + MenuRa / 3 * 2, MenuY - MenuRa / 4, MenuP);
+            canvas.drawText("细", MenuX - MenuRa / 2 + MenuRa / 3 * 2, MenuY + MenuRa / 4, MenuP);
 
-        }else { //关闭菜单
-            canvas.drawColor(0,PorterDuff.Mode.CLEAR); //其实就是清除画布
+        } else { //关闭菜单
+            canvas.drawColor(0, PorterDuff.Mode.CLEAR); //其实就是清除画布
         }
     }
+
     //一级菜单展开二级菜单
     public void infShowMenu(float in_x, float in_y) { //传入当前第二根手指的位置，用来判断是否在菜单范围内
         //求出当前以菜单为圆心，第二根手指位置为边界的圆的方程
@@ -457,7 +560,7 @@ public class SingleHandView extends View {
         //设置圆弧范围
         RectF rectF = new RectF(MenuX - MenuRa, MenuY - MenuRa, MenuX + MenuRa, MenuY + MenuRa);
         //设置高亮区域的圆弧范围
-        RectF rectH = new RectF(MenuX - MenuRa / 2 , MenuY - MenuRa / 2, MenuX + MenuRa / 2, MenuY + MenuRa / 2);
+        RectF rectH = new RectF(MenuX - MenuRa / 2, MenuY - MenuRa / 2, MenuX + MenuRa / 2, MenuY + MenuRa / 2);
 
         Paint ArcP = new Paint();
         ArcP.setColor(Color.LTGRAY); //圆弧颜色
@@ -472,7 +575,7 @@ public class SingleHandView extends View {
 
             showSeMenu(rectF, true, false, in_x, in_y, rectH);
 
-        }else if (r <= Math.pow(MenuRa, 2) && MenuIn && (in_x > MenuX)) { //像素菜单高亮
+        } else if (r <= Math.pow(MenuRa, 2) && MenuIn && (in_x > MenuX)) { //像素菜单高亮
 
             PixMenu = false; //一级像素菜单关闭
             MenuSeCol = false; //二级颜色菜单不显示
@@ -480,7 +583,7 @@ public class SingleHandView extends View {
 
             showSeMenu(rectF, false, true, in_x, in_y, rectH);
 
-        }else {
+        } else {
             ColMenu = true;
             PixMenu = true;
 
@@ -488,6 +591,7 @@ public class SingleHandView extends View {
             MenuSePix = false;
         }
     }
+
     //二级菜单显示
     public void showSeMenu(RectF rectF, boolean Col, boolean Pix, float inf_x, float inf_y, RectF rectH) {
 
@@ -514,9 +618,9 @@ public class SingleHandView extends View {
             SeCHLPaint.setStrokeWidth(10);
 
             if ((inf_y <= (Math.tan(Math.PI * 30 / 180)) * (inf_x - MenuX) + MenuY) && inf_x <= MenuX) { //红色区域高亮
-                canvas.drawArc(rectH,210, 60, true, SeCHLPaint);
+                canvas.drawArc(rectH, 210, 60, true, SeCHLPaint);
             }
-            if ((inf_y >= (Math.tan(Math.PI * 30 / 180)) * (inf_x - MenuX) + MenuY) && (inf_y <= (Math.tan(Math.PI * 150 /180)) * (inf_x - MenuX) + MenuY)) { //黄色区域高亮
+            if ((inf_y >= (Math.tan(Math.PI * 30 / 180)) * (inf_x - MenuX) + MenuY) && (inf_y <= (Math.tan(Math.PI * 150 / 180)) * (inf_x - MenuX) + MenuY)) { //黄色区域高亮
                 canvas.drawArc(rectH, 150, 60, true, SeCHLPaint);
             }
             if ((inf_y >= (Math.tan(Math.PI * 150 / 180)) * (inf_x - MenuX) + MenuY) && inf_x <= MenuX) { //蓝色区域高亮
@@ -533,7 +637,7 @@ public class SingleHandView extends View {
             //提示文字
             canvas.drawText("4px", MenuX + MenuRa / 4, MenuY - MenuRa / 2, SePaint);
             canvas.drawText("8px", MenuX + MenuRa / 2, MenuY, SePaint);
-            canvas.drawText("16px", MenuX + MenuRa / 4, MenuY + MenuRa / 3 * 2,SePaint);
+            canvas.drawText("16px", MenuX + MenuRa / 4, MenuY + MenuRa / 3 * 2, SePaint);
 
             //像素二级菜单高亮显示
             Paint SePHLPaint = new Paint();
@@ -542,9 +646,9 @@ public class SingleHandView extends View {
             SePHLPaint.setStrokeWidth(10);
 
             if ((inf_y >= (Math.tan(Math.PI * 30 / 180)) * (inf_x - MenuX) + MenuY) && inf_x >= MenuX) { //最大像素区域高亮
-                canvas.drawArc(rectH,30, 60, true, SePHLPaint);
+                canvas.drawArc(rectH, 30, 60, true, SePHLPaint);
             }
-            if ((inf_y <= (Math.tan(Math.PI * 30 / 180)) * (inf_x - MenuX) + MenuY) && (inf_y >= (Math.tan(Math.PI * 150 /180)) * (inf_x - MenuX) + MenuY)) { //中等像素区域高亮
+            if ((inf_y <= (Math.tan(Math.PI * 30 / 180)) * (inf_x - MenuX) + MenuY) && (inf_y >= (Math.tan(Math.PI * 150 / 180)) * (inf_x - MenuX) + MenuY)) { //中等像素区域高亮
                 canvas.drawArc(rectH, 30, -60, true, SePHLPaint);
             }
             if ((inf_y <= (Math.tan(Math.PI * 150 / 180)) * (inf_x - MenuX) + MenuY) && inf_x >= MenuX) { //最小像素区域高亮
@@ -552,5 +656,76 @@ public class SingleHandView extends View {
             }
 
         }
+    }
+
+    //初始化
+    public void initialization () {
+        canvas.drawColor(0, PorterDuff.Mode.CLEAR); //清除画布
+
+        /*
+            当将所有的测试用例做完，对当前组数进行判断，如果还未做完就继续做，否则退回到主界面
+         */
+        if (randomNumber.getArrayLength()) { //如果测试用例做完
+            if (experimentalData.Get_group() - 1 <= 0) { //组数做完
+                //返回主界面
+                singleHandMAndA.onBackPressed();
+            }else {
+                //更新组数
+                experimentalData.Update_group();
+                //初始化组内次数
+                experimentalData.Init_num();
+
+                //更新测试用例
+                randomNumber = new RandomNumber();
+            }
+
+        }
+
+        //画笔清空
+        pathInfArrayList.clear();
+        pathInfArrayList.add(new PathInf());
+        PathInfNum = 0;
+        pathInfArrayList.get(PathInfNum).path.moveTo(LastX, LastY);
+
+        //初始化画笔
+        colorNow = Color.BLACK;
+        pixNow = 2;
+
+        //清除测试圆环
+        hoop.setRing_1(true);
+        hoop.setRing_2(false);
+        hoop.setRing_3(false);
+
+        //更新时间记录（环的绘制时间）
+        hoop.set_Ring_1_start(false);
+        hoop.set_Ring_2_start(false);
+
+        //更新时间（模式切换时间）
+        experimentalData.set_color_index_s(false);
+        experimentalData.set_color_index_e(false);
+        experimentalData.set_pixel_index_s(false);
+        experimentalData.set_pixel_index_e(false);
+        experimentalData.set_whole_index(false);
+
+        index = false;
+        error = false;
+
+        //还原提示菜单
+        switchInformation.setCurrent_color(0); //像素块
+        switchInformation.setCurrent_pixel("1PX");
+
+        switchInformation.setTarget_color(0);
+        switchInformation.setTarget_pixel(0);
+
+        //更新单次数据记录
+        experimentalData.Init_Col();
+        experimentalData.Init_Pix();
+
+        experimentalData.Init_Tig();
+        experimentalData.Init_false_all();
+
+
+        experimentalData.Add_num(); //次数加一
+
     }
 }
