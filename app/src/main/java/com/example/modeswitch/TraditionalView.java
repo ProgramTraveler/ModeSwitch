@@ -247,6 +247,8 @@ public class TraditionalView extends View {
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
                         hoop.setRing_2(true);// 当误差满足条件的时候就当做是一个闭环
 
+                        experimentalData.set_tig_index(true); //此时允许进行切换
+
                         //当条件满足时视为环绘制完成，因此不需要变量约束
                         experimentalData.set_end_hoop_1(System.currentTimeMillis());
 
@@ -290,6 +292,8 @@ public class TraditionalView extends View {
                     }
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
                         hoop.setRing_3(true);//当误差满足条件的时候就当做是一个闭环
+
+                        experimentalData.set_tig_index(true);
 
                         //满足条件。绘制完成
                         experimentalData.set_end_hoop_2(System.currentTimeMillis());
@@ -377,8 +381,10 @@ public class TraditionalView extends View {
                  */
                 if (x > Menu_X && x < (Menu_X + MenuLen) && y > Menu_Y && y < (Menu_Y + MenuWith)) { //点击颜色菜单位置
                     //误触发检测
-                    if (!hoop.getRing_2()) { //如果环二还未出现，误触发
+                    if (!experimentalData.get_tig_index()) { //如果不允许切换，误触发
                         experimentalData.Add_Tig();
+                    } else { //如果
+
                     }
 
                     //关闭像素二级菜单（如果之前打开的话）
@@ -392,7 +398,7 @@ public class TraditionalView extends View {
 
                 if (x > (Menu_X + MenuLen) && x < (Menu_X + MenuLen * 2) && y > Menu_Y && y < (Menu_Y + MenuWith)) { //点击像素菜单位置
                     //误触发检测
-                    if (!hoop.getRing_3()) { //如果环三还未出现，误触发
+                    if (!experimentalData.get_tig_index()) { //如果不允许切换，误触发
                         experimentalData.Add_Tig();
                     }
 
@@ -415,6 +421,10 @@ public class TraditionalView extends View {
                     if (hoop.getRing_2() && !experimentalData.get_color_index_e()) { //如果环显示且是第一次选择
                         experimentalData.set_end_color(System.currentTimeMillis());
                         experimentalData.set_color_index_e(true);
+                    }
+
+                    if (experimentalData.get_tig_index()) { //如果之前是允许选择的，那么选择完之后不允许再进行选择
+                        experimentalData.set_tig_index(false);
                     }
 
                     if (y > (Menu_Y + MenuWith) && y < (Menu_Y + MenuLen * 2)) { //红色
@@ -451,6 +461,10 @@ public class TraditionalView extends View {
                     if (hoop.getRing_3() && !experimentalData.get_pixel_index_e()) { //同颜色
                         experimentalData.set_end_pixel(System.currentTimeMillis());
                         experimentalData.set_pixel_index_e(true);
+                    }
+
+                    if (experimentalData.get_tig_index()) { //如果之前是允许选择的，那么选择完之后不允许再进行选择
+                        experimentalData.set_tig_index(false);
                     }
 
                     if (y > (Menu_Y + MenuWith) && y < (Menu_Y + MenuLen * 2)) { //4px

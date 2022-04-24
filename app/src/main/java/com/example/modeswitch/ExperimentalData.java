@@ -43,6 +43,7 @@ public class ExperimentalData {
     private String target_Pix = ""; //切换的目标像素
 
     private int false_tig = 0; //误触发次数
+    private boolean false_tig_index = false; //误触发的变量约束 false 表示不允许切换
 
     private int false_Col = 0; //颜色切换错误次数
     private int false_Pix = 0; //像素切换错误次数
@@ -135,6 +136,12 @@ public class ExperimentalData {
         false_tig ++;
     }
     public void Init_Tig () {false_tig = 0;}
+    public void set_tig_index (boolean b) {
+        false_tig_index = b;
+    }
+    public boolean get_tig_index () {
+        return false_tig_index;
+    }
 
     public void Init_Col () {
         false_Col = 0; //初始化
