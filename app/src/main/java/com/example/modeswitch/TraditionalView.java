@@ -383,8 +383,6 @@ public class TraditionalView extends View {
                     //误触发检测
                     if (!experimentalData.get_tig_index()) { //如果不允许切换，误触发
                         experimentalData.Add_Tig();
-                    } else { //如果
-
                     }
 
                     //关闭像素二级菜单（如果之前打开的话）

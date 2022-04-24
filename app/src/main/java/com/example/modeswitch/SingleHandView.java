@@ -276,6 +276,8 @@ public class SingleHandView extends View {
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
                         hoop.setRing_2(true);// 当误差满足条件的时候就当做是一个闭环
 
+                        experimentalData.set_tig_index(true); //允许一次选择
+
                         //当条件满足时视为环绘制完成，因此不需要变量约束
                         experimentalData.set_end_hoop_1(System.currentTimeMillis());
 
@@ -320,6 +322,8 @@ public class SingleHandView extends View {
                     }
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
                         hoop.setRing_3(true);//当误差满足条件的时候就当做是一个闭环
+
+                        experimentalData.set_tig_index(true); //允许一次选择
 
                         //满足条件。绘制完成
                         experimentalData.set_end_hoop_2(System.currentTimeMillis());
@@ -428,7 +432,22 @@ public class SingleHandView extends View {
                 pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(pixNow);
                 pathInfArrayList.get(PathInfNum).path.moveTo(event.getX(0), event.getY(0)); //第一根手指可能会有移动，更新一下位置，不然会出现直接将两点连线
 
+                if (experimentalData.get_tig_index() && MenuIn) { //如果是允许选择的而且菜单已经触发，那么在选择之后就不允许再次选择
+                    experimentalData.set_tig_index(false);
+                }
+
+                if (hoop.getRing_2() && !experimentalData.get_color_index_e() && MenuIn) { //如果环二显示，而且是第一次选择
+                    experimentalData.set_end_color(System.currentTimeMillis());
+                    experimentalData.set_color_index_e(true);
+                }
+
+                if (hoop.getRing_3() && !experimentalData.get_pixel_index_e() && MenuIn) { //如果环三显示，而且是第一次做选择
+                    experimentalData.set_end_pixel(System.currentTimeMillis());
+                    experimentalData.set_pixel_index_e(true);
+                }
+
                 MenuIn = false;
+
 
                 //颜色控制
                 if ((Tou_y <= (Math.tan(Math.PI * 30 / 180)) * (Tou_x - MenuX) + MenuY) && Tou_x <= MenuX && MenuSeCol && !MenuSePix) { //选择红色
@@ -481,6 +500,10 @@ public class SingleHandView extends View {
                         //显示菜单，并传入菜单出现的位置
                         MenuIn = true;
 
+                        if (!experimentalData.get_tig_index()) { //如果不允许切换，误触发
+                            experimentalData.Add_Tig();
+                        }
+
                         Click_x = event.getX(1); //双击位置
                         Click_y = event.getY(1);
 
@@ -488,6 +511,15 @@ public class SingleHandView extends View {
                         PathInfNum++;
                         pathInfArrayList.add(new PathInf());
 
+                        if (hoop.getRing_2() && !experimentalData.get_color_index_s()) { //如果环二已经出现而且是第一次做选择，记录颜色切换的开始时间
+                            experimentalData.set_start_color(System.currentTimeMillis());
+                            experimentalData.set_color_index_s(true);
+                        }
+
+                        if (hoop.getRing_3() && !experimentalData.get_pixel_index_s()) {
+                            experimentalData.set_start_pixel(System.currentTimeMillis());
+                            experimentalData.set_pixel_index_s(true);
+                        }
                     }
                 }
                 break;
