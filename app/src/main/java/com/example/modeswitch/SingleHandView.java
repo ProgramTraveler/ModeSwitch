@@ -104,13 +104,13 @@ public class SingleHandView extends View {
     private SingleHandMAndA singleHandMAndA;
 
     //重写父类方法
-    public SingleHandView(Context context) { //在new的时候调用
+    public SingleHandView (Context context) { //在new的时候调用
         super(context);
         init();
 
     }
 
-    public SingleHandView(Context context, AttributeSet attr) { //在布局中使用(layout)
+    public SingleHandView (Context context, AttributeSet attr) { //在布局中使用(layout)
         super(context, attr);
 
         //获取活动
@@ -121,12 +121,12 @@ public class SingleHandView extends View {
         init();
     }
 
-    public SingleHandView(Context context, AttributeSet attr, int defStyleAttr) { //会在layout中使用，但会有style
+    public SingleHandView (Context context, AttributeSet attr, int defStyleAttr) { //会在layout中使用，但会有style
         super(context, attr, defStyleAttr);
         init();
     }
 
-    private void init() {
+    private void init () {
 
         MyPaint = new Paint();
         MyPaint.setColor(Color.BLACK);
@@ -143,7 +143,7 @@ public class SingleHandView extends View {
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int highMeasureSpec) {
+    protected void onMeasure (int widthMeasureSpec, int highMeasureSpec) {
 
         super.onMeasure(widthMeasureSpec, highMeasureSpec);
         //布局的宽高都是由该方法指定的
@@ -176,7 +176,7 @@ public class SingleHandView extends View {
 
     //重写该方法，在这里绘图
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw (Canvas canvas) {
 
         super.onDraw(canvas);
 
@@ -231,14 +231,14 @@ public class SingleHandView extends View {
     }
 
     //绘制线条
-    private void drawPath() {
+    private void drawPath () {
         for (int i = 0; i < pathInfArrayList.size(); i++) {
             canvas.drawPath(pathInfArrayList.get(i).path, pathInfArrayList.get(i).paint);
         }
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent (MotionEvent event) {
 
         int action = event.getAction();
 
@@ -436,12 +436,12 @@ public class SingleHandView extends View {
                     experimentalData.set_tig_index(false);
                 }
 
-                if (hoop.getRing_2() && !experimentalData.get_color_index_e() && MenuIn) { //如果环二显示，而且是第一次选择
+                if (hoop.getRing_2() && !experimentalData.get_color_index_e() && MenuSeCol && !MenuSePix) { //如果环二显示，而且是第一次选择
                     experimentalData.set_end_color(System.currentTimeMillis());
                     experimentalData.set_color_index_e(true);
                 }
 
-                if (hoop.getRing_3() && !experimentalData.get_pixel_index_e() && MenuIn) { //如果环三显示，而且是第一次做选择
+                if (hoop.getRing_3() && !experimentalData.get_pixel_index_e() && MenuSePix && !MenuSePix) { //如果环三显示，而且是第一次做选择
                     experimentalData.set_end_pixel(System.currentTimeMillis());
                     experimentalData.set_pixel_index_e(true);
                 }
@@ -535,7 +535,7 @@ public class SingleHandView extends View {
     }
 
     //颜色一级菜单显示
-    public void ShowColMenu(boolean status) { //根据双击位置进行调整
+    public void ShowColMenu (boolean status) { //根据双击位置进行调整
         //菜单圆心
         MenuX = Click_x;
         MenuY = Click_y;
@@ -559,7 +559,7 @@ public class SingleHandView extends View {
     }
 
     //像素一级菜单
-    public void ShowPixMenu(boolean status) {
+    public void ShowPixMenu (boolean status) {
 
         //菜单圆心
         MenuX = Click_x;
@@ -583,7 +583,7 @@ public class SingleHandView extends View {
     }
 
     //一级菜单展开二级菜单
-    public void infShowMenu(float in_x, float in_y) { //传入当前第二根手指的位置，用来判断是否在菜单范围内
+    public void infShowMenu (float in_x, float in_y) { //传入当前第二根手指的位置，用来判断是否在菜单范围内
         //求出当前以菜单为圆心，第二根手指位置为边界的圆的方程
         double x = Math.pow((MenuX - in_x), 2);
         double y = Math.pow((MenuY - in_y), 2);
@@ -625,7 +625,7 @@ public class SingleHandView extends View {
     }
 
     //二级菜单显示
-    public void showSeMenu(RectF rectF, boolean Col, boolean Pix, float inf_x, float inf_y, RectF rectH) {
+    public void showSeMenu (RectF rectF, boolean Col, boolean Pix, float inf_x, float inf_y, RectF rectH) {
 
         Paint SePaint = new Paint();
         SePaint.setStrokeWidth(5);

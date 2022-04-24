@@ -29,7 +29,7 @@ public class SingleHandMAndA extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //获取输入的姓名和组数
@@ -42,7 +42,7 @@ public class SingleHandMAndA extends AppCompatActivity {
         Button buttonBack = (Button) findViewById(R.id.Back_single_Hand);
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick (View view) {
                 SingleHandMAndA.super.onBackPressed();
             }
         });

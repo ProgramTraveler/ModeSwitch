@@ -49,7 +49,7 @@
         <activity
             android:name=".SingleDynamic"
             android:exported="false"
-            android:label="单手动态模式" />
+            android:label="区域映射模式" />
     </application>
 
 </manifest>

@@ -16,6 +16,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import java.io.IOException;
 import java.io.SyncFailedException;
 import java.util.ArrayList;
 
@@ -95,23 +96,31 @@ public class SingleDynamicView extends View {
 
     private ExperimentalData experimentalData = new ExperimentalData();
 
-    public SingleDynamicView(Context context) {
+    private SingleDynamic singleDynamic;
+
+    public SingleDynamicView (Context context) {
         super(context);
         init();
 
     }
 
-    public SingleDynamicView(Context context, AttributeSet attributeSet) {
+    public SingleDynamicView (Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+
+        //获取活动
+        singleDynamic = (SingleDynamic) context;
+        experimentalData.Set_user_name(singleDynamic.get_user_name());
+        experimentalData.Set_group(singleDynamic.get_group());
+
         init();
     }
 
-    public SingleDynamicView(Context context, AttributeSet attributeSet, int defStyleAttr) {
+    public SingleDynamicView (Context context, AttributeSet attributeSet, int defStyleAttr) {
         super(context, attributeSet, defStyleAttr);
         init();
     }
 
-    private void init() {
+    private void init () {
 
         MyPaint = new Paint();
         MyPaint.setColor(Color.BLACK);
@@ -128,10 +137,12 @@ public class SingleDynamicView extends View {
         pathInfArrayList.add(new PathInf());
 
         hoop = new Hoop();
+
+        experimentalData.Set_mode("区域映射模式");
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int highMeasureSpec) {
+    protected void onMeasure (int widthMeasureSpec, int highMeasureSpec) {
         super.onMeasure(widthMeasureSpec, highMeasureSpec);
         //布局的宽高都是由该方法指定的
 
@@ -151,7 +162,7 @@ public class SingleDynamicView extends View {
         hoop.setCircle(3, high / 6 * 10, width / 3);
 
         //设置菜单的长和宽
-        MenuLen = high * 10 / 35;
+        MenuLen = high * 10 / 35 / 2;
         MenuWith = width / 30;
 
         //设置菜单的起始位置（左上角坐标）
@@ -171,7 +182,7 @@ public class SingleDynamicView extends View {
 
     //重写该方法，在这里绘图
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw (Canvas canvas) {
         super.onDraw(canvas);
         //绘制第一个环
         canvas.drawCircle(hoop.getCircle_X(1), hoop.getCircle_Y(1), hoop.getBigCircleR(), MyPaint);
@@ -212,12 +223,12 @@ public class SingleDynamicView extends View {
     }
 
     //绘制线条
-    private void drawPath() {
+    private void drawPath () {
         for (int i = 0; i < pathInfArrayList.size(); i++) { canvas.drawPath(pathInfArrayList.get(i).path, pathInfArrayList.get(i).paint); }
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent (MotionEvent event) {
 
         int action = event.getAction();
 
@@ -232,6 +243,11 @@ public class SingleDynamicView extends View {
             double ra = xr + yr;
 
             if ((ra >= Math.pow((hoop.getSmallCircleR()), 2)) && (ra <= Math.pow((hoop.getBigCircleR()), 2))) { //如果落在圆环内
+                //如果之前没有记录环一第一次落下时间
+                if (!hoop.get_Ring_1_start()) {
+                    experimentalData.set_start_hoop_1(System.currentTimeMillis()); //当前系统毫秒数
+                    hoop.set_Ring_1_start(true);
+                }
 
                 if (!index) { //如果之前没有进入过
                     index = true; //表示已经进入
@@ -245,6 +261,13 @@ public class SingleDynamicView extends View {
                     }
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
                         hoop.setRing_2(true);// 当误差满足条件的时候就当做是一个闭环
+
+                        experimentalData.set_tig_index(true);
+
+                        //当条件满足时视为环绘制完成，因此不需要变量约束
+                        experimentalData.set_end_hoop_1(System.currentTimeMillis());
+
+
                         //重新初始化条件
                         index = false;
                         error = false;
@@ -252,6 +275,9 @@ public class SingleDynamicView extends View {
                         //获得颜色提示
                         tips = randomNumber.getRandom();
                         switchInformation.setTarget_color(tips / 10);
+
+                        //将目标颜色存入
+                        experimentalData.Set_Tar_Col(tips / 10);
                     }
                 }
             } else { //要是画出环的处理，暂时还没有想法
@@ -265,6 +291,11 @@ public class SingleDynamicView extends View {
             double ra = xr + yr;
 
             if (ra >= Math.pow((hoop.getSmallCircleR()), 2) && ra <= Math.pow((hoop.getBigCircleR()), 2)) { //如果落在圆环内
+                //如果之前没有记录环二第一次落下的时间
+                if (!hoop.get_Ring_2_start()) {
+                    experimentalData.set_start_hoop_2(System.currentTimeMillis());
+                    hoop.set_Ring_2_start(true);
+                }
 
                 if (!index) { //如果之前没有进入过
                     index = true; //表示已经进入
@@ -278,18 +309,89 @@ public class SingleDynamicView extends View {
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
                         hoop.setRing_3(true);//当误差满足条件的时候就当做是一个闭环
 
+                        experimentalData.set_tig_index(true);
+
+                        //满足条件。绘制完成
+                        experimentalData.set_end_hoop_2(System.currentTimeMillis());
+
+
+                        //绘制完成
+
+                        //重新初始化条件
+                        index = false;
+                        error = false;
+
                         //像素提示
                         switchInformation.setTarget_pixel(tips % 10);
+
+                        //存入目标像素
+                        experimentalData.Set_Tar_Pix(tips % 10);
                     }
                 }
             } else { //要是画出环的处理，暂时还没有想法
 
+            }
+
+        }
+
+        if (hoop.getRing_3()) { //第三个圆环展开
+            double xr = Math.pow(x - hoop.getCircle_X(3), 2);
+            double yr = Math.pow(y - hoop.getCircle_Y(3), 2);
+            double ra = xr + yr;
+
+            if ((ra >= Math.pow((hoop.getSmallCircleR()), 2)) && (ra <= Math.pow(hoop.getBigCircleR(), 2))) { //如果落在圆环内
+                if (!hoop.get_Ring_3_start()) {
+                    experimentalData.set_start_hoop_3(System.currentTimeMillis());
+                    hoop.set_Ring_3_start(true);
+                }
+
+                if (!index) { //如果之前没有进入过
+                    index = true;
+
+                    StartX = x;
+                    StartY = y;
+                } else { //已经进入，检测是否是一个闭环
+                    if (!error && (Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) >= hoop.getSmallCircleR() * 2)) {
+                        error = true;
+                    }
+                    if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
+
+                        experimentalData.set_end_hoop_3(System.currentTimeMillis());
+                        experimentalData.set_end_whole(System.currentTimeMillis());
+
+                        //当误差满足时，视为一次测试结束
+                        if (switchInformation.get_target_color() != switchInformation.get_current_color()) { //如果当前颜色和目标颜色不一致
+                            experimentalData.Add_Col(); //颜色切换错误数加一
+                        }
+
+                        if (switchInformation.get_target_pixel() != switchInformation.get_current_pixel()) { //如果当前像素和目标像素不一致
+                            experimentalData.Add_Pix(); //像素切换错误数加一
+                        }
+
+                        if (!experimentalData.get_Save()) {
+                            try { //将这一次的数据保存
+                                experimentalData.saveInf();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            experimentalData.set_Save(true);
+                        }
+
+                        initialization();
+                    }
+                }
             }
         }
 
         //根据不同状态，获取坐标进行画线
         switch (action & MotionEvent.ACTION_MASK) { //
             case MotionEvent.ACTION_DOWN: //单指按下触发
+
+                if (!experimentalData.get_whole_index()) { //第一次按下
+                    experimentalData.set_start_whole(System.currentTimeMillis());
+                    experimentalData.set_whole_index(true);
+                }
+
                 LastX = x;
                 LastY = y;
                 pathInfArrayList.get(PathInfNum).path.moveTo(LastX, LastY);
@@ -332,7 +434,22 @@ public class SingleDynamicView extends View {
                 pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(pixNow);
                 pathInfArrayList.get(PathInfNum).path.moveTo(event.getX(0), event.getY(0)); //第一根手指可能会有移动，更新一下位置，不然会出现直接将两点连线
 
+                if (experimentalData.get_tig_index() && Double_click) { //如果是允许选择的而且菜单已经触发，那么在选择之后就不允许再次选择
+                    experimentalData.set_tig_index(false);
+                }
+
+                if (hoop.getRing_2() && !experimentalData.get_color_index_e() && Col_status) { //如果环二显示，而且是第一次选择
+                    experimentalData.set_end_color(System.currentTimeMillis());
+                    experimentalData.set_color_index_e(true);
+                }
+
+                if (hoop.getRing_3() && !experimentalData.get_pixel_index_e() && Pix_status) { //如果环三显示，而且是第一次做选择
+                    experimentalData.set_end_pixel(System.currentTimeMillis());
+                    experimentalData.set_pixel_index_e(true);
+                }
+
                 Double_click = false; //非第一根手指抬起设为false
+
 
                 float index = 0;
                 if (first_finger_y.size() > 0) {
@@ -392,6 +509,20 @@ public class SingleDynamicView extends View {
                     if (event.getPointerCount() > 1 && ((TimeArr.get(TimeArr.size() - 1) - TimeArr.get(TimeArr.size() - 2)) <= 500)) { //双击判断
                         Double_click = true; //做出双击操作
 
+                        if (!experimentalData.get_tig_index()) { //如果不允许切换，判定为误触发
+                            experimentalData.Add_Tig();
+                        }
+
+                        if (hoop.getRing_2() && !experimentalData.get_color_index_s()) { //如果环二已经出现而且是第一次做选择，记录颜色切换的开始时间
+                            experimentalData.set_start_color(System.currentTimeMillis());
+                            experimentalData.set_color_index_s(true);
+                        }
+
+                        if (hoop.getRing_3() && !experimentalData.get_pixel_index_s()) {
+                            experimentalData.set_start_pixel(System.currentTimeMillis());
+                            experimentalData.set_pixel_index_s(true);
+                        }
+
                         //记录第一根手指的X轴坐标
                         first_finger_y.add(event.getY(0));
                         //记录第二根手指的Y轴坐标
@@ -414,7 +545,7 @@ public class SingleDynamicView extends View {
         return true;
     }
     //颜色一级菜单的显示
-    public void showColMenu() {
+    public void showColMenu () {
         //控制文字的画笔
         Paint MenuP = new Paint();
         MenuP.setTextSize(MenuWith); //文字大小
@@ -430,7 +561,7 @@ public class SingleDynamicView extends View {
 
     }
     //像素一级菜单的显示
-    public void showPixMenu() {
+    public void showPixMenu () {
         //控制文字的画笔
         Paint MenuP = new Paint();
         MenuP.setTextSize(MenuWith); //文字大小
@@ -445,7 +576,7 @@ public class SingleDynamicView extends View {
     }
 
     //颜色二级菜单显示
-    public  void showSeMenuCol(boolean Col) {
+    public  void showSeMenuCol (boolean Col) {
 
         //二级颜色菜单画笔
         Paint SeColPaint = new Paint();
@@ -471,7 +602,7 @@ public class SingleDynamicView extends View {
         }
     }
     //像素二级菜单展示
-    public void showSeMenuPix(boolean Pix) {
+    public void showSeMenuPix (boolean Pix) {
 
         //二级像素画笔
         Paint SePixPaint = new Paint();
@@ -495,7 +626,7 @@ public class SingleDynamicView extends View {
 
     }
     //因为颜色和像素二级菜单的判断是一样的，就写在一起
-    public void menuHighLight(boolean Col, boolean Pix) {
+    public void menuHighLight (boolean Col, boolean Pix) {
 
         Paint HL = new Paint();
         HL.setStyle(Paint.Style.STROKE);
@@ -542,12 +673,83 @@ public class SingleDynamicView extends View {
             }
         }
     }
-    public void Menu_inf() { //双击出现的提示矩形
+    public void Menu_inf () { //双击出现的提示矩形
         Paint inf = new Paint();
         inf.setStyle(Paint.Style.FILL);
         inf.setColor(Color.GREEN);
 
         canvas.drawRect(Menu_X + MenuLen - 15, Menu_Y, Menu_X + MenuLen + 15, Menu_Y + MenuWith, inf);
+
+    }
+
+    //初始化
+    public void initialization () {
+        canvas.drawColor(0, PorterDuff.Mode.CLEAR); //清除画布
+
+        /*
+            当将所有的测试用例做完，对当前组数进行判断，如果还未做完就继续做，否则退回到主界面
+         */
+        if (randomNumber.getArrayLength()) { //如果测试用例做完
+            if (experimentalData.Get_group() - 1 <= 0) { //组数做完
+                //返回主界面
+                singleDynamic.onBackPressed();
+            }else {
+                //更新组数
+                experimentalData.Update_group();
+                //初始化组内次数
+                experimentalData.Init_num();
+
+                //更新测试用例
+                randomNumber = new RandomNumber();
+            }
+
+        }
+
+        //画笔清空
+        pathInfArrayList.clear();
+        pathInfArrayList.add(new PathInf());
+        PathInfNum = 0;
+        pathInfArrayList.get(PathInfNum).path.moveTo(LastX, LastY);
+
+        //初始化画笔
+        colorNow = Color.BLACK;
+        pixNow = 2;
+
+        //清除测试圆环
+        hoop.setRing_1(true);
+        hoop.setRing_2(false);
+        hoop.setRing_3(false);
+
+        //更新时间记录（环的绘制时间）
+        hoop.set_Ring_1_start(false);
+        hoop.set_Ring_2_start(false);
+
+        //更新时间（模式切换时间）
+        experimentalData.set_color_index_s(false);
+        experimentalData.set_color_index_e(false);
+        experimentalData.set_pixel_index_s(false);
+        experimentalData.set_pixel_index_e(false);
+        experimentalData.set_whole_index(false);
+
+        index = false;
+        error = false;
+
+        //还原提示菜单
+        switchInformation.setCurrent_color(0); //像素块
+        switchInformation.setCurrent_pixel("1PX");
+
+        switchInformation.setTarget_color(0);
+        switchInformation.setTarget_pixel(0);
+
+        //更新单次数据记录
+        experimentalData.Init_Col();
+        experimentalData.Init_Pix();
+
+        experimentalData.Init_Tig();
+        experimentalData.Init_false_all();
+
+
+        experimentalData.Add_num(); //次数加一
 
     }
 }

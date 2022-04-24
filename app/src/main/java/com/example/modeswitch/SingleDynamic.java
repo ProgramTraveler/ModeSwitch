@@ -13,9 +13,27 @@ import android.widget.Button;
     purpose:活动 单手动态模式
  */
 public class SingleDynamic extends AppCompatActivity {
+
+    private String user_name = "";
+    private String group = "";
+
+    public String get_user_name () {
+        return user_name;
+    }
+
+    public String get_group () {
+        return group;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //获取输入的测试者的姓名和组数
+        Intent intent = getIntent();
+        user_name = intent.getStringExtra("user_name");
+        group = intent.getStringExtra("group");
+
         setContentView(R.layout.activity_single_dynamic);
 
         //对返回按钮的监听

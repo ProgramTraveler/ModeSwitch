@@ -295,7 +295,7 @@ public class TraditionalView extends View {
 
                         experimentalData.set_tig_index(true);
 
-                        //满足条件。绘制完成
+                        //满足条件，绘制完成
                         experimentalData.set_end_hoop_2(System.currentTimeMillis());
 
                         //重新初始化条件
