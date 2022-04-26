@@ -70,7 +70,7 @@ public class MainMenu extends AppCompatActivity implements AdapterView.OnItemSel
 
                 startActivity(intent);
                 //对选择的模式进行提示
-                Toast.makeText(MainMenu.this, "已选择单手主辅模式", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainMenu.this, "已选择主辅选择模式", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -86,7 +86,7 @@ public class MainMenu extends AppCompatActivity implements AdapterView.OnItemSel
                 intent.putExtra("hand", hand_mode);
 
                 startActivity(intent);
-                Toast.makeText(MainMenu.this, "已选择单手动态模式", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainMenu.this, "已选择动态响应模式", Toast.LENGTH_SHORT).show();
             }
         });
     }

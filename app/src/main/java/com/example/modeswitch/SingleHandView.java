@@ -642,7 +642,7 @@ public class SingleHandView extends View {
         Paint SePaint = new Paint();
         SePaint.setStrokeWidth(5);
         SePaint.setStyle(Paint.Style.FILL);
-        SePaint.setTextSize(50);
+        SePaint.setTextSize(25);
 
         if (Col && !Pix) { //展开二级颜色菜单
 

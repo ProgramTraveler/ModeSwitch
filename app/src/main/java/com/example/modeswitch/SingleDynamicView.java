@@ -304,6 +304,9 @@ public class SingleDynamicView extends View {
                     //初次进入的坐标
                     StartX = x;
                     StartY = y;
+
+                    experimentalData.set_Save(false);
+
                 } else { //已经进入，这个用来检测是否是一个闭环
                     if (!error && (Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) >= hoop.getSmallCircleR() * 2)) {
                         error = true;
@@ -448,7 +451,7 @@ public class SingleDynamicView extends View {
                     colorNow = Color.YELLOW;
 
                     switchInformation.setCurrent_color(2);
-                }else if (index >= MenuWith * 3 && index < MenuWith * 4 && Col_status) { //选择蓝色
+                }else if (index >= MenuWith * 3 && Col_status) { //选择蓝色
                     //System.out.println("test");
                     pathInfArrayList.get(PathInfNum).paint.setColor(Color.BLUE);
                     colorNow = Color.BLUE;
@@ -464,7 +467,7 @@ public class SingleDynamicView extends View {
                     pixNow = 8;
 
                     switchInformation.setCurrent_pixel("8PX");
-                }else if (index >= MenuWith * 3 && index < MenuWith * 4 && Pix_status) {
+                }else if (index >= MenuWith * 3 && Pix_status) {
                     pathInfArrayList.get(PathInfNum).paint.setStrokeWidth(16);
                     pixNow = 16;
 
@@ -655,7 +658,8 @@ public class SingleDynamicView extends View {
                 //System.out.println("blu");
                 canvas.drawRect(Menu_X, Menu_Y + MenuWith * 3, Menu_X + MenuLen, Menu_Y + MenuWith * 4, HL);
             }else if (index > MenuWith * 4){ //超出最大的范围就关闭两个二级菜单
-                showSeMenuCol(Col_status = false);
+                //showSeMenuCol(Col_status = false);
+                canvas.drawRect(Menu_X, Menu_Y + MenuWith * 3, Menu_X + MenuLen, Menu_Y + MenuWith * 4, HL);
             }else {
 
             }
@@ -673,8 +677,9 @@ public class SingleDynamicView extends View {
                 //System.out.println("16px");
                 canvas.drawRect(Menu_X + MenuLen, Menu_Y + MenuWith * 3, Menu_X + MenuLen * 2, Menu_Y + MenuWith * 4, HL);
             }else if (index > MenuWith * 4) {
-                showSeMenuCol(Col_status = false);
-                showSeMenuPix(Pix_status = false);
+                //showSeMenuCol(Col_status = false);
+                //showSeMenuPix(Pix_status = false);
+                canvas.drawRect(Menu_X + MenuLen, Menu_Y + MenuWith * 3, Menu_X + MenuLen * 2, Menu_Y + MenuWith * 4, HL);
             }else {
 
             }
