@@ -98,6 +98,7 @@ public class TraditionalView extends View {
         experimentalData.Set_user_name(traditional.get_user_name()); //测试者的姓名
         experimentalData.Set_group(traditional.get_group()); //测试组数
         experimentalData.set_hand_mode(traditional.get_hand_mode()); //单手还是双手
+        experimentalData.set_index_pra(traditional.get_pra());
 
         init();
     }
@@ -612,6 +613,8 @@ public class TraditionalView extends View {
     public void initialization () {
         canvas.drawColor(0, PorterDuff.Mode.CLEAR); //清除画布
 
+        experimentalData.Add_num(); //次数加一
+
         /*
             当将所有的测试用例做完，对当前组数进行判断，如果还未做完就继续做，否则退回到主界面
          */
@@ -622,6 +625,8 @@ public class TraditionalView extends View {
             }else {
                 //更新组数
                 experimentalData.Update_group();
+                experimentalData.Update_group_id();
+
                 //初始化组内次数
                 experimentalData.Init_num();
 
@@ -675,9 +680,6 @@ public class TraditionalView extends View {
 
         experimentalData.Init_Tig();
         experimentalData.Init_false_all();
-
-
-        experimentalData.Add_num(); //次数加一
 
         menuColor = false;
         menuPixel = false;

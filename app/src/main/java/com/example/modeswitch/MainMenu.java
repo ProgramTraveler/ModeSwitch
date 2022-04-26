@@ -25,6 +25,7 @@ public class MainMenu extends AppCompatActivity implements AdapterView.OnItemSel
 
     private String group_context = ""; //记录选择的组数
     private String hand_mode = ""; //记录选择的单双手的模式
+    private String practice = ""; //选择的模式
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,9 @@ public class MainMenu extends AppCompatActivity implements AdapterView.OnItemSel
         Spinner spinner_hand = (Spinner) findViewById(R.id.spinner_hand); //获取选择的单双手模式
         spinner_hand.setOnItemSelectedListener(this);
 
+        Spinner spinner_pra = (Spinner) findViewById(R.id.spinner_practice); //获取选择的模式
+        spinner_pra.setOnItemSelectedListener(this);
+
         //对传统模式按钮进行监听
         Button buttonTra = (Button) findViewById(R.id.Traditional);
         buttonTra.setOnClickListener(new View.OnClickListener() {
@@ -51,6 +55,8 @@ public class MainMenu extends AppCompatActivity implements AdapterView.OnItemSel
                 intent.putExtra("group", group_context);
                 //主菜单选择的单双手模式
                 intent.putExtra("hand", hand_mode);
+                //选择的模式
+                intent.putExtra("pra", practice);
 
                 startActivity(intent);
                 Toast.makeText(MainMenu.this, "已选择传统对照模式", Toast.LENGTH_SHORT).show();
@@ -67,6 +73,7 @@ public class MainMenu extends AppCompatActivity implements AdapterView.OnItemSel
                 intent.putExtra("user_name", edit_user.getText().toString());
                 intent.putExtra("group", group_context);
                 intent.putExtra("hand", hand_mode);
+                intent.putExtra("pra", practice);
 
                 startActivity(intent);
                 //对选择的模式进行提示
@@ -84,6 +91,7 @@ public class MainMenu extends AppCompatActivity implements AdapterView.OnItemSel
                 intent.putExtra("group", group_context);
                 //System.out.println(hand_mode);
                 intent.putExtra("hand", hand_mode);
+                intent.putExtra("pra", practice);
 
                 startActivity(intent);
                 Toast.makeText(MainMenu.this, "已选择动态响应模式", Toast.LENGTH_SHORT).show();
@@ -139,6 +147,12 @@ public class MainMenu extends AppCompatActivity implements AdapterView.OnItemSel
             case "双手" :
                 //System.out.println("双手");
                 hand_mode = "双手";
+            case "正常模式" :
+                practice = "正常模式";
+                break;
+            case "练习模式" :
+                practice = "练习模式";
+                break;
             default: break;
         }
     }

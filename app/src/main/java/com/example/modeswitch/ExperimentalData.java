@@ -36,6 +36,7 @@ public class ExperimentalData {
 
     private int group = 0; //实验的组数
     private int num = 1; //当前组的第几次
+    private int group_id = 1;
 
     private String hand_mode = ""; //选择的单双手模式
 
@@ -94,6 +95,8 @@ public class ExperimentalData {
 
     private boolean save = false; //是否存储过 false 表示没有储存
 
+    private boolean index_pra = false; //是否选择的是练习模式
+
     public ExperimentalData () {}
 
     //测试者姓名
@@ -107,6 +110,10 @@ public class ExperimentalData {
     }
     public int Get_group () {return group;}
     public void Update_group () {group --;}
+    public void Update_group_id () {
+        group_id ++;
+    }
+
 
     //当前组数的第几次
     public void Init_num () {
@@ -263,66 +270,78 @@ public class ExperimentalData {
         return whole_index;
     }
 
+    public void set_index_pra (String s) {
+        if (s.equals("练习模式")) {
+            index_pra = false;
+        }else {
+            index_pra = true;
+        }
+    }
+
     public void saveInf () throws IOException {
 
-        String temp = name + ".csv"; //添加csv文件后缀
+        if (index_pra) { //如果不是练习模式，保存文件
+            String temp = name + ".csv"; //添加csv文件后缀
 
-        //保存实验数据的文件名
-        File saveFile = new File(Environment.getExternalStorageDirectory().getPath() + "/" + temp); //存储的路劲和csv文件的名称
+            //保存实验数据的文件名
+            File saveFile = new File(Environment.getExternalStorageDirectory().getPath() + "/" + temp); //存储的路劲和csv文件的名称
 
-        System.out.println(Environment.getExternalStorageDirectory().getPath());
+            System.out.println(Environment.getExternalStorageDirectory().getPath());
 
-        csv = new RandomAccessFile(saveFile, "rw");
+            csv = new RandomAccessFile(saveFile, "rw");
 
-        int csvLine = (int) csv.length();
-        String saveText = "";
+            int csvLine = (int) csv.length();
+            String saveText = "";
 
-        if (csvLine == 0) {
-            saveText = "姓名" + ","
-                    + "实验组数" + ","
-                    + "实验组编号" + ","
-                    + "手模式" + ","
-                    + "切换模式技术"  + ","
-                    + "目标颜色" + ","
-                    + "目标像素" + ","
-                    + "误触发错误总数" + ","
-                    + "颜色切换错误数" + ","
-                    + "像素切换错误数" + ","
-                    + "模式切换总错误数" + ","
-                    + "第一个圆环绘制时间" + ","
-                    + "第二个圆环绘制时间" + ","
-                    + "第三个圆环绘制时间" + ","
-                    + "颜色菜单切换时间" + ","
-                    + "像素菜单切换时间" + ","
-                    + "模式切换总时间" + ","
-                    + "总操作时间" + ","
-                    + "\n"; //第一排的命名名称
+            if (csvLine == 0) {
+                saveText = "姓名" + ","
+                        + "实验组数" + ","
+                        + "实验组编号" + ","
+                        + "手模式" + ","
+                        + "切换模式技术"  + ","
+                        + "目标颜色" + ","
+                        + "目标像素" + ","
+                        + "误触发错误总数" + ","
+                        + "颜色切换错误数" + ","
+                        + "像素切换错误数" + ","
+                        + "模式切换总错误数" + ","
+                        + "第一个圆环绘制时间" + ","
+                        + "第二个圆环绘制时间" + ","
+                        + "第三个圆环绘制时间" + ","
+                        + "颜色菜单切换时间" + ","
+                        + "像素菜单切换时间" + ","
+                        + "模式切换总时间" + ","
+                        + "总操作时间" + ","
+                        + "\n"; //第一排的命名名称
+                csv.write(saveText.getBytes("GBK"));
+            }
+            csv.skipBytes(csvLine);
+
+            //注意和第一行数据的文字对应
+            System.out.println("save: " + user_Name);
+            saveText = user_Name + ","
+                    + group_id + ","
+                    + num + ","
+                    + hand_mode + ","
+                    + mode + ","
+                    + target_Col + ","
+                    + target_Pix + ","
+                    + false_tig + ","
+                    + false_Col + ","
+                    + false_Pix + ","
+                    + false_All + ","
+                    + (end_hoop_1 - start_hoop_1) + ","
+                    + (end_hoop_2 - start_hoop_2) + ","
+                    + (end_hoop_3 - start_hoop_3) + ","
+                    + (swi_end_color - swi_start_color) + ","
+                    + (swi_end_pixel - swi_start_pixel) + ","
+                    + (swi_end_color + swi_end_pixel - swi_start_color - swi_start_pixel) + ","
+                    + (whole_end - whole_start) + ","
+                    + "\n"; //每排存储的数据记录
             csv.write(saveText.getBytes("GBK"));
-        }
-        csv.skipBytes(csvLine);
+            csv.close();
+        }else { //否则不保存
 
-        //注意和第一行数据的文字对应
-        System.out.println("save: " + user_Name);
-        saveText = user_Name + ","
-                + group + ","
-                + num + ","
-                + hand_mode + ","
-                + mode + ","
-                + target_Col + ","
-                + target_Pix + ","
-                + false_tig + ","
-                + false_Col + ","
-                + false_Pix + ","
-                + false_All + ","
-                + (end_hoop_1 - start_hoop_1) + ","
-                + (end_hoop_2 - start_hoop_2) + ","
-                + (end_hoop_3 - start_hoop_3) + ","
-                + (swi_end_color - swi_start_color) + ","
-                + (swi_end_pixel - swi_start_pixel) + ","
-                + (swi_end_color + swi_end_pixel - swi_start_color - swi_start_pixel) + ","
-                + (whole_end - whole_start) + ","
-                + "\n"; //每排存储的数据记录
-        csv.write(saveText.getBytes("GBK"));
-        csv.close();
+        }
     }
 }

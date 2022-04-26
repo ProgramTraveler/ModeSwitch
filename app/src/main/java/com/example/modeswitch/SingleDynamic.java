@@ -17,6 +17,7 @@ public class SingleDynamic extends AppCompatActivity {
     private String user_name = "";
     private String group = "";
     private String hand_mode = "";
+    private String pra = "";
 
     public String get_user_name () {
         return user_name;
@@ -30,6 +31,10 @@ public class SingleDynamic extends AppCompatActivity {
         return hand_mode;
     }
 
+    public String get_pra () {
+        return pra;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +44,7 @@ public class SingleDynamic extends AppCompatActivity {
         user_name = intent.getStringExtra("user_name");
         group = intent.getStringExtra("group");
         hand_mode = intent.getStringExtra("hand");
+        pra = intent.getStringExtra("pra");
         //System.out.println(hand_mode);
 
         setContentView(R.layout.activity_single_dynamic);

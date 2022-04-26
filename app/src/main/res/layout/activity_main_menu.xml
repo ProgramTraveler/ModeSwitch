@@ -87,6 +87,17 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="8dp"
             />
+        <Spinner
+            android:id="@+id/spinner_practice"
+            android:entries="@array/practice"
+
+            android:layout_width="175dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="150dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="8dp"
+            />
         <Button
             android:id="@+id/SingDynamic"
 

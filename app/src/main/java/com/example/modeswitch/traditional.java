@@ -18,6 +18,7 @@ public class traditional extends AppCompatActivity {
     private String user_name = "";
     private String group = "";
     private String hand_mode = "";
+    private String pra = "";
 
     public String get_user_name () {
         return user_name;
@@ -31,6 +32,10 @@ public class traditional extends AppCompatActivity {
         return hand_mode;
     }
 
+    public String get_pra () {
+        return pra;
+    }
+
     @Override
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +47,8 @@ public class traditional extends AppCompatActivity {
         group = intent.getStringExtra("group");
         //获取输入的单手还是双手模式
         hand_mode = intent.getStringExtra("hand");
+        //获取选择的模式
+        pra = intent.getStringExtra("pra");
 
         setContentView(R.layout.activity_traditional);
 

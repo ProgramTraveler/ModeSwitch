@@ -113,7 +113,7 @@ public class SingleDynamicView extends View {
         experimentalData.Set_user_name(singleDynamic.get_user_name());
         experimentalData.Set_group(singleDynamic.get_group());
         experimentalData.set_hand_mode(singleDynamic.get_hand_mode());
-        System.out.println(singleDynamic.get_hand_mode());
+        experimentalData.set_index_pra(singleDynamic.get_pra());
 
         init();
     }
@@ -697,6 +697,7 @@ public class SingleDynamicView extends View {
     //初始化
     public void initialization () {
         canvas.drawColor(0, PorterDuff.Mode.CLEAR); //清除画布
+        experimentalData.Add_num(); //次数加一
 
         /*
             当将所有的测试用例做完，对当前组数进行判断，如果还未做完就继续做，否则退回到主界面
@@ -708,6 +709,8 @@ public class SingleDynamicView extends View {
             }else {
                 //更新组数
                 experimentalData.Update_group();
+                experimentalData.Update_group_id();
+                
                 //初始化组内次数
                 experimentalData.Init_num();
 
@@ -761,9 +764,6 @@ public class SingleDynamicView extends View {
 
         experimentalData.Init_Tig();
         experimentalData.Init_false_all();
-
-
-        experimentalData.Add_num(); //次数加一
 
     }
 }
