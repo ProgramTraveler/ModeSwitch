@@ -88,7 +88,7 @@ public class SwitchInformation {
 
         if (current_pixel == "4PX") current_pix = 1;
         if (current_pixel == "8PX") current_pix = 2;
-        if (current_pixel == "16PX") current_pix = 4;
+        if (current_pixel == "16PX") current_pix = 3;
     }
     public int get_current_pixel() {
         return current_pix; //返回当前像素的代号

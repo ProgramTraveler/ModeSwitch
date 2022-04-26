@@ -710,7 +710,7 @@ public class SingleDynamicView extends View {
                 //更新组数
                 experimentalData.Update_group();
                 experimentalData.Update_group_id();
-                
+
                 //初始化组内次数
                 experimentalData.Init_num();
 

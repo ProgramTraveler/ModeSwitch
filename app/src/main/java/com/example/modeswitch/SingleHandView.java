@@ -538,7 +538,6 @@ public class SingleHandView extends View {
                         }
                         experimentalData.set_Save(true);
                     }
-
                     initialization();
                 }
                 break;
