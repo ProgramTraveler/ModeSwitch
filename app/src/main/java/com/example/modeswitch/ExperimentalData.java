@@ -37,6 +37,8 @@ public class ExperimentalData {
     private int group = 0; //实验的组数
     private int num = 1; //当前组的第几次
 
+    private String hand_mode = ""; //选择的单双手模式
+
     private String mode = ""; //切换模式技术
 
     private String target_Col = ""; //切换的目标颜色
@@ -112,6 +114,11 @@ public class ExperimentalData {
     }
     public void Add_num () {
         num ++;
+    }
+
+    //选择单双手模式
+    public void set_hand_mode (String s) {
+        hand_mode = s;
     }
 
     //切换模式
@@ -274,6 +281,7 @@ public class ExperimentalData {
             saveText = "姓名" + ","
                     + "实验组数" + ","
                     + "实验组编号" + ","
+                    + "手模式" + ","
                     + "切换模式技术"  + ","
                     + "目标颜色" + ","
                     + "目标像素" + ","
@@ -298,6 +306,7 @@ public class ExperimentalData {
         saveText = user_Name + ","
                 + group + ","
                 + num + ","
+                + hand_mode + ","
                 + mode + ","
                 + target_Col + ","
                 + target_Pix + ","

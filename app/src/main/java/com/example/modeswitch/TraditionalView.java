@@ -96,6 +96,7 @@ public class TraditionalView extends View {
         traditional = (traditional) context;
         experimentalData.Set_user_name(traditional.get_user_name()); //测试者的姓名
         experimentalData.Set_group(traditional.get_group()); //测试组数
+        experimentalData.set_hand_mode(traditional.get_hand_mode()); //单手还是双手
 
         init();
     }

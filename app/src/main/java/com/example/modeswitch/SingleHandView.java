@@ -117,6 +117,7 @@ public class SingleHandView extends View {
         singleHandMAndA = (SingleHandMAndA) context;
         experimentalData.Set_user_name(singleHandMAndA.get_user_name());
         experimentalData.Set_group(singleHandMAndA.get_group());
+        experimentalData.set_hand_mode(singleHandMAndA.get_hand_mode());
 
         init();
     }

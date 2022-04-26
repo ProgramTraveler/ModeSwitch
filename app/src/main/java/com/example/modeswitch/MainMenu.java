@@ -24,6 +24,7 @@ import java.io.IOException;
 public class MainMenu extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     private String group_context = ""; //记录选择的组数
+    private String hand_mode = ""; //记录选择的单双手的模式
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,9 @@ public class MainMenu extends AppCompatActivity implements AdapterView.OnItemSel
         Spinner spinner_group = (Spinner) findViewById(R.id.spinner_group); //获取选中的组数
         spinner_group.setOnItemSelectedListener(this); //为组数设置监听器
 
+        Spinner spinner_hand = (Spinner) findViewById(R.id.spinner_hand); //获取选择的单双手模式
+        spinner_hand.setOnItemSelectedListener(this);
+
         //对传统模式按钮进行监听
         Button buttonTra = (Button) findViewById(R.id.Traditional);
         buttonTra.setOnClickListener(new View.OnClickListener() {
@@ -45,6 +49,8 @@ public class MainMenu extends AppCompatActivity implements AdapterView.OnItemSel
                 intent.putExtra("user_name", edit_user.getText().toString());
                 //主菜单选择的测试组数
                 intent.putExtra("group", group_context);
+                //主菜单选择的单双手模式
+                intent.putExtra("hand", hand_mode);
 
                 startActivity(intent);
                 Toast.makeText(MainMenu.this, "已选择传统对照模式", Toast.LENGTH_SHORT).show();
@@ -60,6 +66,7 @@ public class MainMenu extends AppCompatActivity implements AdapterView.OnItemSel
                 Intent intent = new Intent(MainMenu.this, SingleHandMAndA.class); //由当前模式跳往单手主辅模式
                 intent.putExtra("user_name", edit_user.getText().toString());
                 intent.putExtra("group", group_context);
+                intent.putExtra("hand", hand_mode);
 
                 startActivity(intent);
                 //对选择的模式进行提示
@@ -75,6 +82,7 @@ public class MainMenu extends AppCompatActivity implements AdapterView.OnItemSel
                 Intent intent = new Intent(MainMenu.this, SingleDynamic.class);
                 intent.putExtra("user_name", edit_user.getText().toString());
                 intent.putExtra("group", group_context);
+                intent.putExtra("hand_mode", hand_mode);
 
                 startActivity(intent);
                 Toast.makeText(MainMenu.this, "已选择单手动态模式", Toast.LENGTH_SHORT).show();
@@ -82,7 +90,7 @@ public class MainMenu extends AppCompatActivity implements AdapterView.OnItemSel
         });
     }
 
-    //对选择的组数进行监听
+    //对选择的组数和单双手模式进行监听
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         //System.out.println(adapterView.getItemAtPosition(i).toString());
@@ -123,9 +131,15 @@ public class MainMenu extends AppCompatActivity implements AdapterView.OnItemSel
                 //System.out.println("come 9");
                 group_context = "9";
                 break;
+            case "单手" :
+                //System.out.println("单手");
+                hand_mode = "单手";
+                break;
+            case "双手" :
+                //System.out.println("双手");
+                hand_mode = "双手";
             default: break;
         }
-
     }
 
     @Override

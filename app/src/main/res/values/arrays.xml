@@ -11,4 +11,9 @@
         <item>8组</item>
         <item>9组</item>
     </string-array>
+    <string-array name="hands">
+        <item>单手</item>
+        <item>双手</item>
+    </string-array>
+
 </resources>

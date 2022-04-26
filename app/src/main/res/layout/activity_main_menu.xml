@@ -57,7 +57,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="8dp"
 
-        android:text="单手主辅模式"
+        android:text="主辅选择模式"
         android:textSize="25dp"
 
         app:layout_constraintBottom_toBottomOf="parent"
@@ -76,7 +76,17 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="8dp"
             />
+        <Spinner
+            android:id="@+id/spinner_hand"
+            android:entries="@array/hands"
 
+            android:layout_width="175dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="150dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="8dp"
+            />
         <Button
             android:id="@+id/SingDynamic"
 

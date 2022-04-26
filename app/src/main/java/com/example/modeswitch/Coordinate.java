@@ -48,11 +48,11 @@ public class Coordinate {
         current_color_x = w / 3;
         current_color_y = h / 5;
 
-        current_pixel_x = w / 3;
-        current_pixel_y = h / 5 + 80;
+        target_color_x = w / 3;
+        target_color_y = h / 5 + 80;
 
-        target_color_x = w / 3 + 500;
-        target_color_y = h / 5;
+        current_pixel_x = w / 3 + 500;
+        current_pixel_y = h / 5;
 
         target_pixel_x = w / 3 + 500;
         target_pixel_y = h / 5 + 80;
@@ -62,13 +62,13 @@ public class Coordinate {
         current_color_right = w / 3 + 230 + 120;
         current_color_bottom = h / 5;
 
-        current_pixel_word_X = w / 3 + 230;
-        current_pixel_word_y = h / 5 + 80;
+        current_pixel_word_X = w / 3 + 500 + 230;
+        current_pixel_word_y = h / 5;
 
-        target_color_left = w / 3 + 500 + 230;
-        target_color_top = h / 5 - 40;
-        target_color_right = w / 3 + 500 + 230 + 120;
-        target_color_bottom = h / 5;
+        target_color_left = w / 3 + 230;
+        target_color_top = h / 5 + 80 - 40;
+        target_color_right = w / 3 + 230 + 120;
+        target_color_bottom = h / 5 + 80;
 
         target_pixel_word_x = w / 3 + 500 + 230;
         target_pixel_word_y = h / 5 + 80;

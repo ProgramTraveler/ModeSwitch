@@ -17,6 +17,7 @@ public class traditional extends AppCompatActivity {
 
     private String user_name = "";
     private String group = "";
+    private String hand_mode = "";
 
     public String get_user_name () {
         return user_name;
@@ -24,6 +25,10 @@ public class traditional extends AppCompatActivity {
 
     public String get_group () {
         return group;
+    }
+
+    public String get_hand_mode () {
+        return hand_mode;
     }
 
     @Override
@@ -35,6 +40,8 @@ public class traditional extends AppCompatActivity {
         user_name = intent.getStringExtra("user_name");
         //获取主菜单的输入的测试组数
         group = intent.getStringExtra("group");
+        //获取输入的单手还是双手模式
+        hand_mode = intent.getStringExtra("hand");
 
         setContentView(R.layout.activity_traditional);
 

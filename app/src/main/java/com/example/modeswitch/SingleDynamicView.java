@@ -111,6 +111,7 @@ public class SingleDynamicView extends View {
         singleDynamic = (SingleDynamic) context;
         experimentalData.Set_user_name(singleDynamic.get_user_name());
         experimentalData.Set_group(singleDynamic.get_group());
+        experimentalData.set_hand_mode(singleDynamic.get_hand_mode());
 
         init();
     }
@@ -555,9 +556,9 @@ public class SingleDynamicView extends View {
        //显示菜单
        canvas.drawRect(Menu_X, Menu_Y, Menu_X + MenuLen, Menu_Y + MenuWith,MyMenu);
 
-       //绘制文字
-       canvas.drawText("颜", Menu_X + MenuLen / 3, Menu_Y + MenuWith - 10, MenuP);
-       canvas.drawText("色", Menu_X + MenuLen / 3 + MenuWith, Menu_Y + MenuWith - 10, MenuP);
+        //绘制文字
+        canvas.drawText("颜", Menu_X + MenuLen / 7, Menu_Y + MenuWith - 10, MenuP);
+        canvas.drawText("色", Menu_X + MenuLen / 7 + MenuWith, Menu_Y + MenuWith - 10, MenuP);
 
     }
     //像素一级菜单的显示
@@ -571,8 +572,9 @@ public class SingleDynamicView extends View {
         //显示菜单
         canvas.drawRect(Menu_X + MenuLen,  Menu_Y, Menu_X + MenuLen * 2, Menu_Y + MenuWith, MyMenu);
         //绘制文字
-        canvas.drawText("粗", Menu_X + MenuLen + MenuLen / 3, Menu_Y + MenuWith - 10, MenuP);
-        canvas.drawText("细", Menu_X + MenuLen + MenuLen / 3 + MenuWith, Menu_Y + MenuWith - 10, MenuP);
+        canvas.drawText("粗", Menu_X + MenuLen + MenuLen / 7, Menu_Y + MenuWith - 10, MenuP);
+        canvas.drawText("细", Menu_X + MenuLen + MenuLen / 7 + MenuWith, Menu_Y + MenuWith - 10, MenuP);
+
     }
 
     //颜色二级菜单显示
@@ -613,13 +615,13 @@ public class SingleDynamicView extends View {
         if (Pix) { //像素二级菜单展开
             canvas.drawColor(0, PorterDuff.Mode.CLEAR);
             canvas.drawRect(Menu_X + MenuLen, Menu_Y + MenuWith, Menu_X + MenuLen * 2, Menu_Y + MenuWith * 2, MyMenu);
-            canvas.drawText("4px", Menu_X + MenuLen + MenuLen / 3, Menu_Y + MenuWith * 2 - 10, SePixPaint);
+            canvas.drawText("4px", Menu_X + MenuLen + MenuLen / 7, Menu_Y + MenuWith * 2 - 10, SePixPaint);
 
             canvas.drawRect(Menu_X + MenuLen, Menu_Y + MenuWith * 2, Menu_X + MenuLen * 2, Menu_Y + MenuWith * 3, MyMenu);
-            canvas.drawText("8px", Menu_X + MenuLen + MenuLen / 3, Menu_Y + MenuWith * 3 - 10, SePixPaint);
+            canvas.drawText("8px", Menu_X + MenuLen + MenuLen / 7, Menu_Y + MenuWith * 3 - 10, SePixPaint);
 
             canvas.drawRect(Menu_X + MenuLen, Menu_Y + MenuWith * 3, Menu_X + MenuLen * 2, Menu_Y + MenuWith * 4, MyMenu);
-            canvas.drawText("16px", Menu_X + MenuLen + MenuLen / 3, Menu_Y + MenuWith * 4 - 10, SePixPaint);
+            canvas.drawText("16px", Menu_X + MenuLen + MenuLen / 7, Menu_Y + MenuWith * 4 - 10, SePixPaint);
         }else {
             canvas.drawColor(0, PorterDuff.Mode.CLEAR); //关闭菜单
         }
