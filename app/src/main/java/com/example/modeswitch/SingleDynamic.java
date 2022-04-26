@@ -39,6 +39,7 @@ public class SingleDynamic extends AppCompatActivity {
         user_name = intent.getStringExtra("user_name");
         group = intent.getStringExtra("group");
         hand_mode = intent.getStringExtra("hand");
+        //System.out.println(hand_mode);
 
         setContentView(R.layout.activity_single_dynamic);
 

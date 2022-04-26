@@ -35,6 +35,8 @@ public class Hoop {
     //第三个圆环的时间变量
     private boolean ring3_start = false;
 
+    private boolean ring3_end = false; //环三是否绘制完成
+
     public Hoop() {}
 
     //设置和获取环一的状态
@@ -69,6 +71,12 @@ public class Hoop {
     public void set_Ring_3_start (boolean b) {ring3_start = b;}
     public boolean get_Ring_3_start () {
         return ring3_start;
+    }
+    public void set_ring_3_end (boolean b) {
+        ring3_end = b;
+    }
+    public boolean get_ring_3_end () {
+        return ring3_end;
     }
     //设置和获取大小圆半径
     public void setBigCircleR (float f) {

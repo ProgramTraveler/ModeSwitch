@@ -140,7 +140,7 @@ public class SingleHandView extends View {
 
         hoop = new Hoop();
 
-        experimentalData.Set_mode("单手主辅模式");
+        experimentalData.Set_mode("主辅选择模式");
     }
 
     @Override
@@ -160,9 +160,14 @@ public class SingleHandView extends View {
 
 
         //根据屏幕大小来设置每个圆环的圆心位置
-        hoop.setCircle(1, high / 6 * 3 / 2, width / 3);
+        /*hoop.setCircle(1, high / 6 * 3 / 2, width / 3);
         hoop.setCircle(2, high / 6 * 11 / 2, width / 3);
         hoop.setCircle(3, high / 6 * 10, width / 3);
+         */
+        //根据屏幕大小来设置每个圆环的圆心位置
+        hoop.setCircle(1, high / 6 * 3, width / 3);
+        hoop.setCircle(2, high / 6 * 11 / 2, width / 3);
+        hoop.setCircle(3, high / 6 * 8, width / 3);
 
         //设置菜单的半径
         MenuRa = high / 9;
@@ -367,29 +372,10 @@ public class SingleHandView extends View {
                     }
 
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
-
                         experimentalData.set_end_hoop_3(System.currentTimeMillis());
-                        experimentalData.set_end_whole(System.currentTimeMillis());
 
-                        //满足条件，视为一次测试结束
-                        if (switchInformation.get_target_color() != switchInformation.get_current_color()) {
-                            experimentalData.Add_Col();
-                        }
+                        hoop.set_ring_3_end(true);
 
-                        if (switchInformation.get_target_pixel() != switchInformation.get_current_pixel()) {
-                            experimentalData.Add_Pix();
-                        }
-
-                        if (!experimentalData.get_Save()) {
-                            try { //将这一次的数据保存
-                                experimentalData.saveInf();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            experimentalData.set_Save(true);
-                        }
-
-                        initialization();
                     }
                 }
             }
@@ -442,7 +428,7 @@ public class SingleHandView extends View {
                     experimentalData.set_color_index_e(true);
                 }
 
-                if (hoop.getRing_3() && !experimentalData.get_pixel_index_e() && MenuSePix && !MenuSePix) { //如果环三显示，而且是第一次做选择
+                if (hoop.getRing_3() && !experimentalData.get_pixel_index_e() && MenuSePix && !MenuSeCol) { //如果环三显示，而且是第一次做选择
                     experimentalData.set_end_pixel(System.currentTimeMillis());
                     experimentalData.set_pixel_index_e(true);
                 }
@@ -528,6 +514,31 @@ public class SingleHandView extends View {
                 //当最后一根手指抬起时，清除所有元素（其实清不清都行，也没节省多少空间）
                 while (TimeArr.size() > 0) {
                     TimeArr.remove(0);
+                }
+
+                if (hoop.getRing_3() && hoop.get_ring_3_end()) { //如果环三出现，而且已经绘制完成此时抬手一次任务做完
+
+                    experimentalData.set_end_whole(System.currentTimeMillis());
+
+                    //满足条件，视为一次测试结束
+                    if (switchInformation.get_target_color() != switchInformation.get_current_color()) {
+                        experimentalData.Add_Col();
+                    }
+
+                    if (switchInformation.get_target_pixel() != switchInformation.get_current_pixel()) {
+                        experimentalData.Add_Pix();
+                    }
+
+                    if (!experimentalData.get_Save()) {
+                        try { //将这一次的数据保存
+                            experimentalData.saveInf();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        experimentalData.set_Save(true);
+                    }
+
+                    initialization();
                 }
                 break;
         }
@@ -714,12 +725,6 @@ public class SingleHandView extends View {
 
         }
 
-        //画笔清空
-        pathInfArrayList.clear();
-        pathInfArrayList.add(new PathInf());
-        PathInfNum = 0;
-        pathInfArrayList.get(PathInfNum).path.moveTo(LastX, LastY);
-
         //初始化画笔
         colorNow = Color.BLACK;
         pixNow = 2;
@@ -732,6 +737,8 @@ public class SingleHandView extends View {
         //更新时间记录（环的绘制时间）
         hoop.set_Ring_1_start(false);
         hoop.set_Ring_2_start(false);
+        hoop.set_Ring_3_start(false);
+        hoop.set_ring_3_end(false);
 
         //更新时间（模式切换时间）
         experimentalData.set_color_index_s(false);
@@ -745,10 +752,16 @@ public class SingleHandView extends View {
 
         //还原提示菜单
         switchInformation.setCurrent_color(0); //像素块
-        switchInformation.setCurrent_pixel("1PX");
+        switchInformation.setCurrent_pixel("2PX");
 
         switchInformation.setTarget_color(0);
         switchInformation.setTarget_pixel(0);
+
+        //画笔清空
+        pathInfArrayList.clear();
+        pathInfArrayList.add(new PathInf());
+        PathInfNum = 0;
+        pathInfArrayList.get(PathInfNum).path.moveTo(LastX, LastY);
 
         //更新单次数据记录
         experimentalData.Init_Col();

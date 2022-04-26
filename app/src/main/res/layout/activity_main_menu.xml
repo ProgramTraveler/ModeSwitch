@@ -97,7 +97,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="8dp"
 
-            android:text="区域映射模式"
+            android:text="动态响应模式"
             android:textSize="25dp"
 
             app:layout_constraintBottom_toBottomOf="parent"

@@ -53,6 +53,7 @@ public class TraditionalView extends View {
      */
     private float MenuLen = 0; //菜单长度
     private float MenuWith = 0; //菜单宽度
+    private float word_size = 45; //字体大小
 
     //一级菜单出现的位置
     private float Menu_X = 0;
@@ -142,9 +143,9 @@ public class TraditionalView extends View {
 
 
         //根据屏幕大小来设置每个圆环的圆心位置
-        hoop.setCircle(1, high / 6 * 3 / 2, width / 3);
+        hoop.setCircle(1, high / 6 * 3, width / 3);
         hoop.setCircle(2, high / 6 * 11 / 2, width / 3);
-        hoop.setCircle(3, high / 6 * 10, width / 3);
+        hoop.setCircle(3, high / 6 * 8, width / 3);
 
         //设置菜单的长和宽
         MenuLen = high * 10 / 35 / 2;
@@ -338,27 +339,7 @@ public class TraditionalView extends View {
                     if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
 
                         experimentalData.set_end_hoop_3(System.currentTimeMillis());
-                        experimentalData.set_end_whole(System.currentTimeMillis());
-
-                        //当误差满足时，视为一次测试结束
-                        if (switchInformation.get_target_color() != switchInformation.get_current_color()) { //如果当前颜色和目标颜色不一致
-                            experimentalData.Add_Col(); //颜色切换错误数加一
-                        }
-
-                        if (switchInformation.get_target_pixel() != switchInformation.get_current_pixel()) { //如果当前像素和目标像素不一致
-                            experimentalData.Add_Pix(); //像素切换错误数加一
-                        }
-
-                        if (!experimentalData.get_Save()) {
-                            try { //将这一次的数据保存
-                                experimentalData.saveInf();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            experimentalData.set_Save(true);
-                        }
-
-                        initialization();
+                        hoop.set_ring_3_end(true);
                     }
 
                 }
@@ -518,6 +499,30 @@ public class TraditionalView extends View {
                     experimentalData.set_pixel_index_s(true);
                 }
 
+                if (hoop.getRing_3() && hoop.get_ring_3_end()) {
+                    experimentalData.set_end_whole(System.currentTimeMillis());
+
+                    //当误差满足时，视为一次测试结束
+                    if (switchInformation.get_target_color() != switchInformation.get_current_color()) { //如果当前颜色和目标颜色不一致
+                        experimentalData.Add_Col(); //颜色切换错误数加一
+                    }
+
+                    if (switchInformation.get_target_pixel() != switchInformation.get_current_pixel()) { //如果当前像素和目标像素不一致
+                        experimentalData.Add_Pix(); //像素切换错误数加一
+                    }
+
+                    if (!experimentalData.get_Save()) {
+                        try { //将这一次的数据保存
+                            experimentalData.saveInf();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        experimentalData.set_Save(true);
+                    }
+
+                    initialization();
+                }
+
         }
         invalidate();
         return true;
@@ -527,7 +532,7 @@ public class TraditionalView extends View {
     public void showColMenu () {
         //控制文字的画笔
         Paint MenuP = new Paint();
-        MenuP.setTextSize(MenuWith); //文字大小
+        MenuP.setTextSize(word_size); //文字大小
         MenuP.setStyle(Paint.Style.FILL); //画笔风格为填充
         //MenuP.setTypeface(Typeface.DEFAULT_BOLD); //粗体（字体写不写无所谓）
 
@@ -543,7 +548,7 @@ public class TraditionalView extends View {
     public void showPixMenu () {
         //控制文字的画笔
         Paint MenuP = new Paint();
-        MenuP.setTextSize(MenuWith); //文字大小
+        MenuP.setTextSize(word_size); //文字大小
         MenuP.setStyle(Paint.Style.FILL); //画笔风格为填充
         //MenuP.setTypeface(Typeface.DEFAULT_BOLD); //粗体
 
@@ -586,7 +591,7 @@ public class TraditionalView extends View {
         //二级像素画笔
         Paint SePixPaint = new Paint();
         SePixPaint.setColor(Color.BLACK);
-        SePixPaint.setTextSize(MenuWith);
+        SePixPaint.setTextSize(word_size);
         SePixPaint.setStyle(Paint.Style.FILL);
 
         if (Pix) { //像素二级菜单展开
@@ -644,6 +649,8 @@ public class TraditionalView extends View {
         //更新时间记录（环的绘制时间）
         hoop.set_Ring_1_start(false);
         hoop.set_Ring_2_start(false);
+        hoop.set_Ring_3_start(false);
+        hoop.set_ring_3_end(false);
 
         //更新时间（模式切换时间）
         experimentalData.set_color_index_s(false);
@@ -657,7 +664,7 @@ public class TraditionalView extends View {
 
         //还原提示菜单
         switchInformation.setCurrent_color(0); //像素块
-        switchInformation.setCurrent_pixel("1PX");
+        switchInformation.setCurrent_pixel("2PX");
 
         switchInformation.setTarget_color(0);
         switchInformation.setTarget_pixel(0);

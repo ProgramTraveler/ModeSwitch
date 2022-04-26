@@ -82,7 +82,8 @@ public class MainMenu extends AppCompatActivity implements AdapterView.OnItemSel
                 Intent intent = new Intent(MainMenu.this, SingleDynamic.class);
                 intent.putExtra("user_name", edit_user.getText().toString());
                 intent.putExtra("group", group_context);
-                intent.putExtra("hand_mode", hand_mode);
+                //System.out.println(hand_mode);
+                intent.putExtra("hand", hand_mode);
 
                 startActivity(intent);
                 Toast.makeText(MainMenu.this, "已选择单手动态模式", Toast.LENGTH_SHORT).show();
