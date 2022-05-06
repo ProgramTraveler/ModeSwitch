@@ -42,6 +42,9 @@ public class ExperimentalData {
 
     private String mode = ""; //切换模式技术
 
+    private String actual_Col = ""; //切换的实际颜色
+    private String actual_Pix = ""; //切换的实际像素
+
     private String target_Col = ""; //切换的目标颜色
     private String target_Pix = ""; //切换的目标像素
 
@@ -131,6 +134,19 @@ public class ExperimentalData {
     //切换模式
     public void Set_mode (String s) {
         mode = s;
+    }
+
+    //实际切换颜色
+    public void Set_Act_Col (int n) {
+        if (n == 1) actual_Col = "红色";
+        if (n == 2) actual_Col = "黄色";
+        if (n == 3) actual_Col = "蓝色";
+    }
+    //实际切换像素
+    public void Set_Act_Pix (int n) {
+        if (n == 1) actual_Pix = "4PX";
+        if (n == 2) actual_Pix = "8PX";
+        if (n == 3) actual_Pix = "16PX";
     }
 
     //目标颜色
@@ -299,6 +315,8 @@ public class ExperimentalData {
                         + "实验组编号" + ","
                         + "手模式" + ","
                         + "切换模式技术"  + ","
+                        + "实际切换颜色" + ","
+                        + "实际切换像素" + ","
                         + "目标颜色" + ","
                         + "目标像素" + ","
                         + "误触发错误总数" + ","
@@ -324,6 +342,8 @@ public class ExperimentalData {
                     + num + ","
                     + hand_mode + ","
                     + mode + ","
+                    + actual_Col + ","
+                    + actual_Pix + ","
                     + target_Col + ","
                     + target_Pix + ","
                     + false_tig + ","

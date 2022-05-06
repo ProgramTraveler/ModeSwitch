@@ -18,8 +18,8 @@
     </string-array>
 
     <string-array name = "practice">
-        <item>正常模式</item>
-        <item>练习模式</item>
+        <item>正式实验</item>
+        <item>用户练习</item>
     </string-array>
 
 </resources>

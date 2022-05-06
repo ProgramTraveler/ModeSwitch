@@ -503,6 +503,9 @@ public class TraditionalView extends View {
                 if (hoop.getRing_3() && hoop.get_ring_3_end()) {
                     experimentalData.set_end_whole(System.currentTimeMillis());
 
+                    experimentalData.Set_Act_Col(switchInformation.get_current_color());
+                    experimentalData.Set_Act_Pix(switchInformation.get_current_pixel());
+
                     //当误差满足时，视为一次测试结束
                     if (switchInformation.get_target_color() != switchInformation.get_current_color()) { //如果当前颜色和目标颜色不一致
                         experimentalData.Add_Col(); //颜色切换错误数加一

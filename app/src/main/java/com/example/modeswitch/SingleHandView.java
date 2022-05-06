@@ -521,6 +521,9 @@ public class SingleHandView extends View {
 
                     experimentalData.set_end_whole(System.currentTimeMillis());
 
+                    experimentalData.Set_Act_Col(switchInformation.get_current_color());
+                    experimentalData.Set_Act_Pix(switchInformation.get_current_pixel());
+
                     //满足条件，视为一次测试结束
                     if (switchInformation.get_target_color() != switchInformation.get_current_color()) {
                         experimentalData.Add_Col();
