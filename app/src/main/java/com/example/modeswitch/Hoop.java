@@ -16,17 +16,19 @@ public class Hoop {
     private boolean ring2 = false;
     private boolean ring3 = false;
 
+    //第一个圆环的圆心坐标
+    private float Circle1_X = 0;
+    private float Circle1_Y = 0;
 
     //圆环中大小圆的半径
     private float SmallCircleR = 0;
     private float BigCircleR = 0;
-    //第一个圆环的圆心坐标
-    private float Circle1_X = 0;
-    private float Circle1_Y = 0;
-    //第二个圆环的圆心坐标 （）
+
+    //第二个圆环的圆心坐标 （修改后为三角形的中心位置）
     private float Circle2_X = 0;
     private float Circle2_Y = 0;
-    //第三个圆环的圆心坐标
+
+    //第三个圆环的圆心坐标（修改后为正方形的中心位置）
     private float Circle3_X = 0;
     private float Circle3_Y = 0;
 
@@ -84,6 +86,7 @@ public class Hoop {
     public boolean get_ring_3_end () {
         return ring3_end;
     }
+
     //设置和获取大小圆半径
     public void setBigCircleR (float f) {
         BigCircleR = f;
@@ -97,6 +100,9 @@ public class Hoop {
     public float getSmallCircleR () {
         return SmallCircleR;
     }
+
+    //设计和获取大小三角形的坐标
+
     //设置每个圆的圆心坐标
     public void setCircle (int n, float x, float y) {
         if (n == 1) { //如果是环一

@@ -607,7 +607,7 @@ public class SingleHandView extends View {
         //设置圆弧范围
         RectF rectF = new RectF(MenuX - MenuRa, MenuY - MenuRa, MenuX + MenuRa, MenuY + MenuRa);
         //设置高亮区域的圆弧范围
-        RectF rectH = new RectF(MenuX - MenuRa / 2, MenuY - MenuRa / 2, MenuX + MenuRa / 2, MenuY + MenuRa / 2);
+        RectF rectH = new RectF(MenuX - MenuRa, MenuY - MenuRa, MenuX + MenuRa, MenuY + MenuRa);
 
         Paint ArcP = new Paint();
         ArcP.setColor(Color.LTGRAY); //圆弧颜色
@@ -660,9 +660,9 @@ public class SingleHandView extends View {
 
             //颜色二级菜单高亮显示
             Paint SeCHLPaint = new Paint();
-            SeCHLPaint.setStyle(Paint.Style.FILL); //效果为填充
+            SeCHLPaint.setStyle(Paint.Style.STROKE); //效果为描边
             SeCHLPaint.setColor(Color.GREEN); //颜色为绿色
-            SeCHLPaint.setStrokeWidth(10);
+            SeCHLPaint.setStrokeWidth(15);
 
             if ((inf_y <= (Math.tan(Math.PI * 30 / 180)) * (inf_x - MenuX) + MenuY) && inf_x <= MenuX) { //红色区域高亮
                 canvas.drawArc(rectH, 210, 60, true, SeCHLPaint);
@@ -688,9 +688,9 @@ public class SingleHandView extends View {
 
             //像素二级菜单高亮显示
             Paint SePHLPaint = new Paint();
-            SePHLPaint.setStyle(Paint.Style.FILL);
+            SePHLPaint.setStyle(Paint.Style.STROKE);
             SePHLPaint.setColor(Color.GREEN);
-            SePHLPaint.setStrokeWidth(10);
+            SePHLPaint.setStrokeWidth(15);
 
             if ((inf_y >= (Math.tan(Math.PI * 30 / 180)) * (inf_x - MenuX) + MenuY) && inf_x >= MenuX) { //最大像素区域高亮
                 canvas.drawArc(rectH, 30, 60, true, SePHLPaint);

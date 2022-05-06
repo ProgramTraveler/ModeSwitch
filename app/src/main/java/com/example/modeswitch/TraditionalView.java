@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -175,12 +176,33 @@ public class TraditionalView extends View {
         canvas.drawCircle(hoop.getCircle_X(1), hoop.getCircle_Y(1), hoop.getSmallCircleR(), MyPaint);
 
         if (hoop.getRing_2()) { //显示第二个环
-            canvas.drawCircle(hoop.getCircle_X(2), hoop.getCircle_Y(2), hoop.getBigCircleR(), MyPaint);
-            canvas.drawCircle(hoop.getCircle_X(2), hoop.getCircle_Y(2), hoop.getSmallCircleR(), MyPaint);
+            /*canvas.drawCircle(hoop.getCircle_X(2), hoop.getCircle_Y(2), hoop.getBigCircleR(), MyPaint);
+            canvas.drawCircle(hoop.getCircle_X(2), hoop.getCircle_Y(2), hoop.getSmallCircleR(), MyPaint);*/
+
+            //绘制小三角形
+            Path smallTrianglePath = new Path();
+            smallTrianglePath.moveTo(hoop.getCircle_X(2), hoop.getCircle_Y(2) - hoop.getSmallCircleR());
+            smallTrianglePath.lineTo(hoop.getCircle_X(2) - hoop.getSmallCircleR(), hoop.getCircle_Y(2) + hoop.getSmallCircleR());
+            smallTrianglePath.lineTo(hoop.getCircle_X(2) + hoop.getSmallCircleR(), hoop.getCircle_Y(2) + hoop.getSmallCircleR());
+            smallTrianglePath.close(); //形成封闭图形
+            canvas.drawPath(smallTrianglePath, MyPaint);
+
+            //绘制大三角形
+            Path bigTrianglePath = new Path();
+            bigTrianglePath.moveTo(hoop.getCircle_X(2), hoop.getCircle_Y(2) - hoop.getBigCircleR());
+            bigTrianglePath.lineTo(hoop.getCircle_X(2) - hoop.getBigCircleR(), hoop.getCircle_Y(2) + hoop.getBigCircleR() * 4 / 5);
+            bigTrianglePath.lineTo(hoop.getCircle_X(2) + hoop.getBigCircleR(), hoop.getCircle_Y(2) + hoop.getBigCircleR() * 4 / 5);
+            bigTrianglePath.close(); //形成封闭图形
+            canvas.drawPath(bigTrianglePath, MyPaint);
         }
         if (hoop.getRing_3()) { //显示第三个环
-            canvas.drawCircle(hoop.getCircle_X(3), hoop.getCircle_Y(3), hoop.getBigCircleR(), MyPaint);
-            canvas.drawCircle(hoop.getCircle_X(3), hoop.getCircle_Y(3), hoop.getSmallCircleR(), MyPaint);
+            /*canvas.drawCircle(hoop.getCircle_X(3), hoop.getCircle_Y(3), hoop.getBigCircleR(), MyPaint);
+            canvas.drawCircle(hoop.getCircle_X(3), hoop.getCircle_Y(3), hoop.getSmallCircleR(), MyPaint);*/
+
+            //绘制小正方形
+            canvas.drawRect(hoop.getCircle_X(3) - hoop.getSmallCircleR(), hoop.getCircle_Y(3) - hoop.getSmallCircleR(), hoop.getCircle_X(3) + hoop.getSmallCircleR(),hoop.getCircle_Y(3) + hoop.getSmallCircleR(), MyPaint);
+            //绘制大正方形
+            canvas.drawRect(hoop.getCircle_X(3) - hoop.getBigCircleR() * 4 / 5, hoop.getCircle_Y(3) - hoop.getBigCircleR() * 4 / 5, hoop.getCircle_X(3) + hoop.getBigCircleR() * 4 / 5, hoop.getCircle_Y(3) + hoop.getBigCircleR() * 4 / 5, MyPaint);
         }
 
         // 放在这里会导致一级菜单一直处于最上层（但好像没什么好的解决办法）
