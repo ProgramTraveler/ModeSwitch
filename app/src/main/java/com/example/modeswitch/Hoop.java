@@ -4,6 +4,12 @@ package com.example.modeswitch;
     date:2022-01-23
     purpose:环的相关信息，主要是控制环的一些动作和相关参数
  */
+
+/*
+    对环形的命名但部分图形不是环形的说明：最初是设计的三个环形进行绘制，但是经过讨论后决定将后面两个环形改为三角形和正方形，
+    但是程序已经基本成形，而且变量经过大量调用，修改名称得不偿失，因此只修改绘制图形而不对变量名进行修改。
+ */
+
 public class Hoop {
     //每个操作环的状态，true表示已经出现
     private boolean ring1 = true; //第一个环是默认是出现的，所以只能是true
@@ -17,7 +23,7 @@ public class Hoop {
     //第一个圆环的圆心坐标
     private float Circle1_X = 0;
     private float Circle1_Y = 0;
-    //第二个圆环的圆心坐标
+    //第二个圆环的圆心坐标 （）
     private float Circle2_X = 0;
     private float Circle2_Y = 0;
     //第三个圆环的圆心坐标
