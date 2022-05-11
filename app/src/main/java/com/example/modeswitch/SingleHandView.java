@@ -298,7 +298,7 @@ public class SingleHandView extends View {
                     if (!error && (Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) >= hoop.getSmallCircleR() * 2)) { //根据两点距离判断
                         error = true;
                     }
-                    if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
+                    if ((Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) <= errorNum) && error) {
                         hoop.setRing_2(true);// 当误差满足条件的时候就当做是一个闭环
 
                         experimentalData.set_tig_index(true); //允许一次选择
@@ -339,7 +339,7 @@ public class SingleHandView extends View {
                             (y > -1.8 * (x - hoop.getCircle_X(2)) + hoop.getCircle_Y(2) - hoop.getBigCircleR());
             boolean tag_2 = (y < -2 * (x - hoop.getCircle_X(2)) + hoop.getCircle_Y(2) - hoop.getSmallCircleR()) &&
                             (y > -1.8 * (x - hoop.getCircle_X(2)) + hoop.getCircle_Y(2) - hoop.getBigCircleR()) &&
-                            (y < y + hoop.getBigCircleR() * 4 / 5) &&
+                            (y < hoop.getCircle_Y(2) + hoop.getBigCircleR() * 4 / 5) &&
                             (y > 1.8 * (x - hoop.getCircle_X(2)) + hoop.getCircle_Y(2) - hoop.getBigCircleR());
             boolean tag_3 = (y < hoop.getCircle_Y(2) + hoop.getBigCircleR() * 4 / 5) &&
                             (y > hoop.getCircle_Y(2) + hoop.getSmallCircleR()) &&
@@ -361,7 +361,7 @@ public class SingleHandView extends View {
                     if (!error && (Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) >= hoop.getSmallCircleR() * 2)) {
                         error = true;
                     }
-                    if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
+                    if ((Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) <= errorNum) && error) {
                         hoop.setRing_3(true);//当误差满足条件的时候就当做是一个闭环
 
                         experimentalData.set_tig_index(true); //允许一次选择
@@ -426,7 +426,7 @@ public class SingleHandView extends View {
                         error = true;
                     }
 
-                    if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
+                    if ((Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) <= errorNum) && error) {
                         experimentalData.set_end_hoop_3(System.currentTimeMillis());
 
                         hoop.set_ring_3_end(true);
