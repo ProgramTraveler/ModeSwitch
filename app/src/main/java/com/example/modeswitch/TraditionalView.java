@@ -269,7 +269,7 @@ public class TraditionalView extends View {
                     if (!error && (Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) >= hoop.getSmallCircleR() * 2)) { //根据两点距离判断
                         error = true;
                     }
-                    if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
+                    if ((Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) <= errorNum) && error) {
                         hoop.setRing_2(true);// 当误差满足条件的时候就当做是一个闭环
 
                         experimentalData.set_tig_index(true); //此时允许进行切换
@@ -295,11 +295,28 @@ public class TraditionalView extends View {
         }
         if (hoop.getRing_2() && !hoop.getRing_3()) { //第二个圆环已经显示，与环1的判断一样
 
-            double xr = Math.pow((x - hoop.getCircle_X(2)), 2);
+            /*double xr = Math.pow((x - hoop.getCircle_X(2)), 2);
             double yr = Math.pow((y - hoop.getCircle_Y(2)), 2);
-            double ra = xr + yr;
+            double ra = xr + yr;*/
 
-            if (ra >= Math.pow((hoop.getSmallCircleR()), 2) && ra <= Math.pow((hoop.getBigCircleR()), 2)) { //如果落在圆环内
+            //if (ra >= Math.pow((hoop.getSmallCircleR()), 2) && ra <= Math.pow((hoop.getBigCircleR()), 2))
+            /*
+                判断出在三角形内的哪部分区域
+             */
+            boolean tag_1 = (y > 1.8 * (x - hoop.getCircle_X(2)) + hoop.getCircle_Y(2) - hoop.getBigCircleR()) &&
+                            (y < 2 * (x - hoop.getCircle_X(2)) + hoop.getCircle_Y(2) - hoop.getSmallCircleR()) &&
+                            (y < hoop.getCircle_Y(2)  + hoop.getBigCircleR() * 4 / 5) &&
+                            (y > -1.8 * (x - hoop.getCircle_X(2)) + hoop.getCircle_Y(2) - hoop.getBigCircleR());
+            boolean tag_2 = (y < -2 * (x - hoop.getCircle_X(2)) + hoop.getCircle_Y(2) - hoop.getSmallCircleR()) &&
+                            (y > -1.8 * (x - hoop.getCircle_X(2)) + hoop.getCircle_Y(2) - hoop.getBigCircleR()) &&
+                            (y < y + hoop.getBigCircleR() * 4 / 5) &&
+                            (y > 1.8 * (x - hoop.getCircle_X(2)) + hoop.getCircle_Y(2) - hoop.getBigCircleR());
+            boolean tag_3 = (y < hoop.getCircle_Y(2) + hoop.getBigCircleR() * 4 / 5) &&
+                            (y > hoop.getCircle_Y(2) + hoop.getSmallCircleR()) &&
+                            (y > -1.8 * (x - hoop.getCircle_X(2)) + hoop.getCircle_Y(2) - hoop.getBigCircleR()) &&
+                            (y > 1.8 * (x - hoop.getCircle_X(2)) + hoop.getCircle_Y(2) - hoop.getBigCircleR());
+
+            if (tag_1 || tag_2 || tag_3) { //如果落在圆环(现三角形)内
                 //如果之前没有记录环二第一次落下的时间
                 if (!hoop.get_Ring_2_start()) {
                     experimentalData.set_start_hoop_2(System.currentTimeMillis());
@@ -311,11 +328,17 @@ public class TraditionalView extends View {
                     //初次进入的坐标
                     StartX = x;
                     StartY = y;
+
+                    System.out.println("1");
                 }else { //已经进入，这个用来检测是否是一个闭环
                     if (!error && (Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) >= hoop.getSmallCircleR() * 2)) {
                         error = true;
                     }
-                    if ((Math.abs(x - StartX) <= errorNum) && (Math.abs(y - StartY) <= errorNum) && error) {
+                    System.out.println((Math.abs(x - StartX) <= errorNum) + "---" + (Math.abs(y - StartY) <= errorNum) + "---" + error + "---" + (Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) <= errorNum));
+
+                    if ((Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) <= errorNum) && error) {
+                        System.out.println("come in");
+
                         hoop.setRing_3(true);//当误差满足条件的时候就当做是一个闭环
 
                         experimentalData.set_tig_index(true);
@@ -340,11 +363,31 @@ public class TraditionalView extends View {
         }
 
         if (hoop.getRing_3()) { //第三个圆环展开
-            double xr = Math.pow(x - hoop.getCircle_X(3), 2);
+            /*double xr = Math.pow(x - hoop.getCircle_X(3), 2);
             double yr = Math.pow(y - hoop.getCircle_Y(3), 2);
-            double ra = xr + yr;
+            double ra = xr + yr;*/
 
-            if ((ra >= Math.pow((hoop.getSmallCircleR()), 2)) && (ra <= Math.pow(hoop.getBigCircleR(), 2))) { //如果落在圆环内
+            //if ((ra >= Math.pow((hoop.getSmallCircleR()), 2)) && (ra <= Math.pow(hoop.getBigCircleR(), 2)))
+            /*
+                判断出在正方形的哪部分区域
+             */
+            boolean tag_1 = (x > (hoop.getCircle_X(3) - hoop.getBigCircleR() * 4 / 5)) &&
+                            (x < (hoop.getCircle_X(3) + hoop.getBigCircleR() * 4 / 5)) &&
+                            (y > (hoop.getCircle_Y(3) - hoop.getBigCircleR() * 4 / 5)) &&
+                            (y < (hoop.getCircle_Y(3) - hoop.getSmallCircleR()));
+            boolean tag_2 = (x > (hoop.getCircle_X(3) - hoop.getBigCircleR() * 4 / 5)) &&
+                            (x < (hoop.getCircle_X(3) - hoop.getSmallCircleR())) &&
+                            (y > (hoop.getCircle_Y(3) - hoop.getBigCircleR() * 4 / 5)) &&
+                            (y < (hoop.getCircle_Y(3) + hoop.getBigCircleR() * 4 / 5));
+            boolean tag_3 = (x > (hoop.getCircle_X(3) - hoop.getBigCircleR() * 4 / 5)) &&
+                            (x < (hoop.getCircle_X(3) + hoop.getBigCircleR() * 4 / 5)) &&
+                            (y > (hoop.getCircle_Y(3) + hoop.getSmallCircleR())) &&
+                            (y < (hoop.getCircle_Y(3) + hoop.getBigCircleR() * 4 / 5));
+            boolean tag_4 = (x > (hoop.getCircle_X(3) + hoop.getSmallCircleR())) &&
+                            (x < (hoop.getCircle_X(3) + hoop.getBigCircleR() * 4 / 5)) &&
+                            (y > (hoop.getCircle_Y(3) - hoop.getBigCircleR() * 4 / 5)) &&
+                            (y < (hoop.getCircle_Y(3) + hoop.getBigCircleR() * 4 / 5));
+            if (tag_1 || tag_2 || tag_3 || tag_4) { //如果落在圆环(现正方形)内
                 if (!hoop.get_Ring_3_start()) {
                     experimentalData.set_start_hoop_3(System.currentTimeMillis());
                     hoop.set_Ring_3_start(true);

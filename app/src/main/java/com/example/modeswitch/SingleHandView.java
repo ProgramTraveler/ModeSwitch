@@ -193,14 +193,32 @@ public class SingleHandView extends View {
 
 
         if (hoop.getRing_2()) { //显示第二个环
-            canvas.drawCircle(hoop.getCircle_X(2), hoop.getCircle_Y(2), hoop.getBigCircleR(), MyPaint);
-            canvas.drawCircle(hoop.getCircle_X(2), hoop.getCircle_Y(2), hoop.getSmallCircleR(), MyPaint);
+            /*canvas.drawCircle(hoop.getCircle_X(2), hoop.getCircle_Y(2), hoop.getBigCircleR(), MyPaint);
+            canvas.drawCircle(hoop.getCircle_X(2), hoop.getCircle_Y(2), hoop.getSmallCircleR(), MyPaint);*/
 
+            //绘制小三角形
+            Path smallTrianglePath = new Path();
+            smallTrianglePath.moveTo(hoop.getCircle_X(2), hoop.getCircle_Y(2) - hoop.getSmallCircleR());
+            smallTrianglePath.lineTo(hoop.getCircle_X(2) - hoop.getSmallCircleR(), hoop.getCircle_Y(2) + hoop.getSmallCircleR());
+            smallTrianglePath.lineTo(hoop.getCircle_X(2) + hoop.getSmallCircleR(), hoop.getCircle_Y(2) + hoop.getSmallCircleR());
+            smallTrianglePath.close(); //形成封闭图形
+            canvas.drawPath(smallTrianglePath, MyPaint);
 
+            //绘制大三角形
+            Path bigTrianglePath = new Path();
+            bigTrianglePath.moveTo(hoop.getCircle_X(2), hoop.getCircle_Y(2) - hoop.getBigCircleR());
+            bigTrianglePath.lineTo(hoop.getCircle_X(2) - hoop.getBigCircleR(), hoop.getCircle_Y(2) + hoop.getBigCircleR() * 4 / 5);
+            bigTrianglePath.lineTo(hoop.getCircle_X(2) + hoop.getBigCircleR(), hoop.getCircle_Y(2) + hoop.getBigCircleR() * 4 / 5);
+            bigTrianglePath.close(); //形成封闭图形
+            canvas.drawPath(bigTrianglePath, MyPaint);
         }
         if (hoop.getRing_3()) { //显示第三个环
-            canvas.drawCircle(hoop.getCircle_X(3), hoop.getCircle_Y(3), hoop.getBigCircleR(), MyPaint);
-            canvas.drawCircle(hoop.getCircle_X(3), hoop.getCircle_Y(3), hoop.getSmallCircleR(), MyPaint);
+            /*canvas.drawCircle(hoop.getCircle_X(3), hoop.getCircle_Y(3), hoop.getBigCircleR(), MyPaint);
+            canvas.drawCircle(hoop.getCircle_X(3), hoop.getCircle_Y(3), hoop.getSmallCircleR(), MyPaint);*/
+            //绘制小正方形
+            canvas.drawRect(hoop.getCircle_X(3) - hoop.getSmallCircleR(), hoop.getCircle_Y(3) - hoop.getSmallCircleR(), hoop.getCircle_X(3) + hoop.getSmallCircleR(),hoop.getCircle_Y(3) + hoop.getSmallCircleR(), MyPaint);
+            //绘制大正方形
+            canvas.drawRect(hoop.getCircle_X(3) - hoop.getBigCircleR() * 4 / 5, hoop.getCircle_Y(3) - hoop.getBigCircleR() * 4 / 5, hoop.getCircle_X(3) + hoop.getBigCircleR() * 4 / 5, hoop.getCircle_Y(3) + hoop.getBigCircleR() * 4 / 5, MyPaint);
 
         }
 
@@ -307,11 +325,27 @@ public class SingleHandView extends View {
         }
         if (hoop.getRing_2() && !hoop.getRing_3()) { //第二个圆环已经显示，与环1的判断一样
 
-            double xr = Math.pow((x - hoop.getCircle_X(2)), 2);
+            /*double xr = Math.pow((x - hoop.getCircle_X(2)), 2);
             double yr = Math.pow((y - hoop.getCircle_Y(2)), 2);
             double ra = xr + yr;
 
-            if (ra >= Math.pow((hoop.getSmallCircleR()), 2) && ra <= Math.pow((hoop.getBigCircleR()), 2)) { //如果落在圆环内
+            if (ra >= Math.pow((hoop.getSmallCircleR()), 2) && ra <= Math.pow((hoop.getBigCircleR()), 2))*/
+            /*
+                判断出在三角形内的哪部分区域
+             */
+            boolean tag_1 = (y > 1.8 * (x - hoop.getCircle_X(2)) + hoop.getCircle_Y(2) - hoop.getBigCircleR()) &&
+                            (y < 2 * (x - hoop.getCircle_X(2)) + hoop.getCircle_Y(2) - hoop.getSmallCircleR()) &&
+                            (y < hoop.getCircle_Y(2)  + hoop.getBigCircleR() * 4 / 5) &&
+                            (y > -1.8 * (x - hoop.getCircle_X(2)) + hoop.getCircle_Y(2) - hoop.getBigCircleR());
+            boolean tag_2 = (y < -2 * (x - hoop.getCircle_X(2)) + hoop.getCircle_Y(2) - hoop.getSmallCircleR()) &&
+                            (y > -1.8 * (x - hoop.getCircle_X(2)) + hoop.getCircle_Y(2) - hoop.getBigCircleR()) &&
+                            (y < y + hoop.getBigCircleR() * 4 / 5) &&
+                            (y > 1.8 * (x - hoop.getCircle_X(2)) + hoop.getCircle_Y(2) - hoop.getBigCircleR());
+            boolean tag_3 = (y < hoop.getCircle_Y(2) + hoop.getBigCircleR() * 4 / 5) &&
+                            (y > hoop.getCircle_Y(2) + hoop.getSmallCircleR()) &&
+                            (y > -1.8 * (x - hoop.getCircle_X(2)) + hoop.getCircle_Y(2) - hoop.getBigCircleR()) &&
+                            (y > 1.8 * (x - hoop.getCircle_X(2)) + hoop.getCircle_Y(2) - hoop.getBigCircleR());
+            if (tag_1 || tag_2 || tag_3) { //如果落在圆环内
                 //如果之前没有记录环二第一次落下的时间
                 if (!hoop.get_Ring_2_start()) {
                     experimentalData.set_start_hoop_2(System.currentTimeMillis());
@@ -352,16 +386,36 @@ public class SingleHandView extends View {
         }
 
         if (hoop.getRing_3()) { //第三个圆环已经展开
-            double xr = Math.pow(x - hoop.getCircle_X(3), 2);
+            /*double xr = Math.pow(x - hoop.getCircle_X(3), 2);
             double yr = Math.pow(y - hoop.getCircle_Y(3), 2);
             double ra = xr + yr;
 
-            if ((ra >= Math.pow((hoop.getSmallCircleR()), 2)) && (ra <= Math.pow(hoop.getBigCircleR(), 2))) {
+            if ((ra >= Math.pow((hoop.getSmallCircleR()), 2)) && (ra <= Math.pow(hoop.getBigCircleR(), 2)))*/
+
+            /*
+                判断出在正方形的哪部分区域
+             */
+            boolean tag_1 = (x > (hoop.getCircle_X(3) - hoop.getBigCircleR() * 4 / 5)) &&
+                            (x < (hoop.getCircle_X(3) + hoop.getBigCircleR() * 4 / 5)) &&
+                            (y > (hoop.getCircle_Y(3) - hoop.getBigCircleR() * 4 / 5)) &&
+                            (y < (hoop.getCircle_Y(3) - hoop.getSmallCircleR()));
+            boolean tag_2 = (x > (hoop.getCircle_X(3) - hoop.getBigCircleR() * 4 / 5)) &&
+                            (x < (hoop.getCircle_X(3) - hoop.getSmallCircleR())) &&
+                            (y > (hoop.getCircle_Y(3) - hoop.getBigCircleR() * 4 / 5)) &&
+                            (y < (hoop.getCircle_Y(3) + hoop.getBigCircleR() * 4 / 5));
+            boolean tag_3 = (x > (hoop.getCircle_X(3) - hoop.getBigCircleR() * 4 / 5)) &&
+                            (x < (hoop.getCircle_X(3) + hoop.getBigCircleR() * 4 / 5)) &&
+                            (y > (hoop.getCircle_Y(3) + hoop.getSmallCircleR())) &&
+                            (y < (hoop.getCircle_Y(3) + hoop.getBigCircleR() * 4 / 5));
+            boolean tag_4 = (x > (hoop.getCircle_X(3) + hoop.getSmallCircleR())) &&
+                            (x < (hoop.getCircle_X(3) + hoop.getBigCircleR() * 4 / 5)) &&
+                            (y > (hoop.getCircle_Y(3) - hoop.getBigCircleR() * 4 / 5)) &&
+                            (y < (hoop.getCircle_Y(3) + hoop.getBigCircleR() * 4 / 5));
+            if (tag_1 || tag_2 || tag_3 || tag_4) {
                 if (!hoop.get_Ring_3_start()) {
                     experimentalData.set_start_hoop_3(System.currentTimeMillis());
                     hoop.set_Ring_3_start(true);
                 }
-
                 if (!index) { //之前没有进入过
                     index = true;
 
