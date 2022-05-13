@@ -126,7 +126,7 @@ public class TraditionalView extends View {
 
         hoop = new Hoop();
 
-        experimentalData.Set_mode("传统对照模式");
+        experimentalData.Set_mode("点击切换技术");
     }
 
     @Override
@@ -336,7 +336,7 @@ public class TraditionalView extends View {
                     }
 
                     if ((Math.sqrt(Math.pow(x - StartX, 2) + Math.pow(y - StartY, 2)) <= errorNum) && error) {
-                        
+
                         hoop.setRing_3(true);//当误差满足条件的时候就当做是一个闭环
 
                         experimentalData.set_tig_index(true);

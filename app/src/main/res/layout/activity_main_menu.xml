@@ -26,7 +26,7 @@
             android:layout_marginTop="80dp"
             android:layout_marginBottom="8dp"
 
-            android:text="传统对照模式"
+            android:text="点击切换技术"
             android:textSize="25dp"
 
             app:layout_constraintBottom_toBottomOf="parent"
@@ -57,7 +57,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="8dp"
 
-        android:text="主辅选择模式"
+        android:text="主辅选择技术"
         android:textSize="25dp"
 
         app:layout_constraintBottom_toBottomOf="parent"
@@ -108,7 +108,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="8dp"
 
-            android:text="动态响应模式"
+            android:text="动态响应技术"
             android:textSize="25dp"
 
             app:layout_constraintBottom_toBottomOf="parent"

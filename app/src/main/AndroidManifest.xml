@@ -36,20 +36,20 @@
         <activity
             android:name=".traditional"
             android:exported="false"
-            android:label="传统对照模式"
+            android:label="点击切换技术"
             />
 
         <!-- 单手主辅模式 -->
         <activity
             android:name=".SingleHandMAndA"
             android:exported="false"
-            android:label="主辅选择模式" />
+            android:label="主辅选择技术" />
 
         <!-- 动态区域单手模式 -->
         <activity
             android:name=".SingleDynamic"
             android:exported="false"
-            android:label="动态响应模式" />
+            android:label="动态响应技术" />
     </application>
 
 </manifest>

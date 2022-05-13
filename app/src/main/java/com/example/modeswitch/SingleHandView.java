@@ -141,7 +141,7 @@ public class SingleHandView extends View {
 
         hoop = new Hoop();
 
-        experimentalData.Set_mode("主辅选择模式");
+        experimentalData.Set_mode("主辅选择技术");
     }
 
     @Override
